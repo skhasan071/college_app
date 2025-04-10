@@ -17,7 +17,8 @@ class UiHelper{
     return ElevatedButton(onPressed: callback, style: ElevatedButton.styleFrom(
         backgroundColor: Clr.secondaryBtnClr,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero)
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        elevation: 0.0
     ),
         child: Text(title, style: TextStyle(color: Colors.black, fontSize: 16),));
   }
@@ -33,6 +34,17 @@ class UiHelper{
         prefixIcon: pre,
         suffixIcon: suf
       ),
+    );
+  }
+
+  static getNavItem({required label, required icon, required VoidCallback callback}){
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        IconButton(onPressed: callback, icon: Icon(icon, color: Colors.black,)),
+        Text(label, style: TextStyle(color: Colors.black,),)
+      ],
     );
   }
 

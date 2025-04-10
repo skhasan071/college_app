@@ -1,6 +1,4 @@
-import 'package:college_app/constants/colors.dart';
-import 'package:college_app/constants/ui_helper.dart';
-import 'package:college_app/view/home_page.dart';
+import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: TestingPage(),
+      debugShowCheckedModeBanner: false,
+      home: CompleteProfilePage(),
     );
   }
 }
