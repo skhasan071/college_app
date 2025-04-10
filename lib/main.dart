@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void main() {
-  runApp(
-    DevicePreview(builder: (context)=>MyApp())
-  );
+  runApp(DevicePreview(builder: (context) => MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,21 +14,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      home: TestingPage(),
-    );
+    return GetMaterialApp(home: TestingPage());
   }
 }
 
-class TestingPage extends StatelessWidget{
+class TestingPage extends StatelessWidget {
   const TestingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text("All The Best Guyz"),
-      ),
-    );
+    return Scaffold(body: Center(child: Text("All The Best Guyz")));
   }
 }
