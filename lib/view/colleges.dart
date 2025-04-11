@@ -2,11 +2,14 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/filter.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
+import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Colleges extends StatelessWidget {
   Colleges({super.key});
+
+  var controller = Get.find<Controller>();
 
   final List<Map<String, dynamic>> colleges = [
     {
@@ -27,39 +30,46 @@ class Colleges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
+      backgroundColor: Colors.white,
+
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              child: Text(
-                "Hi, Name",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                child: Text(
+                  "Hi, Name",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
 
-            _buildSection("Colleges Based on NIRF Ranking", colleges),
+              _buildSection("Colleges Based on NIRF Ranking", colleges),
 
-            _buildBox(
-              title: "Which colleges match your preferences?",
-              buttonText: "Predict My College",
-            ),
+              _buildBox(
+                title: "Which colleges match your preferences?",
+                buttonText: "Predict My College",
+              ),
 
-            _buildSection("Colleges Based on Location", colleges),
-            _buildSection("Colleges Based on State", colleges),
-            _buildSection("Colleges Based on City", colleges),
-            _buildSection("Popular Government Colleges", colleges),
-            _buildSection("Popular Private Colleges", colleges),
+              _buildSection("Colleges Based on Location", colleges),
+              _buildSection("Colleges Based on State", colleges),
+              _buildSection("Colleges Based on City", colleges),
+              _buildSection("Popular Government Colleges", colleges),
+              _buildSection("Popular Private Colleges", colleges),
 
-            _buildBox(
-              title: "Want the latest insights on colleges?",
-              buttonText: "Read Insights",
-            ),
+              _buildBox(
+                title: "Want the latest insights on colleges?",
+                buttonText: "Read Insights",
+              ),
 
-            const SizedBox(height: 30),
-          ],
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
@@ -187,7 +197,9 @@ class Colleges extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.bottomLeft,
-              child: UiHelper.getPrimaryBtn(title: buttonText, callback: () {}),
+              child: UiHelper.getPrimaryBtn(title: buttonText, callback: () {
+                controller.navSelectedIndex.value = 3;
+              }),
             ),
           ],
         ),

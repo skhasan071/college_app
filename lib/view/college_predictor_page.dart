@@ -1,4 +1,8 @@
+import 'package:college_app/view/predicted_college.dart';
+import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class CollegePredictorPage extends StatefulWidget {
   const CollegePredictorPage({super.key});
@@ -13,6 +17,8 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
   String? selectedGender;
   String? selectedCourse;
   String rank = '';
+
+  var controller = Get.find<Controller>();
 
   final List<String> demoOptions = ['Select..', 'Option 1', 'Option 2'];
 
@@ -80,7 +86,10 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   width: MediaQuery.of(context).size.width * 0.6, // 60% width
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.navSelectedIndex.value = 6;
+                      
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       shape: const RoundedRectangleBorder(

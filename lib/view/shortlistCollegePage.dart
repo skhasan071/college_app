@@ -10,6 +10,9 @@ class ShortlistedCollegesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      backgroundColor: Colors.white,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(

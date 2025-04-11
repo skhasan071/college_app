@@ -29,8 +29,11 @@ class CardStructure extends StatelessWidget {
     return Container(
       width: width ?? 275, // default to 275 unless overridden
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Card(
-        color: Clr.cardClr,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Clr.cardClr,
+          border: Border.all(color: Colors.black, width: 1)
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

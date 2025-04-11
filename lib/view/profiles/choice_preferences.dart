@@ -1,3 +1,5 @@
+import 'package:college_app/view/FirstPage.dart';
+import 'package:college_app/view/home_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/ui_helper.dart';
@@ -49,7 +51,9 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
+                    },
                   ),
                 ),
 
@@ -84,10 +88,10 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     UiHelper.getSecondaryBtn(title: "Back", callback: () {
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
                     }),
                     UiHelper.getPrimaryBtn(title: "Next", callback: () {
-                      // TODO: Submit or navigate forward
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
                     }),
                   ],
                 )

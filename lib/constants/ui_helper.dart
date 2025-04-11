@@ -2,11 +2,8 @@ import 'package:college_app/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class UiHelper {
-  static getPrimaryBtn({
-    required String title,
-    required VoidCallback callback,
-    IconData? icon, // optional icon support
-  }) {
+
+  static getPrimaryBtn({required String title, required VoidCallback callback, IconData? icon}) {
     return icon != null
         ? ElevatedButton.icon(
           onPressed: callback,
@@ -35,11 +32,7 @@ class UiHelper {
         );
   }
 
-  static getSecondaryBtn({
-    required title,
-    required VoidCallback callback,
-    IconData? icon,
-  }) {
+  static getSecondaryBtn({required title, required VoidCallback callback, IconData? icon,}) {
     return ElevatedButton(
       onPressed: callback,
       style: ElevatedButton.styleFrom(
@@ -52,12 +45,7 @@ class UiHelper {
     );
   }
 
-  static getTextField({
-    required hint,
-    required controller,
-    Icon? pre,
-    Icon? suf,
-  }) {
+  static getTextField({required hint, required controller, Icon? pre, Icon? suf,}) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -76,4 +64,37 @@ class UiHelper {
       ),
     );
   }
+
+  static getNavItem({required label, required icon, required VoidCallback callback, required selected}){
+    return GestureDetector(
+      onTap: callback,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              color: selected ? Colors.black : Colors.white,
+            ),
+            child: Icon(icon, color: selected ? Colors.white : Colors.black, size: selected ? 28 : 24,),),
+          SizedBox(height: 5),
+          Text(label, style: TextStyle(color: Colors.black,),)
+        ],
+      ),
+    );
+  }
+
+  static getCard({required double width, required widget}){
+    return Container(
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black, width: 2)
+      ),
+      child: widget,
+    );
+  }
+
 }

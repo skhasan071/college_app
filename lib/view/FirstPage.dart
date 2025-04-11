@@ -1,3 +1,4 @@
+import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:flutter/material.dart';
 
 class Firstpage extends StatelessWidget {
@@ -6,6 +7,9 @@ class Firstpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      backgroundColor: Colors.white,
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -75,12 +79,17 @@ class Firstpage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Continue as Guest",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CoursePreferencesPage()));
+                },
+                child: const Text(
+                  "Continue as Guest",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

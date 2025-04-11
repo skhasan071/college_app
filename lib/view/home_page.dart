@@ -1,6 +1,12 @@
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/view/college_predictor_page.dart';
+import 'package:college_app/view/colleges.dart';
 import 'package:college_app/view/drawer.dart';
+import 'package:college_app/view/predicted_college.dart';
 import 'package:college_app/view/profiles/complete_profile_page.dart';
+import 'package:college_app/view/profiles/profile_page.dart';
+import 'package:college_app/view/searchPage.dart';
+import 'package:college_app/view/shortlistCollegePage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -23,12 +29,12 @@ class _HomePageState extends State<HomePage> {
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(child: Text("Home", style: TextStyle(color: Colors.black, fontSize: 24),)),
+      child: Colleges(),
     ),
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(child: Text("Search", style: TextStyle(color: Colors.black, fontSize: 24),)),
+      child: SelectionPage(),
     ),
     SizedBox(
       height: double.infinity,
@@ -38,17 +44,22 @@ class _HomePageState extends State<HomePage> {
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(child: Text("Services", style: TextStyle(color: Colors.black, fontSize: 24),)),
+      child: CollegePredictorPage(),
     ),
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(child: Text("Shortlist", style: TextStyle(color: Colors.black, fontSize: 24),)),
+      child: ShortlistedCollegesPage(),
     ),
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(child: Text("Profile", style: TextStyle(color: Colors.black, fontSize: 24),)),
+      child: ProfilePage(),
+    ),
+    SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: CollegeResultsPage(),
     ),
   ];
 
@@ -60,6 +71,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
 
       key: scaffoldKey,
+
+      backgroundColor: Colors.white,
 
       appBar: getAppBar(),
 
@@ -144,26 +157,31 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: double.infinity,
       height: 80,
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          UiHelper.getNavItem(label: "Home", icon: Icons.home_outlined, callback: (){
-            controller.navSelectedIndex.value = 0;
-          }),
-          UiHelper.getNavItem(label: "Search", icon: Icons.search, callback: (){
-            controller.navSelectedIndex.value = 1;
-          }),
-          UiHelper.getNavItem(label: "Insights", icon: Icons.insights, callback: (){
-            controller.navSelectedIndex.value = 2;
-          }),
-          UiHelper.getNavItem(label: "Services", icon: Icons.design_services, callback: (){
-            controller.navSelectedIndex.value = 3;
-          }),
-          UiHelper.getNavItem(label: "Shortlist", icon: Icons.list, callback: (){
-            controller.navSelectedIndex.value = 4;
-          }),
-        ],
+      padding: EdgeInsets.symmetric(horizontal: 25),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.black, width: 2))
+      ),
+      child: Obx(
+        ()=> Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            UiHelper.getNavItem(label: "Home", icon: Icons.home_outlined, callback: (){
+              controller.navSelectedIndex.value = 0;
+            }, selected: controller.navSelectedIndex.value == 0),
+            UiHelper.getNavItem(label: "Search", icon: Icons.search, callback: (){
+              controller.navSelectedIndex.value = 1;
+            }, selected: controller.navSelectedIndex.value == 1),
+            UiHelper.getNavItem(label: "Insights", icon: Icons.insights, callback: (){
+              controller.navSelectedIndex.value = 2;
+            }, selected: controller.navSelectedIndex.value == 2),
+            UiHelper.getNavItem(label: "Services", icon: Icons.design_services, callback: (){
+              controller.navSelectedIndex.value = 3;
+            }, selected: controller.navSelectedIndex.value == 3),
+            UiHelper.getNavItem(label: "Shortlist", icon: Icons.list, callback: (){
+              controller.navSelectedIndex.value = 4;
+            }, selected: controller.navSelectedIndex.value == 4),
+          ],
+        ),
       ),
     );
   }
