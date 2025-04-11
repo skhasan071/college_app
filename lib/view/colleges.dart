@@ -2,42 +2,31 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/filter.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
-import 'package:college_app/services/college_services.dart';
-import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../model/college.dart';
-import '../view_model/profile_controller.dart';
-
-class Colleges extends StatefulWidget {
+class Colleges extends StatelessWidget {
   Colleges({super.key});
 
-  @override
-  State<Colleges> createState() => _CollegesState();
-}
-
-class _CollegesState extends State<Colleges> {
-
   var controller = Get.find<Controller>();
-  var profile = Get.find<ProfileController>();
 
-  List<College> states = [];
-  List<College> cities = [];
-  List<College> rankings = [];
-  List<College> countries = [];
-  List<College> private = [];
-  List<College> public = [];
-
-  @override
-  void initState() {
-
-    super.initState();
-
-    getColleges();
-
-  }
+  final List<Map<String, dynamic>> colleges = [
+    {
+      'name': 'IIT Delhi - Indian Institute of Technology',
+      'courses': 18,
+      'fees': '₹2.97 L - 6.87 L',
+      'location': 'Delhi',
+      'ranking': '27',
+    },
+    {
+      'name': 'IIT Bombay',
+      'courses': 22,
+      'fees': '₹3.10 L - 7.20 L',
+      'location': 'Mumbai',
+      'ranking': '15',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -60,18 +49,18 @@ class _CollegesState extends State<Colleges> {
                 ),
               ),
 
-              _buildSection("Colleges Based on NIRF Ranking", rankings),
+              _buildSection("Colleges Based on NIRF Ranking", colleges),
 
               _buildBox(
                 title: "Which colleges match your preferences?",
                 buttonText: "Predict My College",
               ),
 
-              _buildSection("Colleges Based on Location", countries),
-              _buildSection("Colleges Based on State", states),
-              _buildSection("Colleges Based on City", cities),
-              _buildSection("Popular Government Colleges", private),
-              _buildSection("Popular Private Colleges", private),
+              _buildSection("Colleges Based on Location", colleges),
+              _buildSection("Colleges Based on State", colleges),
+              _buildSection("Colleges Based on City", colleges),
+              _buildSection("Popular Government Colleges", colleges),
+              _buildSection("Popular Private Colleges", colleges),
 
               _buildBox(
                 title: "Want the latest insights on colleges?",
@@ -86,7 +75,7 @@ class _CollegesState extends State<Colleges> {
     );
   }
 
-  Widget _buildSection(String title, List<College> data) {
+  Widget _buildSection(String title, List<Map<String, dynamic>> data) {
     final ScrollController scrollController = ScrollController();
 
     return Column(
@@ -133,11 +122,11 @@ class _CollegesState extends State<Colleges> {
             itemCount: data.length,
             itemBuilder:
                 (context, index) => CardStructure(
-                  collegeName: data[index].name,
-                  coursesCount: 12,
-                  feeRange: "Fees",
-                  location: data[index].country,
-                  ranking: data[index].ranking.toString(),
+                  collegeName: data[index]['name'],
+                  coursesCount: data[index]['courses'],
+                  feeRange: data[index]['fees'],
+                  location: data[index]['location'],
+                  ranking: data[index]['ranking'],
                 ),
           ),
         ),
@@ -217,17 +206,4 @@ class _CollegesState extends State<Colleges> {
       ),
     );
   }
-
-  Future<void> getColleges() async {
-
-    states = await CollegeServices.filterCollegesByStream(stream: "Engineering", state: "Maharashtra");
-    cities = await CollegeServices.filterCollegesByStream(stream: "Engineering", city: "Mumbai");
-    countries = await CollegeServices.filterCollegesByStream(stream: "Engineering", country: "India");
-    rankings = await CollegeServices.filterCollegesByRanking(stream: "Engineering");
-    private = await StudentService.getPrivateCollegesByInterest(profile.profile.value!.id);
-
-    setState(() {});
-
-  }
-
 }
