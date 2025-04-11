@@ -43,7 +43,6 @@ class SelectionPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // 🔍 Search Bar
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: TextField(
@@ -59,7 +58,6 @@ class SelectionPage extends StatelessWidget {
               ),
             ),
 
-            // 📍 Search by Location
             buildGridSection(
               "Search by Location",
               locations,
@@ -69,11 +67,9 @@ class SelectionPage extends StatelessWidget {
             ),
             SizedBox(height: 24),
 
-            // 📚 Search by Streams
             buildStreamSection("Search by Streams", streams),
             SizedBox(height: 24),
 
-            // 🌍 Search by Country
             buildGridSection(
               "Search by Country",
               countries,
