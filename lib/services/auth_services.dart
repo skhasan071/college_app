@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:college_app/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
 
-  static const String baseUrl = 'http://localhost:8080/api/auth/students';
+  static const String baseUrl = 'http://localhost:8080/api/students/student';
 
   // 🔹 Register Student
   static Future<Map<String, dynamic>> registerStudent(String name, String email, String password) async {
@@ -27,7 +28,7 @@ class AuthService {
           "success": true,
           "message": data['message'],
           "token": data['token'],
-          "student": data['data'],
+          "student": Student.fromMap(data['data']),
         };
       } else {
         final data = jsonDecode(response.body);
@@ -61,7 +62,7 @@ class AuthService {
           "success": true,
           "message": data['message'],
           "token": data['token'],
-          "student": data['data'],
+          "student": Student.fromMap(data['data']),
         };
       } else {
         final data = jsonDecode(response.body);

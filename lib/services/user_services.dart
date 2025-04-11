@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:college_app/model/user.dart';
+import 'package:college_app/view/colleges.dart';
 import 'package:http/http.dart' as http;
+
+import '../model/college.dart';
 
 class StudentService {
   static const String _baseUrl = 'http://localhost:8080/api/students';
-
   /// Add or update student profile
-  static Future<Map<String, dynamic>?> addOrUpdateStudent({required String token, required String mobileNumber, required String studyingIn, required String city, required String gender, required String dob, String? passedIn, File? imageFile,}) async {
-    final uri = Uri.parse('$_baseUrl/add-or-update');
+  static Future<Map<String, dynamic>?> addOrUpdateStudent({required String token, required String mobileNumber, required String studyingIn, required String city, String? gender, String? dob, required String passedIn, File? imageFile,}) async {
+    final uri = Uri.parse('$_baseUrl/add');
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -19,11 +22,9 @@ class StudentService {
     request.fields['mobileNumber'] = mobileNumber;
     request.fields['studyingIn'] = studyingIn;
     request.fields['city'] = city;
-    request.fields['gender'] = gender;
-    request.fields['dob'] = dob;
-    if (passedIn != null) {
-      request.fields['passedIn'] = passedIn;
-    }
+    if(gender != null) request.fields['gender'] = gender;
+    if(dob != null) request.fields['dob'] = dob;
+    request.fields['passedIn'] = passedIn;
 
     // Image file (optional)
     if (imageFile != null) {
@@ -100,21 +101,26 @@ class StudentService {
     }
   }
 
-  static Future<List<dynamic>?> getFavoriteColleges(String studentId) async {
+  static Future<List<College>> getFavoriteColleges(String studentId) async {
     try {
       final uri = Uri.parse('http://localhost:8080/api/students/favorites/$studentId');
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['favorites']; // This should be a list of college objects
+        final favoritesList = data['favorites'] as List<dynamic>;
+
+        // Convert each favorite map to a Student object
+        final students = favoritesList.map((item) => College.fromMap(item)).toList();
+
+        return students;// This should be a list of college objects
       } else {
         print("❌ Failed to retrieve favorites: ${response.body}");
-        return null;
+        return [];
       }
     } catch (e) {
       print("❌ Exception in getFavoriteColleges: $e");
-      return null;
+      return [];
     }
   }
 
@@ -164,7 +170,7 @@ class StudentService {
     }
   }
 
-  static Future<List<dynamic>> getPrivateCollegesByInterest(String studentId) async {
+  static Future<List<College>> getPrivateCollegesByInterest(String studentId) async {
     try {
       final uri = Uri.parse('http://localhost:8080/api/students/private-colleges-by-interest');
 
@@ -177,7 +183,12 @@ class StudentService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         print("✅ Private colleges retrieved successfully");
-        return data['colleges']; // List of college objects
+        final favoritesList = data['colleges'] as List<dynamic>;
+
+        // Convert each favorite map to a Student object
+        final students = favoritesList.map((item) => College.fromMap(item)).toList();
+
+        return students;// This should be a list of college objects
       } else {
         print("❌ Failed to fetch private colleges: ${response.body}");
         return [];

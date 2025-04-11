@@ -1,12 +1,14 @@
+import 'package:college_app/services/auth_services.dart';
 import 'package:college_app/view/signuppage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../services/google_signin_api.dart';
+import '../view_model/profile_controller.dart';
 import 'emailverification.dart';
 import 'home_page.dart';
 import 'mobilenoauth.dart';
@@ -24,15 +26,35 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
+  var profile = Get.put(ProfileController());
 
-  void _handleLogin() {
+  Future<bool> _handleLogin() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      Navigator.pushReplacement(context, MaterialPageRoute (
-          builder: (context) =>  HomePage()),
-      );
+
+      Map<String, dynamic> msgs = await AuthService.loginStudent(email, password);
+
+      if(msgs['success']){
+
+        print(msgs['token']);
+        profile.profile.value = msgs['student'];
+        profile.userToken.value = msgs['token'];
+        return true;
+
+      }else{
+        String string = msgs['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(string,),
+            backgroundColor: Colors.purple,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return false;
+      }
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -41,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
           duration: Duration(seconds: 2),
         ),
       );
+      return false;
     }
   }
 
@@ -134,7 +157,14 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2)),
                 ),
-                onPressed: _handleLogin,
+                onPressed: () async {
+                  bool isLogged = await _handleLogin();
+                  if(isLogged){
+                    Navigator.pushReplacement(context, MaterialPageRoute (
+                        builder: (context) =>  HomePage()),
+                    );
+                  }
+                },
                 child: const Text("Login",
                     style: TextStyle(color: Colors.white, fontSize: 18)),
               ),
@@ -240,7 +270,6 @@ class _LoginPageState extends State<LoginPage> {
     final user = await GoogleSignInApi.login();
 
     if (user == null) {
-
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
       print("failed");
     } else {
@@ -282,6 +311,7 @@ class _LoginPageState extends State<LoginPage> {
             SnackBar(content: Text("Error checking user"))
         );
       }
-    }   }
 
+    }
+  }
 }

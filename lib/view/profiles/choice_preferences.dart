@@ -12,6 +12,7 @@ class CoursePreferencesPage extends StatefulWidget {
 }
 
 class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
+
   final List<String> streams = [
     'Engineering', 'Management', 'Arts', 'Science', 'Law',
     'Medicine', 'Design', 'Humanities'
