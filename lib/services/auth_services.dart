@@ -74,4 +74,5 @@ class AuthService {
       return {"success": false, "message": e.toString()};
     }
   }
+
 }

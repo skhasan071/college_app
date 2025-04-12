@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../services/google_signin_api.dart';
@@ -41,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
         print(msgs['token']);
         profile.profile.value = msgs['student'];
         profile.userToken.value = msgs['token'];
+        saveToken(msgs['token']);
         return true;
 
       }else{
@@ -311,7 +313,13 @@ class _LoginPageState extends State<LoginPage> {
             SnackBar(content: Text("Error checking user"))
         );
       }
-
     }
   }
+
+  // Store token
+  Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('authEmailToken', token);
+  }
+
 }
