@@ -9,8 +9,9 @@ class College {
   final String image;
   final String collegeInfo;
   final String stream; // Expected values: "Engineering", "Medical", etc.
-  final String type;   // Expected values: "Private", "Government"
-
+  final String type; // Expected values: "Private", "Government"
+  final int courseCount;
+  final int fees;
   College({
     required this.id,
     required this.name,
@@ -23,6 +24,8 @@ class College {
     required this.collegeInfo,
     required this.stream,
     required this.type,
+    required this.courseCount,
+    required this.fees,
   });
 
   factory College.fromMap(Map<String, dynamic> map) {
@@ -38,6 +41,8 @@ class College {
       collegeInfo: map['collegeInfo'] ?? '',
       stream: map['stream'] ?? '',
       type: map['type'] ?? '',
+      courseCount: map['courseCount'] ?? '',
+      fees: map['fees'] ?? '',
     );
   }
 
@@ -54,6 +59,8 @@ class College {
       'collegeInfo': collegeInfo,
       'stream': stream,
       'type': type,
+      'courseCount': courseCount,
+      'fees': fees,
     };
   }
 }

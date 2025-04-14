@@ -7,14 +7,32 @@ class CompareWith extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> dummyColleges = List.generate(4, (index) {
-      return {
+    final List<Map<String, String>> dummyColleges = [
+      {
         "name": "IIT Bombay",
-        "location": "Bombay",
+        "state": "Maharashtra",
         "description":
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.",
-      };
-    });
+      },
+      {
+        "name": "IIT Delhi",
+        "state": "Delhi",
+        "description":
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.",
+      },
+      {
+        "name": "IIT Madras",
+        "state": "Tamil Nadu",
+        "description":
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.",
+      },
+      {
+        "name": "IIT Kanpur",
+        "state": "Uttar Pradesh",
+        "description":
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.",
+      },
+    ];
 
     return Scaffold(
       body: Padding(
@@ -61,7 +79,7 @@ class CompareWith extends StatelessWidget {
                   child: Container(
                     height: 36,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
+                      border: Border.all(color: Colors.black),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
@@ -74,6 +92,7 @@ class CompareWith extends StatelessWidget {
                               hintText: "Search",
                               hintStyle: TextStyle(fontSize: 13),
                               border: InputBorder.none,
+
                               isDense: true,
                             ),
                           ),
@@ -87,7 +106,7 @@ class CompareWith extends StatelessWidget {
                   height: 36,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: Colors.black),
                   ),
                   child: Row(
                     children: [
@@ -116,37 +135,29 @@ class CompareWith extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            const CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.grey,
-                              child: Icon(
-                                Icons.image,
-                                size: 27,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  college["name"]!,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 19,
-                                  ),
-                                ),
-                                Text(
-                                  college["location"]!,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            const Icon(Icons.more_vert),
-                          ],
+                        const CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.grey,
+                          child: Icon(
+                            Icons.image,
+                            size: 31,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          college["name"]!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 21,
+                          ),
+                        ),
+                        Text(
+                          college["state"]!,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -154,23 +165,19 @@ class CompareWith extends StatelessWidget {
                           style: const TextStyle(fontSize: 15),
                         ),
                         const SizedBox(height: 12),
-                        Center(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: UiHelper.getSecondaryBtn(
-                              title: "Select to Compare",
-                              callback: () {},
-                            ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: UiHelper.getSecondaryBtn(
+                            title: "Select to Compare",
+                            callback: () {},
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Center(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: UiHelper.getPrimaryBtn(
-                              title: "View Details",
-                              callback: () {},
-                            ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: UiHelper.getPrimaryBtn(
+                            title: "View Details",
+                            callback: () {},
                           ),
                         ),
                       ],

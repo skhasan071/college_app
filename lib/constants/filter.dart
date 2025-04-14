@@ -19,7 +19,7 @@ class Filter extends StatelessWidget {
       return GestureDetector(
         onTap: () {
           controller.selectFilter(title);
-          if (onTap != null) onTap!(); // Optional callback if needed
+          if (onTap != null) onTap!();
         },
         child: Container(
           margin: const EdgeInsets.only(right: 8),

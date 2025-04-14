@@ -93,12 +93,15 @@ class CompareColleges extends StatelessWidget {
           child: const Center(child: Icon(Icons.image, size: 40)),
         ),
         const SizedBox(height: 6),
-        Text(
-          name,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+        SizedBox(
+          height: 70,
+          child: Text(
+            name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );
@@ -140,7 +143,7 @@ class CompareColleges extends StatelessWidget {
               ),
             ),
             Container(width: 1, color: Colors.black),
-            // Right column (white/default)
+
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
