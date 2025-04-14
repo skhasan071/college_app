@@ -1,11 +1,33 @@
 import 'package:college_app/constants/colors.dart';
+import 'package:college_app/model/college.dart';
+import 'package:college_app/services/college_services.dart';
+import 'package:college_app/services/user_services.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/card.dart';
 import 'package:college_app/view/colleges.dart';
-import 'package:college_app/constants/filter.dart'; // Make sure Filter widget is in this file
+import 'package:college_app/constants/filter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart'; // Make sure Filter widget is in this file
 
-class ShortlistedCollegesPage extends StatelessWidget {
-  const ShortlistedCollegesPage({super.key});
+class ShortlistedCollegesPage extends StatefulWidget {
+  ShortlistedCollegesPage({super.key});
+
+  @override
+  State<ShortlistedCollegesPage> createState() => _ShortlistedCollegesPageState();
+}
+
+class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
+
+  List<College> colleges = [];
+
+  var profile = Get.find<ProfileController>();
+
+  @override
+  void initState() {
+    super.initState();
+    getColleges();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,24 +124,34 @@ class ShortlistedCollegesPage extends StatelessWidget {
 
             // College Cards
             Column(
-              children: List.generate(
-                5,
-                (index) => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: CardStructure(
-                    width: double.infinity,
-                    collegeName: 'IIT Delhi - Indian Institute of Technology',
-                    coursesCount: 18,
-                    feeRange: '₹2.97 L - 6.87 L',
-                    location: 'Delhi',
-                    ranking: '27',
-                  ),
-                ),
-              ),
+              children: [
+                ListView.builder(itemBuilder: (context, index){
+
+                  College clg = colleges[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: CardStructure(
+                      width: double.infinity,
+                      collegeName: clg.name,
+                      coursesCount: 10,
+                      feeRange: '₹2.97 L - 6.87 L',
+                      location: clg.country,
+                      ranking: clg.ranking.toString(),
+                    ),
+                  );
+                }, itemCount: colleges.length,),
+              ]
             ),
           ],
         ),
       ),
     );
   }
+
+  Future<void> getColleges() async {
+    colleges = await StudentService.getFavoriteColleges(profile.profile.value!.id);
+    setState(() {});
+  }
+
 }

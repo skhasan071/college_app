@@ -1,4 +1,6 @@
+import 'package:college_app/view/login.dart';
 import 'package:college_app/view/profiles/choice_preferences.dart';
+import 'package:college_app/view/signuppage.dart';
 import 'package:flutter/material.dart';
 
 class Firstpage extends StatelessWidget {
@@ -45,7 +47,9 @@ class Firstpage extends StatelessWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> SignupPage()));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
@@ -63,7 +67,9 @@ class Firstpage extends StatelessWidget {
                 width: double.infinity,
                 height: 48,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+                  },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black,
                     backgroundColor: Colors.white,

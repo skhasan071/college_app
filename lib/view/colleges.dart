@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 class Colleges extends StatelessWidget {
   Colleges({super.key});
 
-  var controller = Get.put(Controller());
+  var controller = Get.find<Controller>();
 
   final List<Map<String, dynamic>> colleges = [
     {

@@ -1,7 +1,11 @@
+import 'package:college_app/view/profiles/complete_profile_page.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../services/auth_services.dart';
 import '../services/google_signin_api.dart';
 import 'home_page.dart';
 import 'login.dart';
@@ -20,6 +24,48 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
+  var profile = Get.put(ProfileController());
+
+  Future<bool> _handleSignUp() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String name = fullNameController.text.trim();
+
+    if (email.isNotEmpty && password.isNotEmpty) {
+
+      Map<String, dynamic> msgs = await AuthService.registerStudent("Hasan", email, password);
+
+      if(msgs['success']){
+
+        print(msgs['token']);
+        profile.profile.value = msgs['student'];
+        profile.userToken.value = msgs['token'];
+        print(profile.profile.value!.email + "------------------------");
+        return true;
+
+      }else{
+        String string = msgs['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(string,),
+            backgroundColor: Colors.purple,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return false;
+      }
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill in both fields"),
+          backgroundColor: Colors.purple,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,12 +139,18 @@ class _SignupPageState extends State<SignupPage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2)),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginPage()),
-                  );
+                onPressed: () async {
+
+                  bool isSigned = await _handleSignUp();
+
+                  if(isSigned){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CompleteProfilePage()),
+                    );
+                  }
+
                 },
                 child: const Text("Sign Up",
                     style: TextStyle(color: Colors.white, fontSize: 18)),
