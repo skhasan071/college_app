@@ -5,7 +5,7 @@ import 'package:college_app/view_model/searchController.dart';
 class SelectionPage extends StatelessWidget {
   final controller = Get.put(SelectionController());
 
-  final List<String> locations = [
+  final List<String> states = [
     'Delhi',
     'Maharastra',
     'Benguluru',
@@ -23,7 +23,6 @@ class SelectionPage extends StatelessWidget {
     'Medicine',
     'Design',
     'Humanities',
-    'Others',
   ];
 
   final List<String> countries = [
@@ -40,12 +39,12 @@ class SelectionPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: ListView(
           children: [
-            // 🔍 Search Bar
             Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: EdgeInsets.symmetric(vertical: 16),
+
               child: TextField(
                 decoration: InputDecoration(
                   hintText: "Search here...",
@@ -59,21 +58,18 @@ class SelectionPage extends StatelessWidget {
               ),
             ),
 
-            // 📍 Search by Location
             buildGridSection(
-              "Search by Location",
-              locations,
+              "Search by States",
+              states,
               controller.selectedLocations,
               controller.toggleLocation,
               isGreyBox: true,
             ),
             SizedBox(height: 24),
 
-            // 📚 Search by Streams
             buildStreamSection("Search by Streams", streams),
             SizedBox(height: 24),
 
-            // 🌍 Search by Country
             buildGridSection(
               "Search by Country",
               countries,
@@ -124,7 +120,10 @@ class SelectionPage extends StatelessWidget {
                                 ? Border.all(color: Colors.black, width: 2)
                                 : null,
                       ),
-                      child: Text(item, style: TextStyle(color: Colors.black)),
+                      child: Text(
+                        item,
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
                     ),
                   );
                 }).toList(),
@@ -138,16 +137,17 @@ class SelectionPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
         ),
-        SizedBox(height: 12),
-        Container(
-          padding: EdgeInsets.all(10),
-          color: Colors.grey[300],
-          child: Obx(
-            () => Wrap(
+        Obx(
+          () => Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Wrap(
               spacing: 8,
               runSpacing: 8,
               children:
@@ -158,9 +158,10 @@ class SelectionPage extends StatelessWidget {
                     return GestureDetector(
                       onTap: () => controller.toggleStream(item),
                       child: Container(
-                        width: 100,
-                        height: 50,
-                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
                           color: isSelected ? Colors.black : Colors.transparent,
                           border: Border.all(color: Colors.black),
@@ -169,6 +170,7 @@ class SelectionPage extends StatelessWidget {
                           item,
                           style: TextStyle(
                             color: isSelected ? Colors.white : Colors.black,
+                            fontSize: 16,
                           ),
                         ),
                       ),

@@ -1,20 +1,19 @@
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/view/college_predictor_page.dart';
-import 'package:college_app/view/colleges.dart';
+import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:college_app/view/drawer.dart';
 import 'package:college_app/view/predicted_college.dart';
 import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:college_app/view/profiles/profile_page.dart';
-import 'package:college_app/view/searchPage.dart';
-import 'package:college_app/view/shortlistCollegePage.dart';
+import 'package:college_app/view/Filters&Compare/searchPage.dart';
+import 'package:college_app/view/Filters&Compare/shortlistCollegePage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../view_model/controller.dart';
 
-class HomePage extends StatefulWidget{
-
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
   @override
@@ -22,7 +21,6 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-
   var controller = Get.put(Controller());
 
   List<Widget> screens = [
@@ -39,7 +37,12 @@ class _HomePageState extends State<HomePage> {
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(child: Text("Insights", style: TextStyle(color: Colors.black, fontSize: 24),)),
+      child: Center(
+        child: Text(
+          "Insights",
+          style: TextStyle(color: Colors.black, fontSize: 24),
+        ),
+      ),
     ),
     SizedBox(
       height: double.infinity,
@@ -67,21 +70,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       key: scaffoldKey,
 
       backgroundColor: Colors.white,
 
       appBar: getAppBar(),
 
-      body: Obx(()=> screens[controller.navSelectedIndex.value]),
+      body: Obx(() => screens[controller.navSelectedIndex.value]),
 
       drawer: DrawerWidget(),
 
       bottomNavigationBar: getBottomNavBar(),
-
     );
   }
 
@@ -104,11 +104,21 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      IconButton(onPressed: (){
-                        scaffoldKey.currentState?.openDrawer();
-                      }, icon: Icon(Icons.menu, color: Colors.black,)),
-                      SizedBox(width: 10,),
-                      Text("TalentConnect", style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),)
+                      IconButton(
+                        onPressed: () {
+                          scaffoldKey.currentState?.openDrawer();
+                        },
+                        icon: Icon(Icons.menu, color: Colors.black),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "TalentConnect",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -130,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                         icon: Icon(Icons.notifications, color: Colors.black),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           controller.navSelectedIndex.value = 5;
                         },
                         child: Container(
@@ -144,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -153,37 +163,61 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget getBottomNavBar(){
+  Widget getBottomNavBar() {
     return Container(
       width: double.infinity,
       height: 80,
       padding: EdgeInsets.symmetric(horizontal: 25),
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.black, width: 2))
+        border: Border(top: BorderSide(color: Colors.black, width: 2)),
       ),
       child: Obx(
-        ()=> Row(
+        () => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            UiHelper.getNavItem(label: "Home", icon: Icons.home_outlined, callback: (){
-              controller.navSelectedIndex.value = 0;
-            }, selected: controller.navSelectedIndex.value == 0),
-            UiHelper.getNavItem(label: "Search", icon: Icons.search, callback: (){
-              controller.navSelectedIndex.value = 1;
-            }, selected: controller.navSelectedIndex.value == 1),
-            UiHelper.getNavItem(label: "Insights", icon: Icons.insights, callback: (){
-              controller.navSelectedIndex.value = 2;
-            }, selected: controller.navSelectedIndex.value == 2),
-            UiHelper.getNavItem(label: "Services", icon: Icons.design_services, callback: (){
-              controller.navSelectedIndex.value = 3;
-            }, selected: controller.navSelectedIndex.value == 3),
-            UiHelper.getNavItem(label: "Shortlist", icon: Icons.list, callback: (){
-              controller.navSelectedIndex.value = 4;
-            }, selected: controller.navSelectedIndex.value == 4),
+            UiHelper.getNavItem(
+              label: "Home",
+              icon: Icons.home_outlined,
+              callback: () {
+                controller.navSelectedIndex.value = 0;
+              },
+              selected: controller.navSelectedIndex.value == 0,
+            ),
+            UiHelper.getNavItem(
+              label: "Search",
+              icon: Icons.search,
+              callback: () {
+                controller.navSelectedIndex.value = 1;
+              },
+              selected: controller.navSelectedIndex.value == 1,
+            ),
+            UiHelper.getNavItem(
+              label: "Insights",
+              icon: Icons.insights,
+              callback: () {
+                controller.navSelectedIndex.value = 2;
+              },
+              selected: controller.navSelectedIndex.value == 2,
+            ),
+            UiHelper.getNavItem(
+              label: "Services",
+              icon: Icons.design_services,
+              callback: () {
+                controller.navSelectedIndex.value = 3;
+              },
+              selected: controller.navSelectedIndex.value == 3,
+            ),
+            UiHelper.getNavItem(
+              label: "Shortlist",
+              icon: Icons.list,
+              callback: () {
+                controller.navSelectedIndex.value = 4;
+              },
+              selected: controller.navSelectedIndex.value == 4,
+            ),
           ],
         ),
       ),
     );
   }
-
 }
