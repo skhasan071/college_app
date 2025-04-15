@@ -18,6 +18,7 @@ class CollegeDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Icon(Icons.arrow_back),
         actions: [
           Obx(
             () => InkWell(
@@ -97,6 +98,7 @@ class CollegeDetail extends StatelessWidget {
           // Tab Bar
           TabBar(
             isScrollable: true,
+            tabAlignment: TabAlignment.start,
             controller: tabController.tabController,
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,

@@ -1,4 +1,4 @@
-import 'package:college_app/view/Filters&Compare/collegeDetail.dart';
+import 'package:college_app/view/DetailPage/collegeDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/colors.dart';
