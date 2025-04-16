@@ -35,10 +35,20 @@ class _ReviewsState extends State<Reviews> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reviews & Ratings"),
+        elevation: 3,
+        title: const Text(
+          "Reviews & Ratings",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        leading: const Icon(Icons.arrow_back),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -88,7 +98,9 @@ class _ReviewsState extends State<Reviews> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
 
             // Rating distribution
             _buildRatingBar("5 star", 75),
@@ -101,6 +113,9 @@ class _ReviewsState extends State<Reviews> {
             const SizedBox(height: 8),
             _buildRatingBar("1 star", 2),
             const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
 
             // Dynamic review list
             ..._reviews.map((review) {
@@ -265,7 +280,6 @@ class _ReviewsState extends State<Reviews> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            backgroundColor: Colors.grey.shade300,
             radius: 30,
             child: Icon(Icons.person, color: Colors.black, size: 36),
           ),

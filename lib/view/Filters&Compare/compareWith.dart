@@ -1,3 +1,5 @@
+import 'package:college_app/view/DetailPage/collegeDetail.dart';
+import 'package:college_app/view/Filters&Compare/compareCollege.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/ui_helper.dart';
@@ -169,7 +171,14 @@ class CompareWith extends StatelessWidget {
                           width: double.infinity,
                           child: UiHelper.getSecondaryBtn(
                             title: "Select to Compare",
-                            callback: () {},
+                            callback: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CompareColleges(),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -177,7 +186,9 @@ class CompareWith extends StatelessWidget {
                           width: double.infinity,
                           child: UiHelper.getPrimaryBtn(
                             title: "View Details",
-                            callback: () {},
+                            callback: () {
+                              Navigator.pop(context);
+                            },
                           ),
                         ),
                       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:college_app/model/course.dart';
+import 'package:get/get.dart';
 
 class Courses extends StatelessWidget {
   const Courses({super.key});
@@ -34,12 +35,18 @@ class Courses extends StatelessWidget {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 3,
           title: const Text(
             'Courses & Fees',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          leading: const Icon(Icons.arrow_back),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,9 +135,14 @@ class Courses extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          Text(
-            'Oxford University',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          // 🔥 Wrap with Expanded
+          Expanded(
+            child: Text(
+              'Oxford University',
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+            ),
           ),
         ],
       ),
