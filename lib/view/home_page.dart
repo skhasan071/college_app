@@ -1,4 +1,5 @@
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/view/blog_page.dart';
 import 'package:college_app/view/college_predictor_page.dart';
 import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:college_app/view/drawer.dart';
@@ -37,12 +38,7 @@ class _HomePageState extends State<HomePage> {
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(
-        child: Text(
-          "Insights",
-          style: TextStyle(color: Colors.black, fontSize: 24),
-        ),
-      ),
+      child: BlogPage(),
     ),
     SizedBox(
       height: double.infinity,

@@ -127,20 +127,23 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                 ListView.builder(
                   itemBuilder: (context, index) {
                     College clg = colleges[index];
-
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: CardStructure(
                         width: double.infinity,
+                        collegeID: clg.id,
                         collegeName: clg.name,
                         coursesCount: 10,
                         feeRange: '₹2.97 L - 6.87 L',
                         state: clg.country,
                         ranking: clg.ranking.toString(),
+                        studId: profile.profile.value!.id,
+                        clgId: clg.id,
                       ),
                     );
                   },
                   itemCount: colleges.length,
+                  shrinkWrap: true,
                 ),
               ],
             ),
@@ -152,7 +155,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
 
   Future<void> getColleges() async {
     colleges = await StudentService.getFavoriteColleges(
-      profile.profile.value!.id,
+        profile.profile.value!.id
     );
     setState(() {});
   }

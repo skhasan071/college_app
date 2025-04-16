@@ -14,7 +14,7 @@ class CollegeServices {
 
   /// Get all colleges
   static Future<List<College>> getColleges() async {
-    final url = Uri.parse(_baseUrl);
+    final url = Uri.parse('${_baseUrl}all');
 
     try {
       final response = await http.get(url);
@@ -23,7 +23,7 @@ class CollegeServices {
         final List<dynamic> jsonData = json.decode(response.body);
         return jsonData.map((e) => College.fromMap(e)).toList();
       } else {
-        print('Error fetching colleges: ${response.statusCode}');
+        print('Error fetching colleges: ${response.statusCode} == ${response.body}');
         return [];
       }
     } catch (e) {

@@ -1,10 +1,30 @@
+import 'package:college_app/model/user.dart';
+import 'package:college_app/services/user_services.dart';
+import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view/login.dart';
 import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:college_app/view/signuppage.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
-class Firstpage extends StatelessWidget {
+class Firstpage extends StatefulWidget {
   const Firstpage({super.key});
+
+  @override
+  State<Firstpage> createState() => _FirstpageState();
+}
+
+class _FirstpageState extends State<Firstpage> {
+
+  var profile = Get.put(ProfileController());
+
+  @override
+  void initState() {
+    super.initState();
+    getStud();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +107,7 @@ class Firstpage extends StatelessWidget {
               const SizedBox(height: 20),
               InkWell(
                 onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CoursePreferencesPage()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
                 },
                 child: const Text(
                   "Continue as Guest",
@@ -103,5 +123,9 @@ class Firstpage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> getStud() async {
+    profile.profile.value = await StudentService().fetchStudentById("67f9af13c6a8979472284f41");
   }
 }
