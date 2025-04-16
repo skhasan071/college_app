@@ -190,13 +190,16 @@ class _LoginPageState extends State<LoginPage> {
                   elevation: 2,
                 ),
                 onPressed: () async {
-                  bool isLogged = await login(); // Calling signIn method properly with async
-                  if (isLogged) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage())
-                    );
-                  }
+                  signIn2();
+
+                  // bool isLogged = await login(); // Calling signIn method properly with async
+                  // if (isLogged) {
+                  //   print("hello");
+                  //   Navigator.pushReplacement(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => HomePage())
+                  //   );
+                  // }
                 },
                 icon: Image.asset(
                   'assets/gmail-logo.jpg',
@@ -243,109 +246,145 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  Future signIn() async {
-    final user = await GoogleSignInApi.login();
-
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Signin Failed")),
-      );
-      print("Signin failed");
-    } else {
-      // Get ID token for web
-      final auth = await user.authentication;
-      final idToken = auth.idToken;
-
-      // Print the ID token for debugging
-      print("ID Token: $idToken");
-
-      // Get the email from the signed-in user
-      final String email = user.email;
-
-      // Send email and ID token to the backend
-      final response = await http.post(
-        Uri.parse("http://localhost:4000/auth/google-auth"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "idToken": idToken,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        print("Successful");
-        final data = jsonDecode(response.body);
-
-        // Check if user needs to be redirected
-        // Navigate to the Dashboard page
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomePage()));
-        }
-       else {
-        print(jsonDecode(response.body));
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error checking user")),
-        );
-      }
-    }
-  }
-
-  Future<bool> login() async {
-    final user = await GoogleSignIn().signIn();  // Signing in with Google
-    GoogleSignInAuthentication userAuth = await user!.authentication;  // Getting the authentication details
-    print("ID Token: ${userAuth.idToken}");
-    var credential = GoogleAuthProvider.credential(  // Creating credentials using the idToken and accessToken
-      idToken: userAuth.idToken,
-      accessToken: userAuth.accessToken,
-    );
-
-    await FirebaseAuth.instance.signInWithCredential(credential);  // Signing into Firebase using the credentials
-    return FirebaseAuth.instance.currentUser != null;  // Returns true if the user is logged in, else false
-
-  }
-
-// Future signIn() async {
+  // Future signIn() async {
   //   final user = await GoogleSignInApi.login();
   //
   //   if (user == null) {
-  //
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
-  //     print("failed");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Signin Failed")),
+  //     );
+  //     print("Signin failed");
   //   } else {
+  //     // Get ID token for web
+  //     final auth = await user.authentication;
+  //     final idToken = auth.idToken;
+  //
+  //     // Print the ID token for debugging
+  //     print("ID Token: $idToken");
+  //
   //     // Get the email from the signed-in user
   //     final String email = user.email;
   //
-  //
-  //
-  //     // Send the email to the backend to check if it's already in the database
+  //     // Send email and ID token to the backend
   //     final response = await http.post(
   //       Uri.parse("http://localhost:4000/auth/google-auth"),
   //       headers: {"Content-Type": "application/json"},
-  //       body: jsonEncode({"email":email}),
+  //       body: jsonEncode({
+  //         "email": email,
+  //         "idToken": idToken,
+  //       }),
   //     );
   //
   //     if (response.statusCode == 200) {
   //       print("Successful");
   //       final data = jsonDecode(response.body);
   //
-  //       // Check the backend response to see if the user should be redirected
-  //       if (data['redirect']) {
-  //         // If redirect is true, it means the user does not exist
-  //         print("Redirecting to Dashboard (new user)");
-  //
-  //         // Navigate to the Dashboard page for new user
-  //         Navigator.of(context).pushReplacement(
-  //             MaterialPageRoute(builder: (context) => HomePage()) // Replace with actual Dashboard page
-  //         );
+  //       // Check if user needs to be redirected
+  //       // Navigate to the Dashboard page
+  //       Navigator.of(context).pushReplacement(
+  //           MaterialPageRoute(builder: (context) => HomePage()));
   //       }
-  //     } else {
+  //      else {
   //       print(jsonDecode(response.body));
-  //       // If the server returns an error
   //       ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text("Error checking user"))
-  //
-  //  );
+  //         SnackBar(content: Text("Error checking user")),
+  //       );
   //     }
-  //   }   }
+  //   }
+  // }
+  //
+  // Future<bool> login() async {
+  //   print("inside the method.......");
+  //   final user = await GoogleSignIn().signIn();  // Signing in with Google
+  //   GoogleSignInAuthentication userAuth = await user!.authentication;  // Getting the authentication details
+  //   print("ID Token============: ${userAuth.idToken}");
+  //   var credential = GoogleAuthProvider.credential(  // Creating credentials using the idToken and accessToken
+  //     idToken: userAuth.idToken,
+  //     accessToken: userAuth.accessToken,
+  //   );
+  //
+  //   await FirebaseAuth.instance.signInWithCredential(credential);  // Signing into Firebase using the credentials
+  //   return FirebaseAuth.instance.currentUser != null;  // Returns true if the user is logged in, else false
+  //
+  // }
+
+  Future signIn() async {
+    final user = await GoogleSignInApi.login();
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
+      print("Signin failed");
+    } else {
+      // Get the email from the signed-in user
+      final String email = user.email;
+
+      // Send the email to the backend to check if it's already in the database
+      final response = await http.post(
+        Uri.parse("http://localhost:4000/auth/google-auth"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        print("Signin successful");
+        final data = jsonDecode(response.body);
+
+        // Check the backend response to see if the user exists or not
+        if (data['redirect']) {
+          // If redirect is true, it means the user is new or authenticated
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()), // Redirect to HomePage (Dashboard)
+          );
+        }
+      } else {
+        print(jsonDecode(response.body));
+        // If the server returns an error
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error checking user")));
+      }
+    }
+  }
+  Future signIn2() async {
+    try {
+      // Sign in with Google
+      final user = await GoogleSignIn().signIn();
+
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
+        return;
+      }
+
+      // Get the Google SignIn authentication
+      final GoogleSignInAuthentication authentication = await user.authentication;
+
+      // Access the Access Token (and ID Token if needed)
+      final String accessToken = authentication.accessToken!;
+
+      // Send the access token to the backend for verification
+      final response = await http.post(
+        Uri.parse("http://localhost:4000/auth/google-auth"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"accessToken": accessToken}),
+     
+      );
+
+      if (response.statusCode == 200) {
+        print("Signin successful");
+        final data = jsonDecode(response.body);
+        if (data['redirect']) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+      } else {
+        print(jsonDecode(response.body));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error checking user")));
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error during sign-in")));
+    }
+  }
+
+
 
 }

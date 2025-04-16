@@ -12,7 +12,20 @@
           "package_name": "com.TalentConnect.college_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "498011468714-70fpbbe6f60utobpndf5t4op8g1ifa1r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.TalentConnect.college_app",
+            "certificate_hash": "495a490a1252695d4cbf6cf7a1abd4951f1dfa2b"
+          }
+        },
+        {
+          "client_id": "498011468714-tbfibh1ka4t1lcacku9ik3cm8jp9crc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCBpCNVJU4qqKgxQmV3ZHxlhqyoQqUpwDU"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498011468714-tbfibh1ka4t1lcacku9ik3cm8jp9crc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
