@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "498011468714",
+    "project_id": "fir-cf6a2",
+    "storage_bucket": "fir-cf6a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498011468714:android:23fa85f320d2cdd5b1f1d3",
+        "android_client_info": {
+          "package_name": "com.TalentConnect.college_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBpCNVJU4qqKgxQmV3ZHxlhqyoQqUpwDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

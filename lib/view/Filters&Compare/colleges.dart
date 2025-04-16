@@ -2,6 +2,7 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/filter.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
+import 'package:college_app/model/college.dart';
 import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,30 +10,44 @@ import 'package:get/get.dart';
 class Colleges extends StatelessWidget {
   Colleges({super.key});
 
-  var controller = Get.find<Controller>();
+  var controller = Get.put(Controller());
 
-  final List<Map<String, dynamic>> colleges = [
-    {
-      'name': 'IIT Delhi - Indian Institute of Technology',
-      'courses': 18,
-      'fees': '₹2.97 L - 6.87 L',
-      'location': 'Delhi',
-      'ranking': '27',
-    },
-    {
-      'name': 'IIT Bombay',
-      'courses': 22,
-      'fees': '₹3.10 L - 7.20 L',
-      'location': 'Mumbai',
-      'ranking': '15',
-    },
+  final List<College> colleges = [
+    College(
+      id: '1',
+      name: 'IIT Delhi - Indian Institute of Technology',
+      city: '',
+      state: 'Delhi',
+      country: '',
+      ranking: 27,
+      brochure: '',
+      image: '',
+      collegeInfo: '',
+      stream: '',
+      type: '',
+      courseCount: 18,
+      fees: 20000,
+    ),
+    College(
+      id: '2',
+      name: 'IIT Bombay',
+      city: '',
+      state: 'Maharashtra',
+      country: '',
+      ranking: 15,
+      brochure: '',
+      image: '',
+      collegeInfo: '',
+      stream: '',
+      type: '',
+      courseCount: 19,
+      fees: 90000,
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       backgroundColor: Colors.white,
 
       body: SingleChildScrollView(
@@ -42,7 +57,7 @@ class Colleges extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Text(
                   "Hi, Name",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -56,7 +71,7 @@ class Colleges extends StatelessWidget {
                 buttonText: "Predict My College",
               ),
 
-              _buildSection("Colleges Based on Location", colleges),
+              _buildSection("Colleges Based on Country", colleges),
               _buildSection("Colleges Based on State", colleges),
               _buildSection("Colleges Based on City", colleges),
               _buildSection("Popular Government Colleges", colleges),
@@ -66,8 +81,6 @@ class Colleges extends StatelessWidget {
                 title: "Want the latest insights on colleges?",
                 buttonText: "Read Insights",
               ),
-
-              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -75,14 +88,14 @@ class Colleges extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(String title, List<Map<String, dynamic>> data) {
+  Widget _buildSection(String title, List<College> data) {
     final ScrollController scrollController = ScrollController();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -97,7 +110,7 @@ class Colleges extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -115,18 +128,18 @@ class Colleges extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         SizedBox(
-          height: 400,
+          height: 420,
           child: ListView.builder(
             controller: scrollController,
             scrollDirection: Axis.horizontal,
             itemCount: data.length,
             itemBuilder:
                 (context, index) => CardStructure(
-                  collegeName: data[index]['name'],
-                  coursesCount: data[index]['courses'],
-                  feeRange: data[index]['fees'],
-                  location: data[index]['location'],
-                  ranking: data[index]['ranking'],
+                  collegeName: data[index].name,
+                  coursesCount: data[index].courseCount,
+                  feeRange: data[index].fees.toString(),
+                  state: data[index].state,
+                  ranking: data[index].ranking.toString(),
                 ),
           ),
         ),
@@ -174,7 +187,7 @@ class Colleges extends StatelessWidget {
 
   Widget _buildBox({required String title, required String buttonText}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Container(
         height: 200,
         width: double.infinity,
@@ -197,9 +210,12 @@ class Colleges extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.bottomLeft,
-              child: UiHelper.getPrimaryBtn(title: buttonText, callback: () {
-                controller.navSelectedIndex.value = 3;
-              }),
+              child: UiHelper.getPrimaryBtn(
+                title: buttonText,
+                callback: () {
+                  controller.navSelectedIndex.value = 3;
+                },
+              ),
             ),
           ],
         ),

@@ -5,20 +5,20 @@ import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/card.dart';
-import 'package:college_app/view/colleges.dart';
+import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:college_app/constants/filter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart'; // Make sure Filter widget is in this file
+import 'package:get/get_core/src/get_main.dart';
 
 class ShortlistedCollegesPage extends StatefulWidget {
   ShortlistedCollegesPage({super.key});
 
   @override
-  State<ShortlistedCollegesPage> createState() => _ShortlistedCollegesPageState();
+  State<ShortlistedCollegesPage> createState() =>
+      _ShortlistedCollegesPageState();
 }
 
 class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
-
   List<College> colleges = [];
 
   var profile = Get.find<ProfileController>();
@@ -32,7 +32,6 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
 
       body: SingleChildScrollView(
@@ -125,23 +124,25 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
             // College Cards
             Column(
               children: [
-                ListView.builder(itemBuilder: (context, index){
+                ListView.builder(
+                  itemBuilder: (context, index) {
+                    College clg = colleges[index];
 
-                  College clg = colleges[index];
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: CardStructure(
-                      width: double.infinity,
-                      collegeName: clg.name,
-                      coursesCount: 10,
-                      feeRange: '₹2.97 L - 6.87 L',
-                      location: clg.country,
-                      ranking: clg.ranking.toString(),
-                    ),
-                  );
-                }, itemCount: colleges.length,),
-              ]
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: CardStructure(
+                        width: double.infinity,
+                        collegeName: clg.name,
+                        coursesCount: 10,
+                        feeRange: '₹2.97 L - 6.87 L',
+                        state: clg.country,
+                        ranking: clg.ranking.toString(),
+                      ),
+                    );
+                  },
+                  itemCount: colleges.length,
+                ),
+              ],
             ),
           ],
         ),
@@ -150,8 +151,9 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   }
 
   Future<void> getColleges() async {
-    colleges = await StudentService.getFavoriteColleges(profile.profile.value!.id);
+    colleges = await StudentService.getFavoriteColleges(
+      profile.profile.value!.id,
+    );
     setState(() {});
   }
-
 }
