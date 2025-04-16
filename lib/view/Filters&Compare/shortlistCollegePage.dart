@@ -139,6 +139,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                         ranking: clg.ranking.toString(),
                         studId: profile.profile.value!.id,
                         clgId: clg.id,
+                        clg: clg,
                       ),
                     );
                   },

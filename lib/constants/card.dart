@@ -1,3 +1,4 @@
+import 'package:college_app/model/college.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/DetailPage/collegeDetail.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +16,13 @@ class CardStructure extends StatelessWidget {
   final String ranking;
   final String studId;
   final String clgId;
+  College clg;
 
   final double? width;
-  const CardStructure({
+  CardStructure({
     Key? key,
     this.width,
+    required this.clg,
     required this.collegeID,
     required this.collegeName,
     required this.coursesCount,
@@ -41,7 +44,7 @@ class CardStructure extends StatelessWidget {
           MaterialPageRoute(
             builder:
                 (context) =>
-                    CollegeDetail(collegeName: collegeID, state: state),
+                    CollegeDetail(college: clg,),
           ),
         );
       },

@@ -75,10 +75,10 @@ class _CollegesState extends State<Colleges> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Text(
-                  "Hi, Name",
+                  "Hi, ${profile.profile.value!.name}",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -162,6 +162,7 @@ class _CollegesState extends State<Colleges> {
                   ranking: data[index].ranking.toString(),
                   studId: profile.profile.value!.id,
                   clgId: data[index].id,
+                  clg: data[index],
                 ),
           ),
         ),

@@ -4,12 +4,13 @@ import 'package:college_app/view_model/tabController.dart';
 import 'package:college_app/view_model/saveController.dart';
 import 'package:college_app/constants/colors.dart';
 
-class CollegeDetail extends StatelessWidget {
-  final String collegeName;
-  final String state;
+import '../../model/college.dart';
 
-  CollegeDetail({Key? key, required this.collegeName, required this.state})
-    : super(key: key);
+class CollegeDetail extends StatelessWidget {
+
+  College college;
+
+  CollegeDetail({required this.college, super.key});
 
   final tabController = Get.put(CollegeTabController());
   final saveCtrl = Get.put(saveController());
@@ -17,18 +18,18 @@ class CollegeDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back),
         actions: [
           Obx(
             () => InkWell(
               onTap: () {
-                saveCtrl.toggleSave(collegeName);
+                saveCtrl.toggleSave(college.id);
               },
               child: Container(
                 padding: const EdgeInsets.all(6),
                 child: Icon(
-                  saveCtrl.isSaved(collegeName)
+                  saveCtrl.isSaved(college.id)
                       ? Icons.bookmark
                       : Icons.bookmark_border,
                   size: 27,
@@ -39,7 +40,9 @@ class CollegeDetail extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.share, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+
+            },
           ),
         ],
       ),
@@ -54,9 +57,10 @@ class CollegeDetail extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  collegeName,
+                  college.name,
                   style: const TextStyle(
                     fontSize: 22,
                     color: Colors.black,
@@ -65,7 +69,7 @@ class CollegeDetail extends StatelessWidget {
                 ),
 
                 Text(
-                  state,
+                  college.state,
                   style: const TextStyle(fontSize: 16, color: Colors.black),
                 ),
 
@@ -85,8 +89,8 @@ class CollegeDetail extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text("#1\nNIRF Rank", textAlign: TextAlign.center),
+              children: [
+                Text("#${college.ranking}\nNIRF Rank", textAlign: TextAlign.center),
                 Text("A++\nNAAC Grade", textAlign: TextAlign.center),
                 Text("1961\nEstablished", textAlign: TextAlign.center),
               ],

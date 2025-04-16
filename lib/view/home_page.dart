@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../view_model/controller.dart';
+import '../view_model/profile_controller.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -22,7 +23,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   var controller = Get.put(Controller());
+  var profileController = Get.put(ProfileController());
 
   List<Widget> screens = [
     SizedBox(
@@ -143,9 +146,11 @@ class _HomePageState extends State<HomePage> {
                           height: 40,
                           width: 40,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(20)),
+                            border: Border.all(color: Colors.black, width: 2)
                           ),
+                          child: Center(child: Text(profileController.profile.value!.name[0], style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
                         ),
                       ),
                     ],
