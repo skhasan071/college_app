@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -22,7 +23,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GoogleSignInApi _googleAuthService = GoogleSignInApi();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -268,21 +268,34 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   Future signIn() async {
-    final user = await GoogleSignInApi.login();
+
+    final user = await GoogleSignIn().signIn();
 
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
       print("failed");
     } else {
       // Get the email from the signed-in user
+      final auth = await user.authentication;
+      String? idToken = auth.idToken;
       final String email = user.email;
+
+      if(idToken == null){
+        print(auth.idToken);
+        print(auth.accessToken);
+        print(email);
+        return;
+      }else{
+        print(idToken);
+      }
 
       // Send the email to the backend to check if it's already in the database
       final response = await http.post(
-        Uri.parse("http://localhost:4000/auth/check-email"),
+        Uri.parse("http://localhost:8080/auth/google-auth"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email}),
+        body: jsonEncode({"token": idToken}),
       );
 
       if (response.statusCode == 200) {
