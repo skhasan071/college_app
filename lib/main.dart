@@ -4,7 +4,6 @@ import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:college_app/view/Firstpage.dart';
 
 void main() {
   runApp(DevicePreview(builder: (context) => MyApp()));
