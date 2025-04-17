@@ -88,7 +88,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       controller.navSelectedIndex.value = 6;
-                      
+
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,

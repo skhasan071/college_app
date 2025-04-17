@@ -36,44 +36,44 @@ class ProfilePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Name Surname",
+                        Text(profileController.profile.value!.name,
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
+                          children: [
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(Icons.email, size: 16),
                                 SizedBox(width: 4),
-                                Text("hello@relume.io"),
+                                Text(profileController.profile.value!.email),
                               ],
                             ),
                             SizedBox(width: 16),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.phone, size: 16),
-                                SizedBox(width: 4),
-                                Text("1234567890"),
-                              ],
-                            )
                           ],
                         ),
                         Row(
-                          children: const [
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.phone, size: 16),
+                            SizedBox(width: 4),
+                            Text(profileController.profile.value!.mobileNumber.toString()),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             Icon(Icons.location_on, size: 16),
                             SizedBox(width: 4),
-                            Text("Delhi, India"),
+                            Text(profileController.profile.value!.city ?? ""),
                             SizedBox(width: 16),
                             Icon(Icons.female, size: 16),
                             SizedBox(width: 4),
-                            Text("Female"),
+                            Text(profileController.profile.value!.gender ?? ""),
                           ],
                         ),
                         const SizedBox(height: 4),
-                        const Text("D.O.B: July 1, 2000"),
+                        Text("D.O.B: ${profileController.profile.value!.dob}"),
                       ],
                     ),
                   ),
@@ -125,3 +125,4 @@ class SettingsTile extends StatelessWidget {
     );
   }
 }
+

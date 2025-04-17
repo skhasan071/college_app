@@ -1,4 +1,5 @@
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/view/blog_page.dart';
 import 'package:college_app/view/college_predictor_page.dart';
 import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:college_app/view/drawer.dart';
@@ -12,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../view_model/controller.dart';
+import '../view_model/profile_controller.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -21,7 +23,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   var controller = Get.put(Controller());
+  var profileController = Get.put(ProfileController());
 
   List<Widget> screens = [
     SizedBox(
@@ -37,12 +41,7 @@ class _HomePageState extends State<HomePage> {
     SizedBox(
       height: double.infinity,
       width: double.infinity,
-      child: Center(
-        child: Text(
-          "Insights",
-          style: TextStyle(color: Colors.black, fontSize: 24),
-        ),
-      ),
+      child: BlogPage(),
     ),
     SizedBox(
       height: double.infinity,
@@ -147,9 +146,11 @@ class _HomePageState extends State<HomePage> {
                           height: 40,
                           width: 40,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(20)),
+                            border: Border.all(color: Colors.black, width: 2)
                           ),
+                          child: Center(child: Text(profileController.profile.value!.name[0], style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
                         ),
                       ),
                     ],

@@ -9,6 +9,25 @@ import '../model/college.dart';
 class StudentService {
   static const String _baseUrl = 'http://localhost:8080/api/students';
 
+  Future<Student?> fetchStudentById(String id) async {
+    final url = Uri.parse('$_baseUrl/get/$id'); // Update with your actual backend URL
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        return Student.fromMap(data);
+      } else {
+        print('Failed to load student: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      return null;
+    }
+  }
+
   /// Add or update student profile
   static Future<Map<String, dynamic>?> addOrUpdateStudent({
     required String token,
@@ -103,7 +122,7 @@ class StudentService {
     required String collegeId,
   }) async {
     try {
-      final uri = Uri.parse('http://localhost:8080/api/students/favorites');
+      final uri = Uri.parse('http://localhost:8080/api/students/favorites/add');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},

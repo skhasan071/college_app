@@ -2,10 +2,17 @@ import 'package:college_app/view/DetailPage/collegeDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/colors.dart';
+import 'package:college_app/services/user_services.dart';
+import 'package:college_app/model/college.dart';
 
 class CompareColleges extends StatelessWidget {
-  const CompareColleges({super.key});
+  final College clg;
 
+  const CompareColleges({
+    super.key,
+    required this.clg,
+    required College college,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,8 +81,11 @@ class CompareColleges extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder:
-                            (context) =>
-                                CollegeDetail(collegeName: '', state: ''),
+                            (context) => CollegeDetail(
+                              college: clg,
+                              collegeName: '',
+                              state: '',
+                            ),
                       ),
                     );
                   },

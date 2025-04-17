@@ -1,15 +1,13 @@
-import 'package:college_app/services/auth_services.dart';
 import 'package:college_app/view/signuppage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:http/http.dart' as http;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../services/google_signin_api.dart';
-import '../view_model/profile_controller.dart';
 import 'emailverification.dart';
 import 'home_page.dart';
 import 'mobilenoauth.dart';
@@ -27,36 +25,15 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
-  var profile = Get.put(ProfileController());
 
-  Future<bool> _handleLogin() async {
+  void _handleLogin() {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
-
-      Map<String, dynamic> msgs = await AuthService.loginStudent(email, password);
-
-      if(msgs['success']){
-
-        print(msgs['token']);
-        profile.profile.value = msgs['student'];
-        profile.userToken.value = msgs['token'];
-        saveToken(msgs['token']);
-        return true;
-
-      }else{
-        String string = msgs['message'];
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(string,),
-            backgroundColor: Colors.purple,
-            duration: Duration(seconds: 2),
-          ),
-        );
-        return false;
-      }
-
+      Navigator.pushReplacement(context, MaterialPageRoute (
+          builder: (context) =>  HomePage()),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -65,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
           duration: Duration(seconds: 2),
         ),
       );
-      return false;
     }
   }
 
@@ -159,14 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(2)),
                 ),
-                onPressed: () async {
-                  bool isLogged = await _handleLogin();
-                  if(isLogged){
-                    Navigator.pushReplacement(context, MaterialPageRoute (
-                        builder: (context) =>  HomePage()),
-                    );
-                  }
-                },
+                onPressed: _handleLogin,
                 child: const Text("Login",
                     style: TextStyle(color: Colors.white, fontSize: 18)),
               ),
@@ -221,7 +190,16 @@ class _LoginPageState extends State<LoginPage> {
                   elevation: 2,
                 ),
                 onPressed: () async {
-                  await signIn(); // Calling signIn method properly with async
+                  signIn2();
+
+                  // bool isLogged = await login(); // Calling signIn method properly with async
+                  // if (isLogged) {
+                  //   print("hello");
+                  //   Navigator.pushReplacement(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => HomePage())
+                  //   );
+                  // }
                 },
                 icon: Image.asset(
                   'assets/gmail-logo.jpg',
@@ -268,58 +246,145 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  // Future signIn() async {
+  //   final user = await GoogleSignInApi.login();
+  //
+  //   if (user == null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Signin Failed")),
+  //     );
+  //     print("Signin failed");
+  //   } else {
+  //     // Get ID token for web
+  //     final auth = await user.authentication;
+  //     final idToken = auth.idToken;
+  //
+  //     // Print the ID token for debugging
+  //     print("ID Token: $idToken");
+  //
+  //     // Get the email from the signed-in user
+  //     final String email = user.email;
+  //
+  //     // Send email and ID token to the backend
+  //     final response = await http.post(
+  //       Uri.parse("http://localhost:4000/auth/google-auth"),
+  //       headers: {"Content-Type": "application/json"},
+  //       body: jsonEncode({
+  //         "email": email,
+  //         "idToken": idToken,
+  //       }),
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       print("Successful");
+  //       final data = jsonDecode(response.body);
+  //
+  //       // Check if user needs to be redirected
+  //       // Navigate to the Dashboard page
+  //       Navigator.of(context).pushReplacement(
+  //           MaterialPageRoute(builder: (context) => HomePage()));
+  //       }
+  //      else {
+  //       print(jsonDecode(response.body));
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text("Error checking user")),
+  //       );
+  //     }
+  //   }
+  // }
+  //
+  // Future<bool> login() async {
+  //   print("inside the method.......");
+  //   final user = await GoogleSignIn().signIn();  // Signing in with Google
+  //   GoogleSignInAuthentication userAuth = await user!.authentication;  // Getting the authentication details
+  //   print("ID Token============: ${userAuth.idToken}");
+  //   var credential = GoogleAuthProvider.credential(  // Creating credentials using the idToken and accessToken
+  //     idToken: userAuth.idToken,
+  //     accessToken: userAuth.accessToken,
+  //   );
+  //
+  //   await FirebaseAuth.instance.signInWithCredential(credential);  // Signing into Firebase using the credentials
+  //   return FirebaseAuth.instance.currentUser != null;  // Returns true if the user is logged in, else false
+  //
+  // }
+
   Future signIn() async {
     final user = await GoogleSignInApi.login();
 
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
-      print("failed");
+      print("Signin failed");
     } else {
       // Get the email from the signed-in user
       final String email = user.email;
 
       // Send the email to the backend to check if it's already in the database
       final response = await http.post(
-        Uri.parse("http://localhost:4000/auth/check-email"),
+        Uri.parse("http://localhost:4000/auth/google-auth"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email}),
       );
 
       if (response.statusCode == 200) {
-        print("Successful");
+        print("Signin successful");
         final data = jsonDecode(response.body);
 
-        // Check the backend response to see if the user should be redirected
+        // Check the backend response to see if the user exists or not
         if (data['redirect']) {
-          // If redirect is true, it means the user does not exist
-          print("Redirecting to Dashboard (new user)");
-
-          // Navigate to the Dashboard page for new user
+          // If redirect is true, it means the user is new or authenticated
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomePage()) // Replace with actual Dashboard page
-          );
-        } else {
-          // If redirect is false, it means the user already exists
-          print("User already exists, redirecting to another page");
-
-          // Redirect to a different screen (e.g., Profile or Welcome page for existing users)
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomePage()) // Replace with your desired page
+            MaterialPageRoute(builder: (context) => HomePage()), // Redirect to HomePage (Dashboard)
           );
         }
       } else {
+        print(jsonDecode(response.body));
         // If the server returns an error
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error checking user"))
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error checking user")));
       }
     }
   }
+  Future signIn2() async {
+    try {
+      // Sign in with Google
+      final user = await GoogleSignIn().signIn();
 
-  // Store token
-  Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('authEmailToken', token);
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
+        return;
+      }
+
+      // Get the Google SignIn authentication
+      final GoogleSignInAuthentication authentication = await user.authentication;
+
+      // Access the Access Token (and ID Token if needed)
+      final String accessToken = authentication.accessToken!;
+
+      // Send the access token to the backend for verification
+      final response = await http.post(
+        Uri.parse("http://localhost:4000/auth/google-auth"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"accessToken": accessToken}),
+     
+      );
+
+      if (response.statusCode == 200) {
+        print("Signin successful");
+        final data = jsonDecode(response.body);
+        if (data['redirect']) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+      } else {
+        print(jsonDecode(response.body));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error checking user")));
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error during sign-in")));
+    }
   }
+
+
 
 }

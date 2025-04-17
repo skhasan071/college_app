@@ -1,3 +1,5 @@
+import 'package:college_app/model/college.dart';
+import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/DetailPage/collegeDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/ui_helper.dart';
@@ -6,21 +8,29 @@ import 'package:college_app/view_model/saveController.dart';
 import 'package:get/get.dart';
 
 class CardStructure extends StatelessWidget {
+  final String collegeID;
   final String collegeName;
   final int coursesCount;
   final String feeRange;
   final String state;
   final String ranking;
+  final String studId;
+  final String clgId;
+  College clg;
 
   final double? width;
-  const CardStructure({
+  CardStructure({
     Key? key,
     this.width,
+    required this.clg,
+    required this.collegeID,
     required this.collegeName,
     required this.coursesCount,
     required this.feeRange,
     required this.state,
     required this.ranking,
+    required this.studId,
+    required this.clgId,
   });
 
   @override
@@ -34,7 +44,7 @@ class CardStructure extends StatelessWidget {
           MaterialPageRoute(
             builder:
                 (context) =>
-                    CollegeDetail(collegeName: collegeName, state: state),
+                    CollegeDetail(college: clg, collegeName: '', state: ''),
           ),
         );
       },
@@ -65,13 +75,23 @@ class CardStructure extends StatelessWidget {
                     right: 4,
                     child: Obx(
                       () => InkWell(
-                        onTap: () {
-                          controller.toggleSave(collegeName);
+                        onTap: () async {
+                          if (controller.isSaved(collegeID)) {
+                            bool success = await remove(studId, clgId);
+                            if (success) {
+                              controller.toggleSave(collegeID);
+                            }
+                          } else {
+                            bool success = await save(studId, clgId);
+                            if (success) {
+                              controller.toggleSave(collegeID);
+                            }
+                          }
                         },
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           child: Icon(
-                            controller.isSaved(collegeName)
+                            controller.isSaved(collegeID)
                                 ? Icons.bookmark
                                 : Icons.bookmark_border,
                             size: 27,
@@ -178,5 +198,18 @@ class CardStructure extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  static Future<bool> save(studId, clgId) async {
+    Map<String, dynamic>? msg = await StudentService.addToFavorites(
+      studentId: studId,
+      collegeId: clgId,
+    );
+    return msg != null;
+  }
+
+  static Future<bool> remove(studId, clgId) async {
+    bool msg = await StudentService.removeFromFavorites(studId, clgId);
+    return msg;
   }
 }

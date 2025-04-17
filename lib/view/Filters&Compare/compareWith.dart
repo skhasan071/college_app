@@ -3,9 +3,11 @@ import 'package:college_app/view/Filters&Compare/compareCollege.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/model/college.dart';
 
 class CompareWith extends StatelessWidget {
-  const CompareWith({super.key});
+  final College clg;
+  const CompareWith({super.key, required this.clg});
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +177,11 @@ class CompareWith extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const CompareColleges(),
+                                  builder:
+                                      (context) => CompareColleges(
+                                        college: clg,
+                                        clg: clg,
+                                      ),
                                 ),
                               );
                             },

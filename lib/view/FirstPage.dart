@@ -1,15 +1,33 @@
+import 'package:college_app/model/user.dart';
+import 'package:college_app/services/user_services.dart';
+import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view/login.dart';
 import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:college_app/view/signuppage.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
-class Firstpage extends StatelessWidget {
+class Firstpage extends StatefulWidget {
   const Firstpage({super.key});
+
+  @override
+  State<Firstpage> createState() => _FirstpageState();
+}
+
+class _FirstpageState extends State<Firstpage> {
+  var profile = Get.put(ProfileController());
+
+  @override
+  void initState() {
+    super.initState();
+    getStud();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
 
       body: Center(
@@ -21,10 +39,7 @@ class Firstpage extends StatelessWidget {
               const Text(
                 "Welcome to\nTalentConnect College App",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               const Text(
@@ -48,7 +63,10 @@ class Firstpage extends StatelessWidget {
                 height: 48,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> SignupPage()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignupPage()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -68,7 +86,10 @@ class Firstpage extends StatelessWidget {
                 height: 48,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black,
@@ -86,8 +107,11 @@ class Firstpage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CoursePreferencesPage()));
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 },
                 child: const Text(
                   "Continue as Guest",
@@ -102,6 +126,12 @@ class Firstpage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> getStud() async {
+    profile.profile.value = await StudentService().fetchStudentById(
+      "67f9af13c6a8979472284f41",
     );
   }
 }

@@ -3,16 +3,28 @@ import 'package:college_app/constants/filter.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
 import 'package:college_app/model/college.dart';
+import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view_model/controller.dart';
+import 'package:college_app/view_model/profile_controller.dart';
+import 'package:college_app/view_model/saveController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Colleges extends StatelessWidget {
+import '../../services/user_services.dart';
+
+class Colleges extends StatefulWidget {
   Colleges({super.key});
 
-  var controller = Get.put(Controller());
+  @override
+  State<Colleges> createState() => _CollegesState();
+}
 
-  final List<College> colleges = [
+class _CollegesState extends State<Colleges> {
+  var controller = Get.put(Controller());
+  var saveCtrl = Get.put(saveController());
+  var profile = Get.put(ProfileController());
+
+  List<College> colleges = [
     College(
       id: '1',
       name: 'IIT Delhi - Indian Institute of Technology',
@@ -46,6 +58,13 @@ class Colleges extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    getColleges();
+    getFavorites();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,10 +75,10 @@ class Colleges extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Text(
-                  "Hi, Name",
+                  "Hi, ${profile.profile.value!.name}",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -135,11 +154,15 @@ class Colleges extends StatelessWidget {
             itemCount: data.length,
             itemBuilder:
                 (context, index) => CardStructure(
+                  collegeID: data[index].id,
                   collegeName: data[index].name,
                   coursesCount: data[index].courseCount,
                   feeRange: data[index].fees.toString(),
                   state: data[index].state,
                   ranking: data[index].ranking.toString(),
+                  studId: profile.profile.value!.id,
+                  clgId: data[index].id,
+                  clg: data[index],
                 ),
           ),
         ),
@@ -222,4 +245,17 @@ class Colleges extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> getFavorites() async {
+    List<College> colleges = await StudentService.getFavoriteColleges(profile.profile.value!.id);
+    for(College college in colleges){
+      saveCtrl.savedColleges.add(college.id);
+    }
+  }
+
+  Future<void> getColleges() async {
+    colleges = await CollegeServices.getColleges();
+    setState(() {});
+  }
+
 }

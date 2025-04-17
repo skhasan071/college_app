@@ -41,8 +41,8 @@ class College {
       collegeInfo: map['collegeInfo'] ?? '',
       stream: map['stream'] ?? '',
       type: map['type'] ?? '',
-      courseCount: map['courseCount'] ?? '',
-      fees: map['fees'] ?? '',
+      courseCount: map['courseCount'] ?? 10,
+      fees: map['fees'] ?? 0,
     );
   }
 
