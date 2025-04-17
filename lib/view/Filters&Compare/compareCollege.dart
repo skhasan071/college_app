@@ -16,6 +16,19 @@ class CompareColleges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 5,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Find the Best Fit',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
         child: Column(
