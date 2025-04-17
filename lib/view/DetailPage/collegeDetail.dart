@@ -83,16 +83,61 @@ class CollegeDetail extends StatelessWidget {
                   college.state,
                   style: const TextStyle(fontSize: 16, color: Colors.black),
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                  ),
-                  child: const Text("Apply Now"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Apply Now logic
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                        ),
+                        child: const Text(
+                          "Apply Now",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CompareWith(clg: college),
+                            ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                        child: const Text(
+                          "Compare",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
+          const SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -102,14 +147,12 @@ class CollegeDetail extends StatelessWidget {
                   "#${college.ranking}\nNIRF Rank",
                   textAlign: TextAlign.center,
                 ),
-                Text("A++\nNAAC Grade", textAlign: TextAlign.center),
-                Text("1961\nEstablished", textAlign: TextAlign.center),
+                const Text("A++\nNAAC Grade", textAlign: TextAlign.center),
+                const Text("1961\nEstablished", textAlign: TextAlign.center),
               ],
             ),
           ),
           const SizedBox(height: 15),
-
-          // TabBar
           Container(
             decoration: const BoxDecoration(
               border: Border(
@@ -188,8 +231,6 @@ class CollegeDetail extends StatelessWidget {
                       .toList(),
             ),
           ),
-
-          // TabBarView
           Expanded(
             child: TabBarView(
               controller: tabController.tabController,
