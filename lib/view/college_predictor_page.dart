@@ -1,8 +1,11 @@
+import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view/predicted_college.dart';
 import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+
+import '../model/college.dart';
 
 class CollegePredictorPage extends StatefulWidget {
   const CollegePredictorPage({super.key});
@@ -16,11 +19,89 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
   String? selectedCategory;
   String? selectedGender;
   String? selectedCourse;
+  String? selectedExam;
+  String? selectedRankType;
   String rank = '';
 
   var controller = Get.find<Controller>();
 
-  final List<String> demoOptions = ['Select..', 'Option 1', 'Option 2'];
+  final List<String> rankTypes = ['Percentile', "Rank"];
+  final List<String> states = [
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Delhi',
+    'Jammu and Kashmir',
+    'Ladakh',
+    'Puducherry',
+    'Chandigarh',
+    'Andaman and Nicobar Islands',
+    'Lakshadweep'
+  ];
+
+  final List<String> exams = [
+    'JEE',
+    'MHT-CET',
+    'WBJEE',
+    'KCET',
+    'AP EAMCET',
+    'TS EAMCET',
+    'GUJCET',
+    'COMEDK',
+    'BITSAT',
+    'VITEEE',
+    'SRMJEEE',
+    'IPU CET',
+    'AMUEEE',
+    'CUET',
+    'Other'
+  ];
+
+  final List<String> categories = [
+    'General',
+    'OBC',
+    'SC',
+    'ST',
+    'EWS',
+    'PWD',
+    'Other'
+  ];
+
+  final List<String> genders = ['Male', 'Female', 'Other'];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedExam = "JEE";
+    selectedCategory = "General";
+    selectedRankType = "Percentile";
+    rank = '0';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,25 +129,35 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
               ),
               const SizedBox(height: 23),
 
-              _buildLabel("Select your domicile state"),
+              _buildLabel("Select your Exam"),
+              _buildDropdown(selectedExam, (value) {
+                setState(() => selectedExam = value);
+              }, exams),
+
+              _buildLabel("Select your State"),
               _buildDropdown(selectedState, (value) {
                 setState(() => selectedState = value);
-              }),
+              }, states),
 
               _buildLabel("Select your category"),
               _buildDropdown(selectedCategory, (value) {
                 setState(() => selectedCategory = value);
-              }),
+              }, categories),
 
-              _buildLabel("Select your gender"),
+              _buildLabel("Select your Rank Type"),
+              _buildDropdown(selectedRankType, (value) {
+                setState(() => selectedRankType = value);
+              }, rankTypes),
+
+              _buildLabel("Select your Gender"),
               _buildDropdown(selectedGender, (value) {
                 setState(() => selectedGender = value);
-              }),
+              }, genders),
 
               _buildLabel("Select Preferred Course (Optional)"),
               _buildDropdown(selectedCourse, (value) {
                 setState(() => selectedCourse = value);
-              }),
+              }, genders),
 
               const SizedBox(height: 14),
 
@@ -78,6 +169,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   hintText: "# Enter your rank",
                 ),
                 onChanged: (val) => rank = val,
+                textAlign: TextAlign.center,
               ),
 
               const SizedBox(height: 24),
@@ -86,7 +178,10 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   width: MediaQuery.of(context).size.width * 0.6, // 60% width
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+
+                      List<College> colleges = await CollegeServices.predictColleges(examType: selectedExam! ?? exams.first, category: selectedCategory! ?? categories.first, rankType: selectedRankType! ?? rankTypes.first, rankOrPercentile: rank);
+                      controller.predictedClg.value = colleges;
                       controller.navSelectedIndex.value = 6;
 
                     },
@@ -120,10 +215,10 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     );
   }
 
-  Widget _buildDropdown(String? selectedValue, ValueChanged<String?> onChanged) {
+  Widget _buildDropdown(String? selectedValue, ValueChanged<String?> onChanged, List<String> list) {
     return DropdownButtonFormField<String>(
-      value: selectedValue ?? 'Select..',
-      items: demoOptions.map((opt) {
+      value: selectedValue ?? list.first,
+      items: list.map((opt) {
         return DropdownMenuItem(
           value: opt,
           child: Text(opt),
