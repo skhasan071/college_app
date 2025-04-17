@@ -30,7 +30,7 @@ class CardStructure extends StatelessWidget {
     required this.state,
     required this.ranking,
     required this.studId,
-    required this.clgId
+    required this.clgId,
   });
 
   @override
@@ -44,7 +44,7 @@ class CardStructure extends StatelessWidget {
           MaterialPageRoute(
             builder:
                 (context) =>
-                    CollegeDetail(college: clg,),
+                    CollegeDetail(college: clg, collegeName: '', state: ''),
           ),
         );
       },
@@ -76,14 +76,14 @@ class CardStructure extends StatelessWidget {
                     child: Obx(
                       () => InkWell(
                         onTap: () async {
-                          if(controller.isSaved(collegeID)){
+                          if (controller.isSaved(collegeID)) {
                             bool success = await remove(studId, clgId);
-                            if(success){
+                            if (success) {
                               controller.toggleSave(collegeID);
                             }
-                          }else{
+                          } else {
                             bool success = await save(studId, clgId);
-                            if(success){
+                            if (success) {
                               controller.toggleSave(collegeID);
                             }
                           }
@@ -201,13 +201,15 @@ class CardStructure extends StatelessWidget {
   }
 
   static Future<bool> save(studId, clgId) async {
-    Map<String, dynamic>? msg = await StudentService.addToFavorites(studentId: studId, collegeId: clgId);
-    return msg!=null;
+    Map<String, dynamic>? msg = await StudentService.addToFavorites(
+      studentId: studId,
+      collegeId: clgId,
+    );
+    return msg != null;
   }
 
   static Future<bool> remove(studId, clgId) async {
     bool msg = await StudentService.removeFromFavorites(studId, clgId);
     return msg;
   }
-
 }
