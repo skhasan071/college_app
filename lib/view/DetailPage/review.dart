@@ -1,3 +1,6 @@
+import 'package:college_app/view/FirstPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:flutter/material.dart';
 
 class Reviews extends StatefulWidget {
@@ -6,6 +9,8 @@ class Reviews extends StatefulWidget {
 }
 
 class _ReviewsState extends State<Reviews> {
+  SharedPreferences? prefs;
+  bool isUserLoggedIn = false;
   final List<Map<String, dynamic>> _reviews = [
     {
       "name": "Sarah Johnson",
@@ -30,15 +35,38 @@ class _ReviewsState extends State<Reviews> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadPrefs();
+  }
+
+  Future<void> _loadPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isUserLoggedIn = prefs?.getString('authToken') != null;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     double averageRating = 3.0;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reviews & Ratings"),
+        elevation: 3,
+        title: const Text(
+          "Reviews & Ratings",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        leading: const Icon(Icons.arrow_back),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.white,
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -68,8 +96,13 @@ class _ReviewsState extends State<Reviews> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _showReviewDialog(context);
+                    if (isUserLoggedIn) {
+                      _showReviewDialog(context);
+                    } else {
+                      _showLoginPrompt(context);
+                    }
                   },
+
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
@@ -88,7 +121,9 @@ class _ReviewsState extends State<Reviews> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
 
             // Rating distribution
             _buildRatingBar("5 star", 75),
@@ -101,6 +136,9 @@ class _ReviewsState extends State<Reviews> {
             const SizedBox(height: 8),
             _buildRatingBar("1 star", 2),
             const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
 
             // Dynamic review list
             ..._reviews.map((review) {
@@ -134,6 +172,76 @@ class _ReviewsState extends State<Reviews> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLoginPrompt(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (_) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Login Required",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Please log in to write a review.",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context); // close dialog
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Firstpage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 20,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        child: const Text(
+                          "Log In",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
     );
   }
 
@@ -265,7 +373,6 @@ class _ReviewsState extends State<Reviews> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            backgroundColor: Colors.grey.shade300,
             radius: 30,
             child: Icon(Icons.person, color: Colors.black, size: 36),
           ),

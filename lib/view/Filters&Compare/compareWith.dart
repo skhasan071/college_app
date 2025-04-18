@@ -1,9 +1,13 @@
+import 'package:college_app/view/DetailPage/collegeDetail.dart';
+import 'package:college_app/view/Filters&Compare/compareCollege.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/model/college.dart';
 
 class CompareWith extends StatelessWidget {
-  const CompareWith({super.key});
+  final College clg;
+  const CompareWith({super.key, required this.clg});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,19 @@ class CompareWith extends StatelessWidget {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 5,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Choose with Confidence',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: Column(
@@ -118,7 +135,7 @@ class CompareWith extends StatelessWidget {
                 ),
               ],
             ),
-
+            SizedBox(height: 15),
             Expanded(
               child: ListView.separated(
                 itemCount: dummyColleges.length,
@@ -169,7 +186,18 @@ class CompareWith extends StatelessWidget {
                           width: double.infinity,
                           child: UiHelper.getSecondaryBtn(
                             title: "Select to Compare",
-                            callback: () {},
+                            callback: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => CompareColleges(
+                                        college: clg,
+                                        clg: clg,
+                                      ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -177,7 +205,9 @@ class CompareWith extends StatelessWidget {
                           width: double.infinity,
                           child: UiHelper.getPrimaryBtn(
                             title: "View Details",
-                            callback: () {},
+                            callback: () {
+                              Navigator.pop(context);
+                            },
                           ),
                         ),
                       ],

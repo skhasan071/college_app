@@ -17,7 +17,6 @@ class Firstpage extends StatefulWidget {
 }
 
 class _FirstpageState extends State<Firstpage> {
-
   var profile = Get.put(ProfileController());
 
   @override
@@ -29,7 +28,6 @@ class _FirstpageState extends State<Firstpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
 
       body: Center(
@@ -41,10 +39,7 @@ class _FirstpageState extends State<Firstpage> {
               const Text(
                 "Welcome to\nTalentConnect College App",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               const Text(
@@ -68,7 +63,10 @@ class _FirstpageState extends State<Firstpage> {
                 height: 48,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> SignupPage()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignupPage()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -88,7 +86,10 @@ class _FirstpageState extends State<Firstpage> {
                 height: 48,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black,
@@ -106,8 +107,11 @@ class _FirstpageState extends State<Firstpage> {
               ),
               const SizedBox(height: 20),
               InkWell(
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 },
                 child: const Text(
                   "Continue as Guest",
@@ -126,6 +130,8 @@ class _FirstpageState extends State<Firstpage> {
   }
 
   Future<void> getStud() async {
-    profile.profile.value = await StudentService().fetchStudentById("67f9af13c6a8979472284f41");
+    profile.profile.value = await StudentService().fetchStudentById(
+      "67f9af13c6a8979472284f41",
+    );
   }
 }

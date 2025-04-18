@@ -11,7 +11,6 @@ class CollegeTabController extends GetxController
     "Courses",
     "Reviews",
     "Placements",
-    "Campus",
     "Admission & Eligibility",
     "Cost & Location",
     "Scholarship & Aid",

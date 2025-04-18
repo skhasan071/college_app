@@ -8,15 +8,25 @@ class PlacementDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Placement Details'),
+        elevation: 3,
+        title: const Text(
+          'Placement Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        leading: const Icon(Icons.arrow_back),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 12),
             child: Icon(Icons.share),
           ),
         ],
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -38,7 +48,10 @@ class PlacementDetails extends StatelessWidget {
                 _buildStatCard(context, 'Companies Visited', '125+'),
               ],
             ),
-            const SizedBox(height: 24),
+
+            const SizedBox(height: 16),
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
             const Text(
               'Package Distribution',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
@@ -48,7 +61,9 @@ class PlacementDetails extends StatelessWidget {
             _buildPackageBar('15-20 LPA', 0.25),
             _buildPackageBar('10-15 LPA', 0.35),
             _buildPackageBar('5-10 LPA', 0.25),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
             const Text(
               'Top Recruiters',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
@@ -67,7 +82,9 @@ class PlacementDetails extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
             const Text(
               'Recent Placements',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),

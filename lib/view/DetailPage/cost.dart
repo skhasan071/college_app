@@ -9,9 +9,19 @@ class Cost extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Cost & Location'),
+        elevation: 3,
+        title: const Text(
+          'Cost & Location',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        leading: const Icon(Icons.arrow_back),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -54,7 +64,9 @@ class Cost extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
+                  Divider(color: Colors.grey, thickness: 0.5),
+                  const SizedBox(height: 22),
                   const Text(
                     "Cost of Living",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -64,7 +76,10 @@ class Cost extends StatelessWidget {
                   _buildCostItem("Monthly Utilities", "\$150"),
                   _buildCostItem("Monthly Transport", "\$100"),
                   _buildCostItem("Monthly Groceries", "\$400"),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
+                  Divider(color: Colors.grey, thickness: 0.5),
+                  const SizedBox(height: 22),
+
                   const Text(
                     "Nearby Places",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
