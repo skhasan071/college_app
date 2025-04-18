@@ -20,6 +20,8 @@ class Admission extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
+
+        backgroundColor: Colors.white,
       ),
 
       body: SingleChildScrollView(

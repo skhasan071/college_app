@@ -77,6 +77,7 @@ class _InsightsState extends State<Insights> {
             Navigator.pop(context);
           },
         ),
+        backgroundColor: Colors.white,
       ),
 
       body: SingleChildScrollView(

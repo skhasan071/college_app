@@ -59,6 +59,7 @@ class CollegeDetail extends StatelessWidget {
             onPressed: () {},
           ),
         ],
+        backgroundColor: Colors.white,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

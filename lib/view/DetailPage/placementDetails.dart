@@ -26,6 +26,7 @@ class PlacementDetails extends StatelessWidget {
             child: Icon(Icons.share),
           ),
         ],
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

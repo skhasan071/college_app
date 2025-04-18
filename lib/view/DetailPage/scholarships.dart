@@ -21,7 +21,8 @@ class Scholarships extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 3,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

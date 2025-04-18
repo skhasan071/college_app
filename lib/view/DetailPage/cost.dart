@@ -21,6 +21,7 @@ class Cost extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(

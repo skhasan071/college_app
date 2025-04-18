@@ -47,6 +47,7 @@ class Courses extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
+          backgroundColor: Colors.white,
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
