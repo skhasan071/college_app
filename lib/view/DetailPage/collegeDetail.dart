@@ -182,7 +182,7 @@ class CollegeDetail extends StatelessWidget {
                 if (selectedTab != "Overview") {
                   switch (selectedTab) {
                     case "Courses":
-                      Get.to(() => const Courses());
+                      Get.to(() => Courses(college.id));
                       break;
                     case "Reviews":
                       Get.to(() => Reviews());
@@ -233,6 +233,7 @@ class CollegeDetail extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               controller: tabController.tabController,
               children:
                   tabController.tabs.map((tab) {

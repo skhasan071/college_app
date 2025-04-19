@@ -104,7 +104,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => HomePage("")),
           );
         }
       } else {

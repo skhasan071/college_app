@@ -102,6 +102,12 @@ class CompleteProfilePage extends StatelessWidget {
                     String email = emailController.text.trim();
                     String phNo = mobileController.text.trim();
 
+                    studyingIn ??= studyingItems[0];
+
+                    passedIn ??= passingYearItems[0];
+
+                    city ??= cities[0];
+
                     if(name.isNotEmpty && email.isNotEmpty && phNo.isNotEmpty && studyingIn != null && passedIn != null && city != null){
 
                       print(profile.userToken.value);
@@ -125,7 +131,7 @@ class CompleteProfilePage extends StatelessWidget {
                     }else{
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Check for internet Connection"),
+                          content: Text("Enter All Fields"),
                           backgroundColor: Colors.purple,
                           duration: Duration(seconds: 2),
                         ),

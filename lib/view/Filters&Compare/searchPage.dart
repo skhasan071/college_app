@@ -1,3 +1,4 @@
+import 'package:college_app/services/college_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:college_app/view_model/searchController.dart';
@@ -55,6 +56,11 @@ class SelectionPage extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.white,
                 ),
+                onSubmitted: (query){
+
+                  CollegeServices.searchCollege(streams: streams);
+
+                },
               ),
             ),
 
