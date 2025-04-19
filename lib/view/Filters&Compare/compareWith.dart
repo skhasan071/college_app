@@ -39,6 +39,19 @@ class CompareWith extends StatelessWidget {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 5,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Choose with Confidence',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: Column(
@@ -122,7 +135,7 @@ class CompareWith extends StatelessWidget {
                 ),
               ],
             ),
-
+            SizedBox(height: 15),
             Expanded(
               child: ListView.separated(
                 itemCount: dummyColleges.length,

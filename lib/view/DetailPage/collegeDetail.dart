@@ -7,9 +7,11 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view/DetailPage/courses.dart';
 import 'package:college_app/view/DetailPage/review.dart';
 import 'package:college_app/view/DetailPage/placementDetails.dart';
+import 'package:college_app/view/DetailPage/admission.dart';
 import 'package:college_app/view/DetailPage/cost.dart';
 import 'package:college_app/view/DetailPage/scholarships.dart';
 import 'package:college_app/view/DetailPage/distanceFromHome.dart';
+import 'package:college_app/view/DetailPage/insights.dart';
 import 'package:college_app/view/DetailPage/Q&A.dart';
 import 'package:college_app/view/DetailPage/hostel.dart';
 import 'package:college_app/view/DetailPage/cutoff.dart';
@@ -57,6 +59,7 @@ class CollegeDetail extends StatelessWidget {
             onPressed: () {},
           ),
         ],
+        backgroundColor: Colors.white,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,10 +82,17 @@ class CollegeDetail extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  college.state,
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, size: 18),
+                    const SizedBox(width: 4),
+                    Text(
+                      college.state,
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ],
                 ),
+
                 Row(
                   children: [
                     Expanded(
@@ -137,18 +147,27 @@ class CollegeDetail extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: const [
                 Text(
-                  "#${college.ranking}\nNIRF Rank",
+                  "#1\nNIRF Rank",
                   textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const Text("A++\nNAAC Grade", textAlign: TextAlign.center),
-                const Text("1961\nEstablished", textAlign: TextAlign.center),
+                Text(
+                  "A++\nNAAC Grade",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "1961\nEstablished",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ),
@@ -190,6 +209,9 @@ class CollegeDetail extends StatelessWidget {
                     case "Placements":
                       Get.to(() => const PlacementDetails());
                       break;
+                    case "Admission & Eligibility":
+                      Get.to(() => const Admission());
+                      break;
                     case "Cost & Location":
                       Get.to(() => const Cost());
                       break;
@@ -198,6 +220,9 @@ class CollegeDetail extends StatelessWidget {
                       break;
                     case "Distance from Hometown":
                       Get.to(() => const DistanceFromHometown());
+                      break;
+                    case "Latest News & Insights":
+                      Get.to(() => const Insights());
                       break;
                     case "Q & A":
                       Get.to(() => const QAPage());

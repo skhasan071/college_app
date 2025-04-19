@@ -44,6 +44,7 @@ class _QAPageState extends State<QAPage> {
             Navigator.pop(context);
           },
         ),
+        backgroundColor: Colors.white,
       ),
       body: Column(
         children: [

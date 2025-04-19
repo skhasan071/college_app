@@ -40,6 +40,7 @@ class _CoursesState extends State<Courses> {
               Navigator.pop(context);
             },
           ),
+          backgroundColor: Colors.white,
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
