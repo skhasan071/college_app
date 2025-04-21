@@ -30,9 +30,7 @@ class _MobileSignupState extends State<MobileSignup> {
           context,
           MaterialPageRoute(
             builder: (context) => OtpScreen(
-              phone: phone,
-              sessionId: sessionId,
-              fullName: fullName,
+              phone: phone, sessionId: '', fullName: '',
             ),
           ),
         );

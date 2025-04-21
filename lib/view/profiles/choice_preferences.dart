@@ -92,7 +92,7 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
                     }),
                     UiHelper.getPrimaryBtn(title: "Next", callback: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage("")));
                     }),
                   ],
                 )

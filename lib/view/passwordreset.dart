@@ -53,7 +53,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomePage()));
+              builder: (context) => HomePage("")));
     });
   }
 

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
 class BlogPageDetail extends StatelessWidget {
+  final Map<String, dynamic> blog;
+
+  BlogPageDetail({required this.blog});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blog Page'),
+        title: Text('Blog Detail'),
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -15,110 +20,53 @@ class BlogPageDetail extends StatelessWidget {
             children: [
               // Blog Title Section
               Text(
-                'Blog title heading will go here',
+                blog['title'] ?? 'No Title',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
-                'Category • 5 min read',
+                '${blog['category']} • ${blog['readingTime']}',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               SizedBox(height: 8),
               Text(
-                'Published on 11 Jan 2022',
+                'Published on ${blog['publishedDate']}',
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               SizedBox(height: 16),
 
-              // Blog Image Section
+              // Blog Image Section (Manual Default Image)
               Container(
                 color: Colors.grey[300],
                 height: 200,
-                child: Center(child: Icon(Icons.image, size: 50, color: Colors.white)),
+                child: blog['image'] != null
+                    ? Image.asset('assets/gmail-logo.jpg')
+                    : Image.asset('assets/default-image.jpg'),
               ),
               SizedBox(height: 16),
 
-              // Blog Introduction Section
-              Text(
-                'Introduction',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam suspendisse morbi eleifend faucibus eget vestibulum felis. Ductus quis montes, sit sit. Tellus aliquam enim urna, etiam. Mauris posuere vulputate arcu amet, vitae nisi, tellus tincidunt. At feugiat sapien varius id.',
-                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8,),
-              Text(
-                'Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam suspendisse morbi eleifend faucibus eget vestibulum felis. Ductus quis montes, sit sit. Tellus aliquam enim urna, etiam. Mauris posuere vulputate arcu amet, vitae nisi, tellus tincidunt. At feugiat sapien varius id.',
-                style: TextStyle(fontSize: 16),
-              ),
+              // Display Content Sections Dynamically
+              for (var section in blog['content']) buildContentSection(section),
+
               SizedBox(height: 20),
 
-              // Picture Below Introduction
-              Container(
-                height: 200,
-                color: Colors.grey[300],
-                child: Center(child: Icon(Icons.image, size: 50, color: Colors.white)),
-              ),
-              SizedBox(height: 20),
-
-              // Quote Section (scrollable container with border and shadow)
-              Container(
-                height: 200, // Fixed height for the scrollable quote section
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 2),
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 8,
-                      offset: Offset(0, 3), // Shadow position
-                    ),
+              // Contributors Section (Dynamic)
+              if (blog['contributors'] != null) ...[
+                Text(
+                  'Contributors',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Column(
+                  children: [
+                    for (var contributor in blog['contributors'])
+                      contributorCard(contributor['name'], contributor['title']),
                   ],
                 ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      '"Ipsum sit mattis nulla quam nulla. Gravida id gravida ac enim mauris id. Non pellentesque congue eget consectetur turpis. Sapien, dictum molestie sem Ipsum sit mattis nulla quam nulla. Gravida id gravida ac enim mauris id. Non pellentesque congue eget consectetur turpis. Sapien, dictum molestie sem Ipsum sit mattis nulla quam nulla. Gravida id gravida ac enim mauris id. Non pellentesque congue eget consectetur turpis. Sapien, dictum molestie sem tempor. Diam elit, orci, tincidunt aenean tempus."',
-                      style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
+              ],
 
-
-              // Conclusion Section
-              Text(
-                'Conclusion',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Morbi sed imperdiet in ipsum, adipiscing elit dui lectus. Tellus id scelerisque ultrices ultrices. Duis est sit sed neque nisl, blandit elit sagittis. Odioque tristique consequat quam sed. Nisl sit aliquet tristique augue nulla purus habitasse.',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 20),
-
-              // Contributors Section
-              Text(
-                'Contributors',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Column(
-                children: [
-                  contributorCard('Full Name', 'Job title, Company name'),
-                  contributorCard('Full Name', 'Job title, Company name'),
-                  contributorCard('Full Name', 'Job title, Company name'),
-                ],
-              ),
-              SizedBox(height: 20),
-
-              // Newsletter Section
+              // Static Subscribe Section
+              SizedBox(height: 40),
               Text(
                 'Subscribe to our newsletter',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -169,6 +117,23 @@ class BlogPageDetail extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Function to build each content section dynamically based on its type
+  Widget buildContentSection(Map<String, dynamic> section) {
+    switch (section['type']) {
+      case 'bold':
+        return Text(
+          section['content']!,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        );
+      case 'scrollable':
+        return SingleChildScrollView(
+          child: Text(section['content']!),
+        );
+      default:
+        return Text(section['content']!);
+    }
   }
 
   // Contributor Card Widget

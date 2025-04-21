@@ -1,74 +1,67 @@
-import 'package:college_app/view/blog_detail_page.dart';
+import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'blog_detail_page.dart';  // Import the detail page
 
-class BlogPage extends StatelessWidget {
-  final List<Map<String, String>> blogs = [
-    {
-      'title': 'Blog title heading will go here',
-      'category': 'Category',
-      'readingTime': '5 min read',
-      'description':
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros.',
-      'image': 'assets/gmail-logo.jpg',
-    },
-    {
-      'title': 'Another blog title heading will go here',
-      'category': 'Category',
-      'readingTime': '6 min read',
-      'description':
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros.',
-      'image': 'assets/gmail-logo.jpg',
-    },
-  ];
+class BlogPage extends StatefulWidget {
+  @override
+  _BlogPageState createState() => _BlogPageState();
+}
+
+
+class _BlogPageState extends State<BlogPage> {
+  List<Map<String, dynamic>> blogs = [];
+  
+  var controller = Get.put(Controller());
+
+  // Fetch blogs from the backend
+  Future<void> fetchBlogs() async {
+    controller.isLoading.value = true;
+    final response = await http.get(Uri.parse('http://localhost:8080/api/blogs'));  // Change to your backend URL
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData);
+      blogs = List<Map<String, dynamic>>.from(responseData['blogs']);
+      controller.isLoading.value = false;
+    } else {
+      print('Failed to load blogs');
+      controller.isLoading.value = false;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBlogs();  // Fetch blogs when the page is loaded
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Blog description header
-                Text(
-                  'Describe what your blog is about',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Obx(
+          ()=> controller.isLoading.value
+              ? Center(child: CircularProgressIndicator())  // Show a loading indicator while fetching
+              : blogs.isNotEmpty ? ListView.builder(
+            itemCount: blogs.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                child: BlogCard(
+                  title: blogs[index]['title'],
+                  category: blogs[index]['category'],
+                  readingTime: blogs[index]['readingTime'],
+                  description: blogs[index]['description'],
+                  image: 'assets/gmail-logo.jpg',  // Use default image if none
+                  blog: blogs[index],  // Pass the entire blog to the detail page
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Featured blog posts',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16),
-          
-                // List of blog cards
-                ListView.builder(
-                  itemCount: blogs.length,
-                  itemBuilder: (context, index) {
-                    return BlogCard(
-                      title: blogs[index]['title']!,
-                      category: blogs[index]['category']!,
-                      readingTime: blogs[index]['readingTime']!,
-                      description: blogs[index]['description']!,
-                      image: blogs[index]['image']!,
-                    );
-                  },
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ],
-            ),
-          ),
-        ),
+              );
+            },
+          ) : Center(child: Text("No Blogs Found", style: TextStyle(color: Colors.black, fontSize: 20,),),)
       ),
     );
   }
@@ -80,6 +73,7 @@ class BlogCard extends StatelessWidget {
   final String readingTime;
   final String description;
   final String image;
+  final Map<String, dynamic> blog;
 
   BlogCard({
     required this.title,
@@ -87,6 +81,7 @@ class BlogCard extends StatelessWidget {
     required this.readingTime,
     required this.description,
     required this.image,
+    required this.blog,
   });
 
   @override
@@ -94,8 +89,8 @@ class BlogCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
-        borderRadius: BorderRadius.circular(20)
+        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)],
+        borderRadius: BorderRadius.circular(20),
       ),
       margin: EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -143,9 +138,12 @@ class BlogCard extends StatelessWidget {
             // Read more button
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => BlogPageDetail(),
-                ),);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlogPageDetail(blog: blog),
+                  ),
+                );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
