@@ -1,4 +1,7 @@
+import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'blog_detail_page.dart';  // Import the detail page
@@ -11,18 +14,22 @@ class BlogPage extends StatefulWidget {
 
 class _BlogPageState extends State<BlogPage> {
   List<Map<String, dynamic>> blogs = [];
+  
+  var controller = Get.put(Controller());
 
   // Fetch blogs from the backend
   Future<void> fetchBlogs() async {
-    final response = await http.get(Uri.parse('http://localhost:4000/api/blogs'));  // Change to your backend URL
+    controller.isLoading.value = true;
+    final response = await http.get(Uri.parse('http://localhost:8080/api/blogs'));  // Change to your backend URL
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      setState(() {
-        blogs = List<Map<String, dynamic>>.from(responseData['blogs']);
-      });
+      print(responseData);
+      blogs = List<Map<String, dynamic>>.from(responseData['blogs']);
+      controller.isLoading.value = false;
     } else {
       print('Failed to load blogs');
+      controller.isLoading.value = false;
     }
   }
 
@@ -35,23 +42,26 @@ class _BlogPageState extends State<BlogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Blog List'),
-      ),
-      body: blogs.isEmpty
-          ? Center(child: CircularProgressIndicator())  // Show a loading indicator while fetching
-          : ListView.builder(
-        itemCount: blogs.length,
-        itemBuilder: (context, index) {
-          return BlogCard(
-            title: blogs[index]['title'],
-            category: blogs[index]['category'],
-            readingTime: blogs[index]['readingTime'],
-            description: blogs[index]['description'],
-            image: blogs[index]['image'] ?? 'assets/default-image.jpg',  // Use default image if none
-            blog: blogs[index],  // Pass the entire blog to the detail page
-          );
-        },
+      backgroundColor: Colors.white,
+      body: Obx(
+          ()=> controller.isLoading.value
+              ? Center(child: CircularProgressIndicator())  // Show a loading indicator while fetching
+              : blogs.isNotEmpty ? ListView.builder(
+            itemCount: blogs.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                child: BlogCard(
+                  title: blogs[index]['title'],
+                  category: blogs[index]['category'],
+                  readingTime: blogs[index]['readingTime'],
+                  description: blogs[index]['description'],
+                  image: 'assets/gmail-logo.jpg',  // Use default image if none
+                  blog: blogs[index],  // Pass the entire blog to the detail page
+                ),
+              );
+            },
+          ) : Center(child: Text("No Blogs Found", style: TextStyle(color: Colors.black, fontSize: 20,),),)
       ),
     );
   }
@@ -79,7 +89,7 @@ class BlogCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
+        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)],
         borderRadius: BorderRadius.circular(20),
       ),
       margin: EdgeInsets.only(bottom: 16),

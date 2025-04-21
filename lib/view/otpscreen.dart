@@ -8,14 +8,15 @@ import 'dart:async';
 import '../services/apiservice.dart';
 
 class OtpScreen extends StatefulWidget {
+
   final String phone;
   String sessionId;
   String fullName;
-  OtpScreen(
-      {required this.phone, required this.sessionId, required this.fullName});
+  OtpScreen({required this.phone, required this.sessionId, required this.fullName});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
+
 }
 
 class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {

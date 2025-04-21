@@ -11,6 +11,7 @@ class BlogPageDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text('Blog Detail'),
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -39,7 +40,7 @@ class BlogPageDetail extends StatelessWidget {
                 color: Colors.grey[300],
                 height: 200,
                 child: blog['image'] != null
-                    ? Image.asset(blog['image'])
+                    ? Image.asset('assets/gmail-logo.jpg')
                     : Image.asset('assets/default-image.jpg'),
               ),
               SizedBox(height: 16),

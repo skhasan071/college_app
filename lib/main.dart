@@ -1,4 +1,3 @@
-import 'package:college_app/model/admission_process.dart';
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';
 import 'package:device_preview/device_preview.dart';
