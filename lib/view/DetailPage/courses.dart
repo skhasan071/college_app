@@ -1,36 +1,29 @@
+import 'package:college_app/services/college_services.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/model/course.dart';
 import 'package:get/get.dart';
 
-class Courses extends StatelessWidget {
-  const Courses({super.key});
+class Courses extends StatefulWidget {
+
+  String uid;
+
+  Courses(this.uid, {super.key});
+
+  @override
+  State<Courses> createState() => _CoursesState();
+}
+
+class _CoursesState extends State<Courses> {
+  List<Course> courses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getCourse();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Course> courses = [
-      Course(
-        id: '1',
-        collegeId: 'oxford123',
-        courseName: 'Bachelor of Engineering',
-        duration: '10 Years',
-        fees: 35000,
-        examType: 'JEE Exam',
-        category: 'Engineering',
-        rankType: '',
-        maxRankOrPercentile: 100,
-      ),
-      Course(
-        id: '2',
-        collegeId: 'oxford123',
-        courseName: 'Master of Business Administration',
-        duration: '2 Years',
-        fees: 45000,
-        examType: 'NEET Exam',
-        category: 'Business',
-        rankType: '',
-        maxRankOrPercentile: 100,
-      ),
-    ];
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -80,7 +73,7 @@ class Courses extends StatelessWidget {
                 ),
                 tabs:
                     [
-                          'All Courses',
+                      'All Courses',
                           'Engineering',
                           'Medical',
                           'Business',
@@ -100,7 +93,7 @@ class Courses extends StatelessWidget {
             ),
 
             const SizedBox(height: 10),
-            Expanded(
+            courses.isNotEmpty ? Expanded(
               child: TabBarView(
                 children: [
                   _buildCourseList(courses),
@@ -110,6 +103,11 @@ class Courses extends StatelessWidget {
                   _buildCourseList(courses),
                 ],
               ),
+            ) : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: Text("No Course Offered", style: TextStyle(color: Colors.black, fontSize: 20),),),
+              ],
             ),
           ],
         ),
@@ -269,4 +267,10 @@ class Courses extends StatelessWidget {
       ),
     );
   }
+
+  getCourse() async {
+    courses = await CollegeServices.getCoursesByCollege(widget.uid);
+    setState(() {});
+  }
+
 }

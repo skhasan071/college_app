@@ -20,6 +20,7 @@ class Colleges extends StatefulWidget {
 }
 
 class _CollegesState extends State<Colleges> {
+
   var controller = Get.put(Controller());
   var saveCtrl = Get.put(saveController());
   var profile = Get.put(ProfileController());
@@ -56,6 +57,12 @@ class _CollegesState extends State<Colleges> {
       fees: 90000,
     ),
   ];
+  List<College> countries = [];
+  List<College> states = [];
+  List<College> cities = [];
+  List<College> rankings = [];
+  List<College> privates = [];
+  List<College> public = [];
 
   @override
   void initState() {
@@ -78,23 +85,23 @@ class _CollegesState extends State<Colleges> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Text(
-                  "Hi, ${profile.profile.value!.name}",
+                  "Hi, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
 
-              _buildSection("Colleges Based on NIRF Ranking", colleges),
+              _buildSection("Colleges Based on NIRF Ranking", rankings),
 
               _buildBox(
                 title: "Which colleges match your preferences?",
                 buttonText: "Predict My College",
               ),
 
-              _buildSection("Colleges Based on Country", colleges),
-              _buildSection("Colleges Based on State", colleges),
-              _buildSection("Colleges Based on City", colleges),
-              _buildSection("Popular Government Colleges", colleges),
-              _buildSection("Popular Private Colleges", colleges),
+              _buildSection("Colleges Based on Country", countries),
+              _buildSection("Colleges Based on State", states),
+              _buildSection("Colleges Based on City", cities),
+              controller.isLoggedIn.value && public.isNotEmpty ? _buildSection("Popular Government Colleges", public) : Container(),
+              controller.isLoggedIn.value && privates.isNotEmpty ? _buildSection("Popular Private Colleges", privates) : Container(),
 
               _buildBox(
                 title: "Want the latest insights on colleges?",
@@ -160,7 +167,7 @@ class _CollegesState extends State<Colleges> {
                   feeRange: data[index].fees.toString(),
                   state: data[index].state,
                   ranking: data[index].ranking.toString(),
-                  studId: profile.profile.value!.id,
+                  studId: profile.profile.value != null ? profile.profile.value!.id : "12345678",
                   clgId: data[index].id,
                   clg: data[index],
                 ),
@@ -247,14 +254,24 @@ class _CollegesState extends State<Colleges> {
   }
 
   Future<void> getFavorites() async {
-    List<College> colleges = await StudentService.getFavoriteColleges(profile.profile.value!.id);
-    for(College college in colleges){
-      saveCtrl.savedColleges.add(college.id);
+    // Check if profile is null before accessing id
+    if (profile.profile.value != null) {
+      List<College> colleges = await StudentService.getFavoriteColleges(profile.profile.value!.id);
+      for (College college in colleges) {
+        saveCtrl.savedColleges.add(college.id);
+      }
+    } else {
+      // Handle case when profile is null (e.g., show a message or return early)
+      print('Profile is null, cannot fetch favorite colleges.');
     }
   }
 
   Future<void> getColleges() async {
-    colleges = await CollegeServices.getColleges();
+    rankings = await StudentService.getCollegesByRanking(profile.profile.value!.id);
+    privates = await StudentService.getPrivateCollegesByInterest(profile.profile.value!.id);
+    countries = await CollegeServices.fetchFilteredColleges(streams: profile.profile.value!.interestedStreams!, country: "India");
+    states = await CollegeServices.fetchFilteredColleges(streams: profile.profile.value!.interestedStreams!, state: "Maharashtra");
+    cities = await CollegeServices.fetchFilteredColleges(streams: profile.profile.value!.interestedStreams!, city: "Mumbai");
     setState(() {});
   }
 

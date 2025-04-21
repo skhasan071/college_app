@@ -1,96 +1,121 @@
-import 'dart:async';
+import 'package:college_app/view/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import '../services/otp_service.dart';
-import 'home_page.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+
+import '../services/apiservice.dart';
 
 class OtpScreen extends StatefulWidget {
+
   final String phone;
-  OtpScreen({required this.phone});
+  String sessionId;
+  String fullName;
+  OtpScreen({required this.phone, required this.sessionId, required this.fullName});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
+
 }
 
-class _OtpScreenState extends State<OtpScreen> {
-  final OtpService otpService = OtpService();
-  final TextEditingController otpController = TextEditingController();
-
+class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String otpCode = "";
   int countdown = 60;
-  Timer? timer;
+  late Timer _timer;
   bool isResendEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    startCountdown();
+    startTimer();
+    listenForCode();
   }
 
-  void startCountdown() {
+  void startTimer() {
     setState(() {
       countdown = 60;
       isResendEnabled = false;
     });
 
-    timer?.cancel();
-    timer = Timer.periodic(Duration(seconds: 1), (t) {
-      if (countdown == 1) {
-        t.cancel();
-        setState(() => isResendEnabled = true);
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (countdown > 0) {
+        setState(() {
+          countdown--;
+        });
       } else {
-        setState(() => countdown--);
+        setState(() {
+          isResendEnabled = true;
+        });
+        _timer.cancel();
       }
     });
   }
 
-  void verifyOtp() async {
-    String otp = otpController.text.trim();
-
-    if (otp.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Enter a valid 6-digit OTP")),
-      );
-      return;
-    }
-
-    bool success = await otpService.verifyOtp(widget.phone, otp);
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OTP verified successfully")),
-      );
-
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()), // replace with your home widget
-            (Route<dynamic> route) => false,
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid or expired OTP")),
-      );
-    }
+  @override
+  void codeUpdated() {
+    setState(() {
+      otpCode = code ?? ""; // Auto-fill OTP
+    });
   }
 
   void resendOtp() async {
-    bool sent = await otpService.sendOtp(widget.phone);
-    if (sent) {
+    if (!isResendEnabled) return;
+
+    // Call API to resend OTP and get a new session ID
+    String? newSessionId = await ApiService.sendOtp(widget.phone);
+
+    if (newSessionId != null) {
+      setState(() {
+        widget.sessionId = newSessionId; // Update the session ID
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OTP resent successfully")),
+        SnackBar(content: Text("OTP Resent Successfully!")),
       );
-      startCountdown(); // Restart timer
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to resend OTP")),
-      );
+
+      startTimer(); // Restart the timer
     }
   }
 
   @override
   void dispose() {
-    timer?.cancel();
-    otpController.dispose();
+    _timer.cancel();
     super.dispose();
+    cancel();
+  }
+
+  void verifyOtp() async {
+    if (otpCode.length == 6) {
+      bool isVerified = await ApiService.verifyOtp(widget.sessionId, otpCode);
+      if (isVerified) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("OTP Verified Successfully!")));
+
+        var response =
+        await ApiService.sendUserData(widget.fullName, widget.phone);
+
+        print("API Response: $response");
+
+        if (response != null && response.containsKey('token')) {
+          String token = response['token'];
+
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', token);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage("")),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Invalid OTP. Try again.")));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please enter a valid 6-digit OTP")));
+    }
   }
 
   @override
@@ -108,14 +133,16 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
               SizedBox(height: 20),
 
+              // Title
               Text(
                 "OTP Verification",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
 
+              // Subtitle with phone number
               Text(
-                "Enter OTP sent to your mobile\n+91-${widget.phone.substring(3, 8)}-xxxxx",
+                "Enter OTP sent to your mobile\n+91-${widget.phone.substring(0, 5)}-xxxxx",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
@@ -125,10 +152,10 @@ class _OtpScreenState extends State<OtpScreen> {
                 width: 300,
                 child: PinCodeTextField(
                   length: 6,
-                  controller: otpController,
-                  onChanged: (value) => otpCode = value,
+                  obscureText: false,
                   keyboardType: TextInputType.number,
-                  textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  textStyle:
+                  TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.underline,
                     fieldHeight: 50,
@@ -139,11 +166,18 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                   animationType: AnimationType.fade,
                   animationDuration: Duration(milliseconds: 200),
+                  onChanged: (value) {
+                    setState(() {
+                      otpCode = value;
+                    });
+                  },
                   appContext: context,
+                  controller: TextEditingController(text: otpCode), // Autofill
                 ),
               ),
               SizedBox(height: 20),
 
+              // Countdown Timer
               Text(
                 countdown > 0
                     ? "Resend OTP in ${countdown}s"
@@ -152,6 +186,7 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
               SizedBox(height: 10),
 
+              // Resend OTP Button
               TextButton(
                 onPressed: isResendEnabled ? resendOtp : null,
                 child: Text(
@@ -165,6 +200,7 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
               SizedBox(height: 20),
 
+              // Continue Button
               SizedBox(
                 width: double.infinity,
                 height: 50,

@@ -32,6 +32,24 @@ class CollegeServices {
     }
   }
 
+  static Future<List<College>> searchCollege({required List<String> streams, List<String>? countries, List<String>? states, String? searchText,}) async {
+    final uri = Uri.http('localhost:8080', '/api/colleges/search', {
+      'stream': streams,
+      if (countries != null && countries.isNotEmpty) 'country': countries,
+      if (states != null && states.isNotEmpty) 'state': states,
+      if (searchText != null && searchText.isNotEmpty) 'search': searchText,
+    });
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = json.decode(response.body);
+      return body.map((item) => College.fromMap(item)).toList();
+    } else {
+      throw Exception("Failed to load colleges: ${response.statusCode}");
+    }
+  }
+
   ///Get Filters
   static Future<List<College>> filterColleges({required List<String> interestedStreams, List<String>? coursesInterested, String? type,}) async {
     final url = Uri.parse('${_baseUrl}filter');
@@ -83,29 +101,48 @@ class CollegeServices {
     }
   }
 
-  static Future<List<College>> filterCollegesByStream({required String stream, String? country, String? state, String? city,}) async {
-    final uri = Uri.parse('${_baseUrl}colleges/filter-by-stream').replace(
+  static Future<List<College>> fetchFilteredColleges({required List<String> streams, String? country, String? state, String? city,}) async {
+    final baseUrl = Uri.parse('http://localhost:8080/api/colleges/filter-by-stream');
+
+    // Create query parameters
+    final queryParams = {
+      'stream': streams,
+      if (country != null) 'country': country,
+      if (state != null) 'state': state,
+      if (city != null) 'city': city,
+    };
+
+    final uri = Uri(
+      scheme: baseUrl.scheme,
+      host: baseUrl.host,
+      port: baseUrl.port,
+      path: baseUrl.path,
       queryParameters: {
-        'stream': stream,
-        if (country != null) 'country': country,
-        if (state != null) 'state': state,
-        if (city != null) 'city': city,
+        'stream': streams,
+        if (country != null) 'country': [country],
+        if (state != null) 'state': [state],
+        if (city != null) 'city': [city],
       },
     );
 
-    try {
-      final response = await http.get(uri);
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body) as List;
-        return data.map((college) => College.fromMap(college)).toList();
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+
+      var json = jsonDecode(response.body);
+
+      if (json is List) {
+        return json.map((d) => College.fromMap(d)).toList();
+      } else if (json is Map && json['message'] != null) {
+        throw Exception(json['message']);
       } else {
-        print('Error: ${response.body}');
-        return [];
+        throw Exception('Unexpected response format');
       }
-    } catch (e) {
-      print('Exception while filtering colleges by stream: $e');
-      return [];
+
+
+    } else {
+      throw Exception('Failed to fetch colleges: ${response.body}');
     }
   }
 

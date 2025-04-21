@@ -1,4 +1,6 @@
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/model/user.dart';
+import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/blog_page.dart';
 import 'package:college_app/view/college_predictor_page.dart';
 import 'package:college_app/view/Filters&Compare/colleges.dart';
@@ -16,7 +18,10 @@ import '../view_model/controller.dart';
 import '../view_model/profile_controller.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+
+  String token;
+
+  HomePage(this.token,{super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -65,6 +70,12 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -76,7 +87,7 @@ class _HomePageState extends State<HomePage> {
 
       appBar: getAppBar(),
 
-      body: Obx(() => screens[controller.navSelectedIndex.value]),
+      body: Obx(() => controller.isLoggedIn.value ? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
 
       drawer: DrawerWidget(),
 
@@ -150,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             border: Border.all(color: Colors.black, width: 2)
                           ),
-                          child: Center(child: Text(profileController.profile.value!.name[0], style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
+                          child: Center(child: Text(profileController.profile.value == null ? "?" : profileController.profile.value!.name[0], style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
                         ),
                       ),
                     ],
@@ -221,4 +232,13 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future<void> getUser() async {
+    print(widget.token);
+    Student? student = await StudentService().getStudent(widget.token);
+    print("StudentID = ${student!.id}");
+    profileController.profile.value = student;
+    controller.isLoggedIn.value = true;
+  }
+
 }

@@ -28,6 +28,38 @@ class StudentService {
     }
   }
 
+  Future<Student?> getStudent(token) async {
+
+    try{
+
+      final res = await http.get(
+        Uri.parse("$_baseUrl/verify-user/$token"),
+        headers: {
+          "Content-Type":"application/json",
+          "authorization":"Bearer $token"
+        }
+      );
+
+      if(res.statusCode == 200 || res.statusCode == 201){
+
+        print(jsonDecode(res.body));
+
+        Map<String, dynamic> data = jsonDecode(res.body) as Map<String, dynamic>;
+
+        return Student.fromMap(data);
+
+      }else{
+        print(jsonDecode(res.body));
+        return null;
+      }
+
+    }catch(err){
+      print(err);
+      return null;
+    }
+
+  }
+
   /// Add or update student profile
   static Future<Map<String, dynamic>?> addOrUpdateStudent({
     required String token,
@@ -167,10 +199,7 @@ class StudentService {
     }
   }
 
-  static Future<bool> removeFromFavorites(
-    String studentId,
-    String collegeId,
-  ) async {
+  static Future<bool> removeFromFavorites(String studentId, String collegeId,) async {
     try {
       final uri = Uri.parse(
         'http://localhost:8080/api/students/favorites/remove',
@@ -195,18 +224,21 @@ class StudentService {
   }
 
   ///Filters
-  static Future<List<dynamic>> getCollegesByRanking(String studentId) async {
+  static Future<List<College>> getCollegesByRanking(String studentId) async {
     try {
       final uri = Uri.parse(
-        'http://localhost:8080/api/students/ranked-colleges?studentId=$studentId',
+        'http://localhost:8080/api/students/rankings?studentId=$studentId',
       );
 
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("✅ Colleges retrieved successfully");
-        return data['colleges']; // List of college objects
+        List<dynamic> list = data['colleges'];
+        return list.map((item){
+          print(item);
+          return College.fromMap(item);
+        }).toList();
       } else {
         print("❌ Failed to retrieve colleges: ${response.body}");
         return [];
@@ -222,7 +254,7 @@ class StudentService {
   ) async {
     try {
       final uri = Uri.parse(
-        'http://localhost:8080/api/students/private-colleges-by-interest',
+        'http://localhost:8080/api/students/private-colleges',
       );
 
       final response = await http.post(

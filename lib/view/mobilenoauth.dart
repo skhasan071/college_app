@@ -33,7 +33,7 @@ class _MobilenoauthState extends State<Mobilenoauth> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OtpScreen(phone: phone),
+          builder: (context) => OtpScreen(phone: phone, sessionId: '', fullName: '',),
         ),
       );
     } else {

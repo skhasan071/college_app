@@ -3,9 +3,8 @@ import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import '../services/google_signin_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../services/auth_services.dart';
 import '../services/google_signin_api.dart';
@@ -35,7 +34,7 @@ class _SignupPageState extends State<SignupPage> {
 
     if (email.isNotEmpty && password.isNotEmpty) {
 
-      Map<String, dynamic> msgs = await AuthService.registerStudent("Hasan", email, password);
+      Map<String, dynamic> msgs = await AuthService.registerStudent(name, email, password);
 
       if(msgs['success']){
 
@@ -94,6 +93,20 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w100)))),
 
             const SizedBox(height: 50),
+            const Text(
+              "Name*",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: fullNameController,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                hintText: "Enter your name",
+                border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+              ),
+            ),
+            const SizedBox(height: 15),
             const Text(
               "Email*",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -195,7 +208,7 @@ class _SignupPageState extends State<SignupPage> {
                   elevation: 2,
                 ),
                 onPressed: () async {
-                  await signIn(); // Calling signIn method properly with async
+                  // await signIn(); // Calling signIn method properly with async
                 },
                 icon: Image.asset(
                   'assets/gmail-logo.jpg',
@@ -244,45 +257,59 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
   }
-  Future signIn() async {
-    try {
-      // Sign in with Google
-      final user = await GoogleSignIn().signIn();
 
-      if (user == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
-        return;
-      }
-
-      // Get the Google SignIn authentication
-      final GoogleSignInAuthentication authentication = await user.authentication;
-
-      // Access the Access Token (and ID Token if needed)
-      final String accessToken = authentication.accessToken!;
-
-      // Send the access token to the backend for verification
-      final response = await http.post(
-        Uri.parse("http://localhost:4000/auth/google-auth"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"accessToken": accessToken}),
-
-      );
-
-      if (response.statusCode == 200) {
-        print("Signin successful");
-        final data = jsonDecode(response.body);
-        if (data['redirect']) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        }
-      } else {
-        print(jsonDecode(response.body));
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error checking user")));
-      }
-    } catch (e) {
-      print("Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error during sign-in")));
-    }
+  // Function to save the token
+  Future<void> saveToken(String token) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
   }
+
+
+// Future signIn() async {
+  //   final user = await GoogleSignInApi.login();
+  //
+  //   if (user == null) {
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
+  //     print("failed");
+  //   } else {
+  //     // Get the email from the signed-in user
+  //     final String email = user.email;
+  //
+  //     // Send the email to the backend to check if it's already in the database
+  //     final response = await http.post(
+  //       Uri.parse("http://localhost:4000/auth/check-email"),
+  //       headers: {"Content-Type": "application/json"},
+  //       body: jsonEncode({"email": email}),
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       print("Successful");
+  //       final data = jsonDecode(response.body);
+  //
+  //       // Check the backend response to see if the user should be redirected
+  //       if (data['redirect']) {
+  //         // If redirect is true, it means the user does not exist
+  //         print("Redirecting to Dashboard (new user)");
+  //
+  //         // Navigate to the Dashboard page for new user
+  //         Navigator.of(context).pushReplacement(
+  //             MaterialPageRoute(builder: (context) => HomePage()) // Replace with actual Dashboard page
+  //         );
+  //       } else {
+  //         // If redirect is false, it means the user already exists
+  //         print("User already exists, redirecting to another page");
+  //
+  //         // Redirect to a different screen (e.g., Profile or Welcome page for existing users)
+  //         Navigator.of(context).pushReplacement(
+  //             MaterialPageRoute(builder: (context) => HomePage()) // Replace with your desired page
+  //         );
+  //       }
+  //     } else {
+  //       // If the server returns an error
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(content: Text("Error checking user"))
+  //       );
+  //     }
+  //   }   }
 }
