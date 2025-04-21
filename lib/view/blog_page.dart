@@ -8,7 +8,6 @@ class BlogPage extends StatefulWidget {
   _BlogPageState createState() => _BlogPageState();
 }
 
-
 class _BlogPageState extends State<BlogPage> {
   List<Map<String, dynamic>> blogs = [];
 
@@ -35,23 +34,56 @@ class _BlogPageState extends State<BlogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Blog List'),
-      ),
-      body: blogs.isEmpty
-          ? Center(child: CircularProgressIndicator())  // Show a loading indicator while fetching
-          : ListView.builder(
-        itemCount: blogs.length,
-        itemBuilder: (context, index) {
-          return BlogCard(
-            title: blogs[index]['title'],
-            category: blogs[index]['category'],
-            readingTime: blogs[index]['readingTime'],
-            description: blogs[index]['description'],
-            image: blogs[index]['image'] ?? 'assets/default-image.jpg',  // Use default image if none
-            blog: blogs[index],  // Pass the entire blog to the detail page
-          );
-        },
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // "Describe what your blog is about" Heading
+                Text(
+                  'Blogs To enhance you knowledge',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'all latest topics',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                SizedBox(height: 16),
+
+                // "Featured blog posts" Heading
+                Text(
+                  'Featured blog posts',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+
+                // List of blog cards
+                blogs.isEmpty
+                    ? Center(child: CircularProgressIndicator())  // Show loading indicator while fetching
+                    : ListView.builder(
+                  itemCount: blogs.length,
+                  itemBuilder: (context, index) {
+                    return BlogCard(
+                      title: blogs[index]['title'],
+                      category: blogs[index]['category'],
+                      readingTime: blogs[index]['readingTime'],
+                      description: blogs[index]['description'],
+                      image: blogs[index]['image'] ?? 'assets/default-image.jpg',  // Use default image if none
+                      blog: blogs[index],  // Pass the entire blog to the detail page
+                    );
+                  },
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
