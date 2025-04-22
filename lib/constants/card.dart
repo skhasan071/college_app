@@ -95,7 +95,7 @@ class CardStructure extends StatelessWidget {
                                 ? Icons.bookmark
                                 : Icons.bookmark_border,
                             size: 27,
-                            color: Clr.primaryBtnClr,
+                            color: themes.saveIconColor,
                           ),
                         ),
                       ),

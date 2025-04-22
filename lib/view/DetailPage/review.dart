@@ -1,6 +1,6 @@
 import 'package:college_app/view/FirstPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 class Reviews extends StatefulWidget {
@@ -9,6 +9,7 @@ class Reviews extends StatefulWidget {
 }
 
 class _ReviewsState extends State<Reviews> {
+  String formattedDate = DateFormat('MMM d, yyyy').format(DateTime.now());
   SharedPreferences? prefs;
   bool isUserLoggedIn = false;
   final List<Map<String, dynamic>> _reviews = [
@@ -18,7 +19,8 @@ class _ReviewsState extends State<Reviews> {
       "review":
           "Great faculty and amazing campus life! The computer science program is challenging but rewarding. Professors are always willing to help.",
       "rating": 5.0,
-      "date": "Jan 15, 2025",
+      "date": DateFormat('MMM d, yyyy').format(DateTime.now()),
+
       "likes": 45,
       "comments": 12,
     },
@@ -28,7 +30,8 @@ class _ReviewsState extends State<Reviews> {
       "review":
           "The engineering labs are well-equipped and modern. Career services could be better, but overall a solid educational experience.",
       "rating": 4.0,
-      "date": "Jan 10, 2025",
+      "date": DateFormat('MMM d, yyyy').format(DateTime.now()),
+
       "likes": 32,
       "comments": 8,
     },
@@ -43,7 +46,7 @@ class _ReviewsState extends State<Reviews> {
   Future<void> _loadPrefs() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      isUserLoggedIn = prefs?.getString('authToken') != null;
+      isUserLoggedIn = prefs?.getString('auth_token') != null;
     });
   }
 
@@ -111,7 +114,7 @@ class _ReviewsState extends State<Reviews> {
                       vertical: 15,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero, // No rounded border
+                      borderRadius: BorderRadius.zero,
                     ),
                   ),
                   child: const Text(
@@ -504,7 +507,10 @@ class _ReviewsState extends State<Reviews> {
                               "role": "Student",
                               "review": reviewController.text,
                               "rating": selectedRating.toDouble(),
-                              "date": "Apr 15, 2025",
+                              "date": DateFormat(
+                                'MMM d, yyyy',
+                              ).format(DateTime.now()),
+
                               "likes": 0,
                               "liked": false,
                               "comments": 0,

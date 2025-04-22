@@ -5,12 +5,19 @@ import 'package:college_app/constants/customTheme.dart';
 class ThemeController extends GetxController {
   static ThemeController get to => Get.find();
 
-  RxBool isColorMode = false.obs;
+  RxInt selectedThemeIndex = 0.obs;
 
-  CustomTheme get currentTheme =>
-      isColorMode.value ? AppThemes.coloredTheme : AppThemes.blackWhiteTheme;
+  List<CustomTheme> allThemes = [
+    AppThemes.blackWhiteTheme,
+    AppThemes.coloredTheme,
+    AppThemes.emeraldTheme,
+    AppThemes.sunsetTheme,
+    AppThemes.coolBlueTheme,
+  ];
 
-  static const _themeKey = 'isColorMode';
+  CustomTheme get currentTheme => allThemes[selectedThemeIndex.value];
+
+  static const _themeKey = 'selectedThemeIndex';
 
   @override
   void onInit() {
@@ -18,18 +25,18 @@ class ThemeController extends GetxController {
     _loadThemeFromPrefs();
   }
 
-  void toggleTheme() async {
-    isColorMode.value = !isColorMode.value;
-    _saveThemeToPrefs(isColorMode.value);
+  void changeTheme(int index) {
+    selectedThemeIndex.value = index;
+    _saveThemeToPrefs(index);
   }
 
-  Future<void> _saveThemeToPrefs(bool value) async {
+  Future<void> _saveThemeToPrefs(int value) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_themeKey, value);
+    await prefs.setInt(_themeKey, value);
   }
 
   Future<void> _loadThemeFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    isColorMode.value = prefs.getBool(_themeKey) ?? false;
+    selectedThemeIndex.value = prefs.getInt(_themeKey) ?? 0;
   }
 }

@@ -127,6 +127,7 @@ class _CollegesState extends State<Colleges> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Wrap title, filters, cards
           Container(
             margin: const EdgeInsets.symmetric(vertical: 12),
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
@@ -138,6 +139,7 @@ class _CollegesState extends State<Colleges> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -156,6 +158,8 @@ class _CollegesState extends State<Colleges> {
                     ],
                   ),
                 ),
+
+                // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: SingleChildScrollView(
@@ -173,7 +177,10 @@ class _CollegesState extends State<Colleges> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 10),
+
+                // Cards
                 SizedBox(
                   height: 420,
                   child: ListView.builder(
@@ -194,46 +201,48 @@ class _CollegesState extends State<Colleges> {
                         ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                // Arrows below card list
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        side: BorderSide(color: Clr.primaryBtnClr),
-                        padding: const EdgeInsets.all(10),
-                      ),
-                      onPressed: () {
-                        scrollController.animateTo(
-                          scrollController.offset - 300,
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                      child: const Icon(Icons.arrow_back_ios_new, size: 18),
-                    ),
-                    const SizedBox(width: 12),
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        side: BorderSide(color: Clr.primaryBtnClr),
-                        padding: const EdgeInsets.all(10),
-                      ),
-                      onPressed: () {
-                        scrollController.animateTo(
-                          scrollController.offset + 300,
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                      child: const Icon(Icons.arrow_forward_ios, size: 18),
-                    ),
-                  ],
-                ),
               ],
             ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // Arrows (outside the container)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  side: BorderSide(color: Clr.primaryBtnClr),
+                  padding: const EdgeInsets.all(10),
+                ),
+                onPressed: () {
+                  scrollController.animateTo(
+                    scrollController.offset - 300,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                child: const Icon(Icons.arrow_back_ios_new, size: 18),
+              ),
+              const SizedBox(width: 12),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  side: BorderSide(color: Clr.primaryBtnClr),
+                  padding: const EdgeInsets.all(10),
+                ),
+                onPressed: () {
+                  scrollController.animateTo(
+                    scrollController.offset + 300,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                child: const Icon(Icons.arrow_forward_ios, size: 18),
+              ),
+            ],
           ),
         ],
       );

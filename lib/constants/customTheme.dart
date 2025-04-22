@@ -10,6 +10,8 @@ class CustomTheme {
   final LinearGradient backgroundGradient; //College.dart
   final LinearGradient boxGradient;
   final List<BoxShadow> boxShadow;
+  final Color saveIconColor;
+  final Color bottonNav;
 
   const CustomTheme({
     required this.brochureBtnColor,
@@ -21,6 +23,8 @@ class CustomTheme {
     required this.backgroundGradient,
     required this.boxGradient,
     required this.boxShadow,
+    required this.saveIconColor,
+    required this.bottonNav,
   });
 }
 
@@ -50,6 +54,8 @@ class AppThemes {
         offset: Offset(0, 6),
       ),
     ],
+    saveIconColor: Colors.black,
+    bottonNav: Colors.black,
   );
 
   static final coloredTheme = CustomTheme(
@@ -85,5 +91,94 @@ class AppThemes {
         offset: Offset(0, 6),
       ),
     ],
+    saveIconColor: Colors.black,
+    bottonNav: Color(0xFFEEE6F6),
+  );
+
+  static final emeraldTheme = CustomTheme(
+    brochureBtnColor: Color(0xFF2E7D32),
+    starColor: Color(0xFFFFC107),
+    nirfTextColor: Color(0xFF1B5E20),
+    courseCountColor: Color(0xFF388E3C),
+    filterSelectedColor: Color(0xFF1B5E20),
+    filterTextColor: Colors.white,
+    backgroundGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFF1F8F5), Color(0xFFD0EAD9), Color(0xFFA5D6A7)],
+    ),
+    boxGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFD0F0C0), Color(0xFFB2DFDB)],
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Color(0xFF81C784).withOpacity(0.2),
+        blurRadius: 12,
+        spreadRadius: 2,
+        offset: Offset(0, 6),
+      ),
+    ],
+    saveIconColor: Color(0xFF2E7D32),
+    bottonNav: Color(0xFFE0F4E9),
+  );
+
+  static final sunsetTheme = CustomTheme(
+    brochureBtnColor: Color(0xFFFF7043),
+    starColor: Color(0xFFFFC107),
+    nirfTextColor: Color(0xFFE64A19),
+    courseCountColor: Color(0xFFFF8A65),
+    filterSelectedColor: Color(0xFFD84315),
+    filterTextColor: Colors.white,
+    backgroundGradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2), Color(0xFFFFCCBC)],
+    ),
+    boxGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFE0B2), Color(0xFFFFAB91)],
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Color(0xFFFF7043).withOpacity(0.15),
+        blurRadius: 12,
+        spreadRadius: 2,
+        offset: Offset(0, 5),
+      ),
+    ],
+    saveIconColor: Color(0xFFE64A19),
+    bottonNav: Color(0xFFFFF0E6),
+  );
+
+  static final coolBlueTheme = CustomTheme(
+    brochureBtnColor: Color(0xFF1E88E5),
+    starColor: Color(0xFFFFD600),
+    nirfTextColor: Color(0xFF0D47A1),
+    courseCountColor: Color(0xFF42A5F5),
+    filterSelectedColor: Color(0xFF1976D2),
+    filterTextColor: Colors.white,
+    backgroundGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB), Color(0xFF90CAF9)],
+    ),
+    boxGradient: LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: [Color(0xFFB3E5FC), Color(0xFF81D4FA)],
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Color(0xFF64B5F6).withOpacity(0.2),
+        blurRadius: 12,
+        spreadRadius: 2,
+        offset: Offset(0, 5),
+      ),
+    ],
+    saveIconColor: Color(0xFF1E88E5),
+    bottonNav: Color(0xFFE3F2FD),
   );
 }
