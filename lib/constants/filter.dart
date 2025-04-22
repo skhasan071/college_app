@@ -1,5 +1,6 @@
 import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view_model/filterController.dart';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,6 +15,7 @@ class Filter extends StatelessWidget {
     var controller = Get.put(FilterController());
 
     return Obx(() {
+      final theme = ThemeController.to.currentTheme;
       final bool selected = controller.isSelected(title);
 
       return GestureDetector(
@@ -24,7 +26,7 @@ class Filter extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.only(right: 8),
           decoration: BoxDecoration(
-            color: selected ? Colors.black : Colors.white,
+            color: selected ? theme.filterSelectedColor : Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.black),
           ),
@@ -32,7 +34,7 @@ class Filter extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: selected ? Colors.white : Colors.black,
+              color: selected ? theme.filterTextColor : Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),

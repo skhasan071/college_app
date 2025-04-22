@@ -1,4 +1,7 @@
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
@@ -18,7 +21,11 @@ class DrawerWidget extends StatelessWidget {
                     children: [
                       Text(
                         'Logo',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Cursive'),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Cursive',
+                        ),
                       ),
                       Spacer(),
                       IconButton(
@@ -32,7 +39,9 @@ class DrawerWidget extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Search',
                       prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ],
@@ -44,21 +53,146 @@ class DrawerWidget extends StatelessWidget {
               child: ListView(
                 children: [
                   _buildTile(Icons.home, 'Home'),
-                  _buildTile(Icons.favorite_border, 'Shortlist/Favorites', trailing: _badge('24')),
+
+                  //Theme Button
+                  ListTile(
+                    leading: Icon(Icons.color_lens, color: Colors.black),
+                    title: Text(
+                      'Theme',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    trailing: Obx(() {
+                      final selectedIndex =
+                          ThemeController.to.selectedThemeIndex.value;
+                      final currentColor =
+                          ThemeController.to.currentTheme.brochureBtnColor;
+
+                      final themeColors = [
+                        Colors.black,
+                        Color(0xff4B0082),
+                        Colors.green,
+                        Color(0xFFF57C00),
+                        Color(0xFF1976D2),
+                      ];
+
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: currentColor),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<int>(
+                            value: selectedIndex,
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              color: currentColor,
+                            ),
+                            focusColor: Colors.transparent,
+                            elevation: 0,
+                            dropdownColor: Colors.white,
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            onChanged: (int? newIndex) {
+                              if (newIndex != null) {
+                                ThemeController.to.changeTheme(newIndex);
+                              }
+                            },
+                            items: [
+                              DropdownMenuItem(
+                                value: 0,
+                                child: Text(
+                                  "Black & White",
+                                  style: TextStyle(
+                                    color: themeColors[0],
+                                    fontSize: 17,
+                                    fontFamily: 'Cursive',
+                                  ),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 1,
+                                child: Text(
+                                  "Purple",
+                                  style: TextStyle(
+                                    color: themeColors[1],
+                                    fontSize: 17,
+                                    fontFamily: 'Cursive',
+                                  ),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 2,
+                                child: Text(
+                                  "Emerald",
+                                  style: TextStyle(
+                                    color: themeColors[2],
+                                    fontSize: 17,
+                                    fontFamily: 'Cursive',
+                                  ),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 3,
+                                child: Text(
+                                  "Sunset",
+                                  style: TextStyle(
+                                    color: themeColors[3],
+                                    fontSize: 17,
+                                    fontFamily: 'Cursive',
+                                  ),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 4,
+                                child: Text(
+                                  "Cool Blue",
+                                  style: TextStyle(
+                                    color: themeColors[4],
+                                    fontSize: 17,
+                                    fontFamily: 'Cursive',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+
+                  _buildTile(
+                    Icons.favorite_border,
+                    'Shortlist/Favorites',
+                    trailing: _badge('24'),
+                  ),
                   ExpansionTile(
-                    leading: Icon(Icons.account_balance, color: Colors.black,),
+                    leading: Icon(Icons.account_balance, color: Colors.black),
                     iconColor: Colors.black,
-                    title: Text('Management Colleges', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                    title: Text(
+                      'Management Colleges',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     children: [
-                      _buildSubTile(Icons.star, 'Top Ranked Colleges', (){
-
-                      }),
-                      _buildSubTile(Icons.school, 'Find Colleges by Specialization', (){
-
-                      }),
-                      _buildSubTile(Icons.info_outline, 'All about Management', (){
-
-                      }),
+                      _buildSubTile(Icons.star, 'Top Ranked Colleges', () {}),
+                      _buildSubTile(
+                        Icons.school,
+                        'Find Colleges by Specialization',
+                        () {},
+                      ),
+                      _buildSubTile(
+                        Icons.info_outline,
+                        'All about Management',
+                        () {},
+                      ),
                     ],
                   ),
                   _buildTile(Icons.insights, 'Insights'),
@@ -76,17 +210,25 @@ class DrawerWidget extends StatelessWidget {
               subtitle: Text('hello@gmail.com'),
               trailing: Icon(Icons.more_vert),
               onTap: () {},
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTile(IconData icon, String title, {Widget? trailing, VoidCallback? callback}) {
+  Widget _buildTile(
+    IconData icon,
+    String title, {
+    Widget? trailing,
+    VoidCallback? callback,
+  }) {
     return ListTile(
-      leading: Icon(icon, color: Colors.black,),
-      title: Text(title, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+      leading: Icon(icon, color: Colors.black),
+      title: Text(
+        title,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      ),
       trailing: trailing,
       onTap: callback,
     );
@@ -95,8 +237,15 @@ class DrawerWidget extends StatelessWidget {
   Widget _buildSubTile(IconData icon, String title, callback) {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 56, right: 16),
-      leading: Icon(icon, size: 20, color: Colors.black,),
-      title: Text(title, style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+      leading: Icon(icon, size: 20, color: Colors.black),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       onTap: callback,
     );
   }
