@@ -96,12 +96,15 @@ class UiHelper {
               borderRadius: BorderRadius.all(Radius.circular(15)),
               color:
                   selected
-                      ? ThemeController.to.currentTheme.bottonNav
+                      ? ThemeController.to.currentTheme.bottomNav
                       : Colors.white,
             ),
             child: Icon(
               icon,
-              color: selected ? Colors.black : Colors.black,
+              color:
+                  selected
+                      ? ThemeController.to.currentTheme.bottomIcons
+                      : Colors.black,
               size: selected ? 28 : 24,
             ),
           ),

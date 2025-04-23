@@ -1,3 +1,6 @@
+import 'package:college_app/view/Setting&Support/policy&privacy.dart';
+import 'package:college_app/view/Setting&Support/settting.dart';
+import 'package:college_app/view/Setting&Support/support.dart';
 import 'package:college_app/view/profiles/profile_extension.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 class ProfilePage extends StatelessWidget {
-
   ProfilePage({super.key});
 
   var profileController = Get.put(ProfileController());
@@ -14,7 +16,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
 
       body: SingleChildScrollView(
@@ -36,8 +37,13 @@ class ProfilePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(profileController.profile.value!.name,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(
+                          profileController.profile.value!.name,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const SizedBox(height: 4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -58,7 +64,10 @@ class ProfilePage extends StatelessWidget {
                           children: [
                             Icon(Icons.phone, size: 16),
                             SizedBox(width: 4),
-                            Text(profileController.profile.value!.mobileNumber.toString()),
+                            Text(
+                              profileController.profile.value!.mobileNumber
+                                  .toString(),
+                            ),
                           ],
                         ),
                         Row(
@@ -82,22 +91,50 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Obx(
-                  ()=> profileController.isFullProfileEnable.value ?
-                  EducationPreferenceCards()
-                      : ElevatedButton(
-                    onPressed: () {
-                      profileController.isFullProfileEnable.value = true;
-                    },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    child: const Text("View Profile", style: TextStyle(color: Colors.white)),
-                  ),
+                () =>
+                    profileController.isFullProfileEnable.value
+                        ? EducationPreferenceCards()
+                        : ElevatedButton(
+                          onPressed: () {
+                            profileController.isFullProfileEnable.value = true;
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                          ),
+                          child: const Text(
+                            "View Profile",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
               ),
               const Divider(height: 40),
-              const SettingsTile(icon: Icons.settings, title: "General Settings"),
-              const SettingsTile(icon: Icons.contact_mail, title: "Contact Details"),
-              const SettingsTile(icon: Icons.privacy_tip, title: "Privacy"),
+              SettingsTile(
+                icon: Icons.settings,
+                title: "General Settings",
+                onTap: () {
+                  Get.to(() => SettingsPage());
+                },
+              ),
+
+              const SettingsTile(
+                icon: Icons.contact_mail,
+                title: "Contact Details",
+              ),
+              SettingsTile(
+                icon: Icons.privacy_tip,
+                title: "Privacy",
+                onTap: () {
+                  Get.to(() => PrivacyPolicyPage());
+                },
+              ),
               const Divider(height: 40),
-              const SettingsTile(icon: Icons.support, title: "Support"),
+              SettingsTile(
+                icon: Icons.support,
+                title: "Support",
+                onTap: () {
+                  Get.to(() => SupportPage());
+                },
+              ),
               const SettingsTile(icon: Icons.logout, title: "Logout"),
             ],
           ),
@@ -110,8 +147,14 @@ class ProfilePage extends StatelessWidget {
 class SettingsTile extends StatelessWidget {
   final IconData icon;
   final String title;
+  final VoidCallback? onTap;
 
-  const SettingsTile({super.key, required this.icon, required this.title});
+  const SettingsTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -119,10 +162,7 @@ class SettingsTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon),
       title: Text(title),
-      onTap: () {
-        // Implement navigation or actions here
-      },
+      onTap: onTap,
     );
   }
 }
-
