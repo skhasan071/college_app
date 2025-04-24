@@ -251,24 +251,6 @@ class CollegeServices {
     }
   }
 
-  static Future<List<Placement>> getPlacementByCollege(String collegeId) async {
-    final url = Uri.parse('${_baseUrl}placement/$collegeId');
-
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonData = json.decode(response.body);
-        return jsonData.map((e) => Placement.fromMap(e)).toList();
-      } else {
-        print('Failed to load placement data: ${response.statusCode}');
-        return [];
-      }
-    } catch (e) {
-      print('Exception: $e');
-      return [];
-    }
-  }
 
   static Future<Hostel?> getHostelByCollege(String collegeId) async {
     final url = Uri.parse('${_baseUrl}hostel/$collegeId');
@@ -305,5 +287,15 @@ class CollegeServices {
       return null;
     }
   }
+  static Future<Map<String, dynamic>> getScholarshipsByCollege(String collegeId) async {
+    final response = await http.get(
+      Uri.parse('${_baseUrl}scholarships/$collegeId'), // Modify with your API URL
+    );
 
+    if (response.statusCode == 200) {
+      return json.decode(response.body);  // Assuming response contains scholarships data
+    } else {
+      throw Exception('Failed to load scholarships');
+    }
+  }
 }

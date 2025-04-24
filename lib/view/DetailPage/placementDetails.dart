@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:college_app/model/placement.dart';
 
-class PlacementDetails extends StatelessWidget {
-  const PlacementDetails({super.key});
+class PlacementDetails extends StatefulWidget {
+  final String collegeId;
+  const PlacementDetails({super.key, required this.collegeId});
+
+  @override
+  State<PlacementDetails> createState() => _PlacementDetailsState();
+}
+
+class _PlacementDetailsState extends State<PlacementDetails> {
+  late Placement placementData;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPlacementData();
+  }
+
+  Future<void> fetchPlacementData() async {
+    final url = 'http://localhost:8080/api/colleges/placement/${widget.collegeId}';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      // Parse the JSON response and set it to the state
+      final data = jsonDecode(response.body);
+      setState(() {
+        placementData = Placement.fromJson(data[0]);  // Assuming the response is an array and we take the first item
+      });
+    } else {
+      // Handle error if any (e.g., no placement data found)
+      print('Error fetching placement data: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +60,9 @@ class PlacementDetails extends StatelessWidget {
         ],
         backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
+      body: placementData == null
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,19 +70,18 @@ class PlacementDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard(context, 'Average Package', '₹8.5 LPA'),
-                _buildStatCard(context, 'Highest Package', '₹45 LPA'),
+                _buildStatCard(context, 'Average Package', placementData.averagePackage),
+                _buildStatCard(context, 'Highest Package', placementData.highestPackage),
               ],
             ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard(context, 'Placement Rate', '92%'),
-                _buildStatCard(context, 'Companies Visited', '125+'),
+                _buildStatCard(context, 'Placement Rate', placementData.placementRate),
+                _buildStatCard(context, 'Number of Companies Visited', placementData.numberOfCompanyVisited),
               ],
             ),
-
             const SizedBox(height: 16),
             Divider(color: Colors.grey, thickness: 0.5),
             const SizedBox(height: 22),
@@ -57,10 +90,10 @@ class PlacementDetails extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
             ),
             const SizedBox(height: 12),
-            _buildPackageBar('Above 20 LPA', 0.75),
-            _buildPackageBar('15-20 LPA', 0.25),
-            _buildPackageBar('10-15 LPA', 0.35),
-            _buildPackageBar('5-10 LPA', 0.25),
+            _buildPackageBar('Above 20 LPA', double.parse(placementData.aboveTwenty) / 100),
+            _buildPackageBar('15-20 LPA', double.parse(placementData.fifteenToTwenty) / 100),
+            _buildPackageBar('10-15 LPA', double.parse(placementData.tenToFifteen) / 100),
+            _buildPackageBar('5-10 LPA', double.parse(placementData.fiveToTen) / 100),
             const SizedBox(height: 16),
             Divider(color: Colors.grey, thickness: 0.5),
             const SizedBox(height: 22),
@@ -72,16 +105,10 @@ class PlacementDetails extends StatelessWidget {
             Wrap(
               spacing: 18,
               runSpacing: 16,
-              children: [
-                _buildRecruiterChip('Google'),
-                _buildRecruiterChip('Microsoft'),
-                _buildRecruiterChip('Amazon'),
-                _buildRecruiterChip('Adobe'),
-                _buildRecruiterChip('Meta'),
-                _buildRecruiterChip('Apple'),
-              ],
+              children: placementData.companiesVisited.map((company) {
+                return _buildRecruiterChip(company);
+              }).toList(),
             ),
-
             const SizedBox(height: 16),
             Divider(color: Colors.grey, thickness: 0.5),
             const SizedBox(height: 22),
@@ -90,9 +117,23 @@ class PlacementDetails extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
             ),
             const SizedBox(height: 12),
-            _buildRecentPlacement('Rahul Kumar', 'Google', '₹42 LPA'),
-            _buildRecentPlacement('Priya Singh', 'Microsoft', '₹38 LPA'),
-            _buildRecentPlacement('Amit Sharma', 'Amazon', '₹30 LPA'),
+            Column(
+              children: placementData.recentPlacements.map<Widget>((placement) {
+                // Use RegExp to match the pattern (Name - Package)
+                RegExp regExp = RegExp(r'^(.*?)(?:\s*-\s*(.*))$');
+                var match = regExp.firstMatch(placement);
+
+                if (match != null) {
+                  var name = match.group(1);  // Group 1 is the name part
+                  var package = match.group(2); // Group 2 is the package part
+
+                  // Now pass name and package to the widget
+                  return _buildRecentPlacement(name!, package!); // Pass name and package
+                }
+
+                return SizedBox.shrink(); // In case the pattern doesn't match
+              }).toList(),
+            )
           ],
         ),
       ),
@@ -198,8 +239,7 @@ class PlacementDetails extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildRecentPlacement(String name, String company, String package) {
+  Widget _buildRecentPlacement(String name, String package) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
@@ -219,10 +259,10 @@ class PlacementDetails extends StatelessWidget {
           radius: 35,
           child: Icon(Icons.person, size: 28),
         ),
-
         title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('$company | $package'),
+        subtitle: Text(package), // Displaying the package here
       ),
     );
   }
+
 }

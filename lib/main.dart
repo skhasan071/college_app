@@ -1,11 +1,13 @@
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  Get.put(ThemeController());
   WidgetsFlutterBinding.ensureInitialized();
   runApp(DevicePreview(builder: (context) => MyApp()));
 }
@@ -18,7 +20,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   String? token;
 
   @override
@@ -30,8 +31,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: token == null || token == "" ? Firstpage() : HomePage(token!)
+      debugShowCheckedModeBanner: false,
+      home: token == null || token == "" ? Firstpage() : HomePage(token!),
     );
   }
 
@@ -39,7 +40,6 @@ class _MyAppState extends State<MyApp> {
     token = await getToken();
     setState(() {});
   }
-
 }
 
 // Function to get the token

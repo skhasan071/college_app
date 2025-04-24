@@ -1,4 +1,8 @@
+import 'package:college_app/view/Setting&Support/settting.dart';
+import 'package:college_app/view/Setting&Support/support.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
@@ -18,7 +22,11 @@ class DrawerWidget extends StatelessWidget {
                     children: [
                       Text(
                         'Logo',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Cursive'),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Cursive',
+                        ),
                       ),
                       Spacer(),
                       IconButton(
@@ -32,7 +40,9 @@ class DrawerWidget extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Search',
                       prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ],
@@ -44,27 +54,52 @@ class DrawerWidget extends StatelessWidget {
               child: ListView(
                 children: [
                   _buildTile(Icons.home, 'Home'),
-                  _buildTile(Icons.favorite_border, 'Shortlist/Favorites', trailing: _badge('24')),
+
+                  _buildTile(
+                    Icons.favorite_border,
+                    'Shortlist/Favorites',
+                    trailing: _badge('24'),
+                  ),
                   ExpansionTile(
-                    leading: Icon(Icons.account_balance, color: Colors.black,),
+                    leading: Icon(Icons.account_balance, color: Colors.black),
                     iconColor: Colors.black,
-                    title: Text('Management Colleges', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                    title: Text(
+                      'Management Colleges',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     children: [
-                      _buildSubTile(Icons.star, 'Top Ranked Colleges', (){
-
-                      }),
-                      _buildSubTile(Icons.school, 'Find Colleges by Specialization', (){
-
-                      }),
-                      _buildSubTile(Icons.info_outline, 'All about Management', (){
-
-                      }),
+                      _buildSubTile(Icons.star, 'Top Ranked Colleges', () {}),
+                      _buildSubTile(
+                        Icons.school,
+                        'Find Colleges by Specialization',
+                        () {},
+                      ),
+                      _buildSubTile(
+                        Icons.info_outline,
+                        'All about Management',
+                        () {},
+                      ),
                     ],
                   ),
                   _buildTile(Icons.insights, 'Insights'),
                   Divider(),
-                  _buildTile(Icons.support_agent, 'Support'),
-                  _buildTile(Icons.settings, 'Settings'),
+                  _buildTile(
+                    Icons.support_agent,
+                    'Support',
+                    callback: () {
+                      Get.to(() => SupportPage());
+                    },
+                  ),
+                  _buildTile(
+                    Icons.settings,
+                    'Settings',
+                    callback: () {
+                      Get.to(() => SettingsPage());
+                    },
+                  ),
                 ],
               ),
             ),
@@ -76,17 +111,25 @@ class DrawerWidget extends StatelessWidget {
               subtitle: Text('hello@gmail.com'),
               trailing: Icon(Icons.more_vert),
               onTap: () {},
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTile(IconData icon, String title, {Widget? trailing, VoidCallback? callback}) {
+  Widget _buildTile(
+    IconData icon,
+    String title, {
+    Widget? trailing,
+    VoidCallback? callback,
+  }) {
     return ListTile(
-      leading: Icon(icon, color: Colors.black,),
-      title: Text(title, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+      leading: Icon(icon, color: Colors.black),
+      title: Text(
+        title,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      ),
       trailing: trailing,
       onTap: callback,
     );
@@ -95,8 +138,15 @@ class DrawerWidget extends StatelessWidget {
   Widget _buildSubTile(IconData icon, String title, callback) {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 56, right: 16),
-      leading: Icon(icon, size: 20, color: Colors.black,),
-      title: Text(title, style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+      leading: Icon(icon, size: 20, color: Colors.black),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       onTap: callback,
     );
   }

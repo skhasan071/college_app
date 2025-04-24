@@ -1,7 +1,4 @@
-import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'blog_detail_page.dart';  // Import the detail page
@@ -11,25 +8,20 @@ class BlogPage extends StatefulWidget {
   _BlogPageState createState() => _BlogPageState();
 }
 
-
 class _BlogPageState extends State<BlogPage> {
   List<Map<String, dynamic>> blogs = [];
-  
-  var controller = Get.put(Controller());
 
   // Fetch blogs from the backend
   Future<void> fetchBlogs() async {
-    controller.isLoading.value = true;
     final response = await http.get(Uri.parse('http://localhost:8080/api/blogs'));  // Change to your backend URL
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      print(responseData);
-      blogs = List<Map<String, dynamic>>.from(responseData['blogs']);
-      controller.isLoading.value = false;
+      setState(() {
+        blogs = List<Map<String, dynamic>>.from(responseData['blogs']);
+      });
     } else {
       print('Failed to load blogs');
-      controller.isLoading.value = false;
     }
   }
 
@@ -43,25 +35,55 @@ class _BlogPageState extends State<BlogPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Obx(
-          ()=> controller.isLoading.value
-              ? Center(child: CircularProgressIndicator())  // Show a loading indicator while fetching
-              : blogs.isNotEmpty ? ListView.builder(
-            itemCount: blogs.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                child: BlogCard(
-                  title: blogs[index]['title'],
-                  category: blogs[index]['category'],
-                  readingTime: blogs[index]['readingTime'],
-                  description: blogs[index]['description'],
-                  image: 'assets/gmail-logo.jpg',  // Use default image if none
-                  blog: blogs[index],  // Pass the entire blog to the detail page
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // "Describe what your blog is about" Heading
+                Text(
+                  'Blogs To enhance you knowledge',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-              );
-            },
-          ) : Center(child: Text("No Blogs Found", style: TextStyle(color: Colors.black, fontSize: 20,),),)
+                SizedBox(height: 8),
+                Text(
+                  'all latest topics',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                SizedBox(height: 16),
+
+                // "Featured blog posts" Heading
+                Text(
+                  'Featured blog posts',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+
+                // List of blog cards
+                blogs.isEmpty
+                    ? Center(child: CircularProgressIndicator())  // Show loading indicator while fetching
+                    : ListView.builder(
+                  itemCount: blogs.length,
+                  itemBuilder: (context, index) {
+                    return BlogCard(
+                      title: blogs[index]['title'],
+                      category: blogs[index]['category'],
+                      readingTime: blogs[index]['readingTime'],
+                      description: blogs[index]['description'],
+                      image: blogs[index]['image'] ?? 'assets/default-image.jpg',  // Use default image if none
+                      blog: blogs[index],  // Pass the entire blog to the detail page
+                    );
+                  },
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -89,7 +111,7 @@ class BlogCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)],
+        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
         borderRadius: BorderRadius.circular(20),
       ),
       margin: EdgeInsets.only(bottom: 16),

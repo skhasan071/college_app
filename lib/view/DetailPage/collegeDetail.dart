@@ -203,11 +203,17 @@ class CollegeDetail extends StatelessWidget {
                     case "Courses":
                       Get.to(() => Courses(college.id));
                       break;
+                    case "Scholarship & Aid":
+                      Get.to(() => Scholarships(
+                          collegeId: college.id,
+                          collegeName: college.name // Pass the college name here as well
+                      ));
+                      break;
                     case "Reviews":
                       Get.to(() => Reviews(college.id));
                       break;
                     case "Placements":
-                      Get.to(() => const PlacementDetails());
+                      Get.to(() => PlacementDetails(collegeId: college.id,));
                       break;
                     case "Admission & Eligibility":
                       Get.to(() => const Admission());
@@ -215,9 +221,7 @@ class CollegeDetail extends StatelessWidget {
                     case "Cost & Location":
                       Get.to(() => const Cost());
                       break;
-                    case "Scholarship & Aid":
-                      Get.to(() => const Scholarships());
-                      break;
+
                     case "Distance from Hometown":
                       Get.to(() => const DistanceFromHometown());
                       break;

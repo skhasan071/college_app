@@ -12,7 +12,6 @@ import 'home_page.dart';
 import 'login.dart';
 import 'mobilesignup.dart';
 
-
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
@@ -33,29 +32,29 @@ class _SignupPageState extends State<SignupPage> {
     String name = fullNameController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
+      Map<String, dynamic> msgs = await AuthService.registerStudent(
+        name,
+        email,
+        password,
+      );
 
-      Map<String, dynamic> msgs = await AuthService.registerStudent(name, email, password);
-
-      if(msgs['success']){
-
+      if (msgs['success']) {
         print(msgs['token']);
         profile.profile.value = msgs['student'];
         profile.userToken.value = msgs['token'];
         print(profile.profile.value!.email + "------------------------");
         return true;
-
-      }else{
+      } else {
         String string = msgs['message'];
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(string,),
+            content: Text(string),
             backgroundColor: Colors.purple,
             duration: Duration(seconds: 2),
           ),
         );
         return false;
       }
-
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -71,26 +70,36 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-                child: RichText(
-                    text: TextSpan(
-                        text: "Sign Up",
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)))),
+              child: RichText(
+                text: TextSpan(
+                  text: "Sign Up",
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
 
             const SizedBox(height: 10),
             Center(
-                child: RichText(
-                    text: TextSpan(
-                        text: "SignUp here to continue to app",
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w100)))),
+              child: RichText(
+                text: TextSpan(
+                  text: "SignUp here to continue to app",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+              ),
+            ),
 
             const SizedBox(height: 50),
             const Text(
@@ -102,8 +111,9 @@ class _SignupPageState extends State<SignupPage> {
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
                 hintText: "Enter your name",
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
             const SizedBox(height: 15),
@@ -116,8 +126,9 @@ class _SignupPageState extends State<SignupPage> {
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 hintText: "Enter your email",
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
             const SizedBox(height: 15),
@@ -140,8 +151,9 @@ class _SignupPageState extends State<SignupPage> {
                     });
                   },
                 ),
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
             const SizedBox(height: 25),
@@ -152,23 +164,25 @@ class _SignupPageState extends State<SignupPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2)),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
                 onPressed: () async {
-
                   bool isSigned = await _handleSignUp();
 
-                  if(isSigned){
+                  if (isSigned) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CompleteProfilePage()),
+                        builder: (context) => CompleteProfilePage(),
+                      ),
                     );
                   }
-
                 },
-                child: const Text("Sign Up",
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
+                child: const Text(
+                  "Sign Up",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
             ),
             const SizedBox(height: 25),
@@ -179,18 +193,24 @@ class _SignupPageState extends State<SignupPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2)),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                   side: const BorderSide(color: Colors.black),
                 ),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => MobileSignup()),
+                    MaterialPageRoute(builder: (context) => MobileSignup()),
                   );
                 },
-                child: const Text("Sign up with Mobile Number",
-                    style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  "Sign up with Mobile Number",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -218,9 +238,10 @@ class _SignupPageState extends State<SignupPage> {
                 label: const Text(
                   "Sign Up with Gmail",
                   style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -234,24 +255,25 @@ class _SignupPageState extends State<SignupPage> {
                     TextSpan(
                       text: "Login",
                       style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()),
-                          );
-                        },
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer:
+                          TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginPage(),
+                                ),
+                              );
+                            },
                     ),
                   ],
                 ),
               ),
-
             ),
-
           ],
         ),
       ),
@@ -264,8 +286,7 @@ class _SignupPageState extends State<SignupPage> {
     await prefs.setString('auth_token', token);
   }
 
-
-// Future signIn() async {
+  // Future signIn() async {
   //   final user = await GoogleSignInApi.login();
   //
   //   if (user == null) {

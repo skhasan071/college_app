@@ -1,6 +1,8 @@
+import 'package:college_app/constants/customTheme.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/DetailPage/collegeDetail.dart';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/colors.dart';
@@ -8,6 +10,7 @@ import 'package:college_app/view_model/saveController.dart';
 import 'package:get/get.dart';
 
 class CardStructure extends StatelessWidget {
+  final theme = ThemeController.to;
   final String collegeID;
   final String collegeName;
   final int coursesCount;
@@ -37,30 +40,31 @@ class CardStructure extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.put(saveController());
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (context) =>
-                    CollegeDetail(college: clg, collegeName: '', state: ''),
-          ),
-        );
-      },
-      child: Container(
-        width: width ?? 285,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    return Obx(() {
+      final CustomTheme themes = theme.currentTheme;
+
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      CollegeDetail(college: clg, collegeName: '', state: ''),
+            ),
+          );
+        },
         child: Container(
+          width: width ?? 285,
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: Clr.cardClr,
-            border: Border.all(color: Colors.black, width: 1),
+            border: Border.all(color: Colors.black),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Stack(
-                clipBehavior: Clip.none,
                 children: [
                   Container(
                     height: 150,
@@ -78,14 +82,10 @@ class CardStructure extends StatelessWidget {
                         onTap: () async {
                           if (controller.isSaved(collegeID)) {
                             bool success = await remove(studId, clgId);
-                            if (success) {
-                              controller.toggleSave(collegeID);
-                            }
+                            if (success) controller.toggleSave(collegeID);
                           } else {
                             bool success = await save(studId, clgId);
-                            if (success) {
-                              controller.toggleSave(collegeID);
-                            }
+                            if (success) controller.toggleSave(collegeID);
                           }
                         },
                         child: Container(
@@ -95,7 +95,7 @@ class CardStructure extends StatelessWidget {
                                 ? Icons.bookmark
                                 : Icons.bookmark_border,
                             size: 27,
-                            color: Clr.primaryBtnClr,
+                            color: themes.saveIconColor,
                           ),
                         ),
                       ),
@@ -122,17 +122,17 @@ class CardStructure extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Row(
-                      children: [
-                        Icon(Icons.star, size: 18, color: Clr.primaryBtnClr),
-                        Icon(Icons.star, size: 18, color: Clr.primaryBtnClr),
-                        Icon(Icons.star, size: 18, color: Clr.primaryBtnClr),
-                        Icon(Icons.star, size: 18, color: Clr.primaryBtnClr),
+                      children: List.generate(
+                        4,
+                        (index) =>
+                            Icon(Icons.star, size: 18, color: themes.starColor),
+                      )..add(
                         Icon(
                           Icons.star_half,
                           size: 18,
-                          color: Clr.primaryBtnClr,
+                          color: themes.starColor,
                         ),
-                      ],
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -141,8 +141,9 @@ class CardStructure extends StatelessWidget {
                         _buildInfoColumn(
                           "Courses Offered",
                           "$coursesCount courses",
+                          themes,
                         ),
-                        _buildInfoColumn("Total Fees Range", feeRange),
+                        _buildInfoColumn("Total Fees Range", feeRange, themes),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -160,21 +161,28 @@ class CardStructure extends StatelessWidget {
                         const SizedBox(width: 20),
                         Text(
                           "#$ranking NIRF",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
+                            color: themes.nirfTextColor,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 14),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: UiHelper.getPrimaryBtn(
-                        title: "Brochure",
-                        callback: () {},
-                        icon: Icons.download,
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.download, size: 18),
+                      label: const Text(
+                        "Brochure",
+                        style: TextStyle(fontSize: 18),
                       ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: themes.brochureBtnColor,
+                        foregroundColor: Colors.white,
+
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -182,11 +190,11 @@ class CardStructure extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  static Widget _buildInfoColumn(String title, String value) {
+  Widget _buildInfoColumn(String title, String value, CustomTheme themes) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -194,7 +202,11 @@ class CardStructure extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: themes.courseCountColor,
+          ),
         ),
       ],
     );

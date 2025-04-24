@@ -21,7 +21,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
@@ -31,22 +30,23 @@ class _LoginPageState extends State<LoginPage> {
     String password = passwordController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
+      Map<String, dynamic> map = await AuthService.loginStudent(
+        email,
+        password,
+      );
 
-      Map<String, dynamic> map = await AuthService.loginStudent(email, password);
-
-      if(map["success"]){
-
+      if (map["success"]) {
         String token = map['token'];
 
         print("Token =============== $token");
 
         await saveToken(token);
 
-        Navigator.pushReplacement(context, MaterialPageRoute (
-            builder: (context) =>  HomePage(token)),
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(token)),
         );
-
-      }else{
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(map["message"]),
@@ -55,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       }
-
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -77,17 +76,29 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-                child: RichText(
-                    text: TextSpan(
-                        text: "Log In",
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)))),
+              child: RichText(
+                text: TextSpan(
+                  text: "Log In",
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
 
             const SizedBox(height: 10),
             Center(
-                child: RichText(
-                    text: TextSpan(
-                        text: "Login here to continue to app",
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w100)))),
+              child: RichText(
+                text: TextSpan(
+                  text: "Login here to continue to app",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+              ),
+            ),
 
             const SizedBox(height: 50),
             const Text(
@@ -98,8 +109,9 @@ class _LoginPageState extends State<LoginPage> {
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
             const SizedBox(height: 15),
@@ -121,8 +133,9 @@ class _LoginPageState extends State<LoginPage> {
                     });
                   },
                 ),
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -133,16 +146,17 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const EmailVerification()),
+                      builder: (context) => const EmailVerification(),
+                    ),
                   );
                 },
                 child: const Text(
                   "Forgot Password ?",
                   style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w100,
-                      decoration: TextDecoration.underline
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w100,
+                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),
@@ -155,11 +169,14 @@ class _LoginPageState extends State<LoginPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2)),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
                 onPressed: _handleLogin,
-                child: const Text("Login",
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
+                child: const Text(
+                  "Login",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -179,26 +196,25 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>  Mobilenoauth()),
+                    MaterialPageRoute(builder: (context) => Mobilenoauth()),
                   );
-
                 },
                 icon: Image.asset(
-                  'assets/gmail-logo.jpg',
+                  'assets/Mobile_authlogo.png',
                   height: 43,
                   width: 43,
                 ),
                 label: const Text(
                   "Log in with Mobile Number",
                   style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -231,9 +247,10 @@ class _LoginPageState extends State<LoginPage> {
                 label: const Text(
                   "Log in with Gmail",
                   style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -247,17 +264,20 @@ class _LoginPageState extends State<LoginPage> {
                     TextSpan(
                       text: "Sign up",
                       style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignupPage()),
-                          );
-                        },
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer:
+                          TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SignupPage(),
+                                ),
+                              );
+                            },
                     ),
                   ],
                 ),
@@ -311,18 +331,21 @@ class _LoginPageState extends State<LoginPage> {
       final user = await GoogleSignIn().signIn();
 
       if (user == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Signin Failed")));
         return;
       }
 
       // Get the Google SignIn authentication
-      final GoogleSignInAuthentication authentication = await user.authentication;
+      final GoogleSignInAuthentication authentication =
+          await user.authentication;
 
       // Send the access token to the backend for verification
       final response = await http.post(
         Uri.parse("http://localhost:8080/auth/google-auth"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": user.email, "name":user.displayName}),
+        body: jsonEncode({"email": user.email, "name": user.displayName}),
       );
 
       if (response.statusCode == 200) {
@@ -337,11 +360,15 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         print(jsonDecode(response.body));
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error checking user")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error checking user")));
       }
     } catch (e) {
       print("Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error during sign-in")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error during sign-in")));
     }
   }
 
@@ -350,5 +377,4 @@ class _LoginPageState extends State<LoginPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
   }
-
 }

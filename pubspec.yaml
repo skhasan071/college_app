@@ -69,7 +69,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
+    - assets/gmail-logo.jpg
+    - assets/appLogo.png
+    - assets/Mobile_authlogo.png
+    - assets/otp_image.png
+    - assets/otpscreen.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

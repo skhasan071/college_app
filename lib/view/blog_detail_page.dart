@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BlogPageDetail extends StatelessWidget {
-  final Map<String, dynamic> blog;
+  final Map<String, dynamic> blog;  // Blog data passed from the list page
 
   BlogPageDetail({required this.blog});
 
@@ -10,47 +10,79 @@ class BlogPageDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Blog Detail'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);  // Go back to the blog list page
+          },
+        ),
       ),
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Blog Title Section
+              // "All Posts" link
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Navigate back to the blog list
+                },
+                child: Text(
+                  'All Posts',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 8),
+
+              // Category and reading time
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    blog['category'] ?? 'Category',  // Use a default value if category is null
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  Text(
+                    blog['readingTime'] ?? '5 min read',  // Default reading time
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+
+              // Blog title and publish date
               Text(
-                blog['title'] ?? 'No Title',
+                blog['title'] ?? 'Blog title heading will go here',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
-                '${blog['category']} • ${blog['readingTime']}',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Published on ${blog['publishedDate']}',
+                'Published on ${blog['publishedDate'] ?? 'N/A'}',
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               SizedBox(height: 16),
 
-              // Blog Image Section (Manual Default Image)
+              // Blog Image Section
               Container(
                 color: Colors.grey[300],
                 height: 200,
                 child: blog['image'] != null
-                    ? Image.asset('assets/gmail-logo.jpg')
-                    : Image.asset('assets/default-image.jpg'),
+                    ? Image.asset(blog['image'])  // Load image from assets
+                    : Image.asset('assets/default-image.jpg'),  // Default image if none
               ),
               SizedBox(height: 16),
 
-              // Display Content Sections Dynamically
+              // Content Sections
               for (var section in blog['content']) buildContentSection(section),
 
               SizedBox(height: 20),
 
-              // Contributors Section (Dynamic)
+              // Contributors Section
               if (blog['contributors'] != null) ...[
                 Text(
                   'Contributors',
