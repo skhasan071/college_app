@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../services/user_services.dart';
+import '../DetailPage/collegeDetail.dart';
+
 
 class Colleges extends StatefulWidget {
   Colleges({super.key});
@@ -40,21 +42,27 @@ class _CollegesState extends State<Colleges> {
       type: '',
       courseCount: 18,
       fees: 20000,
+      naacGrade: "A++",
+      estYear: "1995",
+      acceptanceRate: "65%",
     ),
     College(
-      id: '2',
-      name: 'IIT Bombay',
-      city: '',
-      state: 'Maharashtra',
-      country: '',
-      ranking: 15,
-      brochure: '',
-      image: '',
-      collegeInfo: '',
-      stream: '',
-      type: '',
-      courseCount: 19,
-      fees: 90000,
+        id: '2',
+        name: 'IIT Bombay',
+        city: '',
+        state: 'Maharashtra',
+        country: '',
+        ranking: 15,
+        brochure: '',
+        image: '',
+        collegeInfo: '',
+        stream: '',
+        type: '',
+        courseCount: 19,
+        fees: 90000,
+        naacGrade: "A++",
+        estYear: "1995",
+        acceptanceRate: "65%"
     ),
   ];
   List<College> countries = [];
@@ -63,6 +71,7 @@ class _CollegesState extends State<Colleges> {
   List<College> rankings = [];
   List<College> privates = [];
   List<College> public = [];
+  bool isLoading = false;  // To track loading state
 
   @override
   void initState() {
@@ -188,17 +197,43 @@ class _CollegesState extends State<Colleges> {
                     scrollDirection: Axis.horizontal,
                     itemCount: data.length,
                     itemBuilder:
-                        (context, index) => CardStructure(
-                          collegeID: data[index].id,
-                          collegeName: data[index].name,
-                          coursesCount: data[index].courseCount,
-                          feeRange: data[index].fees.toString(),
-                          state: data[index].state,
-                          ranking: data[index].ranking.toString(),
-                          studId: profile.profile.value!.id,
-                          clgId: data[index].id,
-                          clg: data[index],
-                        ),
+                        (context, index) => GestureDetector(
+                      onTap: () async {
+                        setState(() {
+                          isLoading = true;  // Show loader on click
+                        });
+
+                        // Simulate loading delay (e.g., 1 second)
+                        await Future.delayed(Duration(seconds: 5));
+
+                        // Navigate to CollegeDetail
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CollegeDetail(
+                              college: data[index],
+                              collegeName: data[index].name,
+                              state: data[index].state,
+                            ),
+                          ),
+                        );
+
+                        setState(() {
+                          isLoading = false;  // Hide loader after navigation
+                        });
+                      },
+                      child: CardStructure(
+                        collegeID: data[index].id,
+                        collegeName: data[index].name,
+                        coursesCount: data[index].courseCount,
+                        feeRange: data[index].fees.toString(),
+                        state: data[index].state,
+                        ranking: data[index].ranking.toString(),
+                        studId: profile.profile.value!.id,
+                        clgId: data[index].id,
+                        clg: data[index],
+                      ),
+                    ),
                   ),
                 ),
               ],
