@@ -13,7 +13,7 @@ class _BlogPageState extends State<BlogPage> {
 
   // Fetch blogs from the backend
   Future<void> fetchBlogs() async {
-    final response = await http.get(Uri.parse('http://localhost:4000/api/blogs'));  // Change to your backend URL
+    final response = await http.get(Uri.parse('http://localhost:8080/api/blogs'));  // Change to your backend URL
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
