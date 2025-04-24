@@ -32,21 +32,34 @@ class CollegeServices {
     }
   }
 
-  static Future<List<College>> searchCollege({required List<String> streams, List<String>? countries, List<String>? states, String? searchText,}) async {
+  Future<List<College>> searchColleges({
+    required String searchText,
+    List<String>? streams,
+    List<String>? countries,
+    List<String>? states,
+  }) async {
     final uri = Uri.http('localhost:8080', '/api/colleges/search', {
-      'stream': streams,
-      if (countries != null && countries.isNotEmpty) 'country': countries,
-      if (states != null && states.isNotEmpty) 'state': states,
-      if (searchText != null && searchText.isNotEmpty) 'search': searchText,
+      'search': searchText,
+      if (streams != null && streams.isNotEmpty) 'stream': streams.join(','),
+      if (countries != null && countries.isNotEmpty) 'country': countries.join(','),
+      if (states != null && states.isNotEmpty) 'state': states.join(','),
     });
 
-    final response = await http.get(uri);
+    try {
+      final response = await http.get(uri);
 
-    if (response.statusCode == 200) {
-      List<dynamic> body = json.decode(response.body);
-      return body.map((item) => College.fromMap(item)).toList();
-    } else {
-      throw Exception("Failed to load colleges: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        final List colleges = json.decode(response.body);
+        print("Colleges found: $colleges");
+        return colleges.map((item) => College.fromMap(item)).toList();
+      } else {
+        final error = json.decode(response.body);
+        print("Error: ${error['message']}");
+        return [];
+      }
+    } catch (e) {
+      print("Exception: $e");
+      return [];
     }
   }
 

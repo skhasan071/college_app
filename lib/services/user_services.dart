@@ -5,6 +5,7 @@ import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/college.dart';
+import '../model/review.dart';
 
 class StudentService {
   static const String _baseUrl = 'http://localhost:8080/api/students';
@@ -220,6 +221,48 @@ class StudentService {
     } catch (e) {
       print("❌ Exception in removeFromFavorites: $e");
       return false;
+    }
+  }
+
+
+  Future<Review?> postReview(Review review) async {
+    final url = Uri.parse('http://localhost:8080/api/colleges/reviews');
+
+    try{
+
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(review.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        print("Review added: ${response.body}");
+        return Review.fromJson(jsonDecode(response.body)['review']);
+      } else {
+        print("Failed to post review: ${response.statusCode} ${response.body}");
+        return null;
+      }
+
+    }catch(err){
+      print(err);
+      return null;
+    }
+  }
+
+  Future<List<Review>> getReviews(String uid) async {
+    final url = Uri.parse('http://localhost:8080/api/colleges/reviews/getAll/$uid');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List decoded = jsonDecode(response.body);
+      return decoded.map((json) => Review.fromJson(json)).toList();
+    } else {
+      print("Failed to fetch reviews: ${response.statusCode} ${response.body}");
+      return [];
     }
   }
 

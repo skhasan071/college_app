@@ -1,9 +1,20 @@
+import 'package:college_app/model/review.dart';
+import 'package:college_app/services/college_services.dart';
+import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/FirstPage.dart';
+import 'package:college_app/view_model/profile_controller.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 
 class Reviews extends StatefulWidget {
+
+  String uid;
+
+  Reviews(this.uid, {super.key});
+
   @override
   State<Reviews> createState() => _ReviewsState();
 }
@@ -11,45 +22,28 @@ class Reviews extends StatefulWidget {
 class _ReviewsState extends State<Reviews> {
   SharedPreferences? prefs;
   bool isUserLoggedIn = false;
-  final List<Map<String, dynamic>> _reviews = [
-    {
-      "name": "Sarah Johnson",
-      "role": "Computer Science Student",
-      "review":
-          "Great faculty and amazing campus life! The computer science program is challenging but rewarding. Professors are always willing to help.",
-      "rating": 5.0,
-      "date": "Jan 15, 2025",
-      "likes": 45,
-      "comments": 12,
-    },
-    {
-      "name": "Michael Chen",
-      "role": "Engineering Graduate",
-      "review":
-          "The engineering labs are well-equipped and modern. Career services could be better, but overall a solid educational experience.",
-      "rating": 4.0,
-      "date": "Jan 10, 2025",
-      "likes": 32,
-      "comments": 8,
-    },
-  ];
+  List<Review> _reviews = [];
+  var pfp = Get.find<ProfileController>();
+  double averageRating = 0;
+  List<int> percents = [0,0,0,0,0];
 
   @override
   void initState() {
     super.initState();
     _loadPrefs();
+    getReviews();
   }
 
   Future<void> _loadPrefs() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      isUserLoggedIn = prefs?.getString('authToken') != null;
+      isUserLoggedIn = prefs?.getString('auth_token') != null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    double averageRating = 3.0;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 3,
@@ -126,15 +120,15 @@ class _ReviewsState extends State<Reviews> {
             const SizedBox(height: 22),
 
             // Rating distribution
-            _buildRatingBar("5 star", 75),
+            _buildRatingBar("5 star", percents[0]),
             const SizedBox(height: 8),
-            _buildRatingBar("4 star", 15),
+            _buildRatingBar("4 star", percents[1]),
             const SizedBox(height: 8),
-            _buildRatingBar("3 star", 5),
+            _buildRatingBar("3 star", percents[2]),
             const SizedBox(height: 8),
-            _buildRatingBar("2 star", 3),
+            _buildRatingBar("2 star", percents[3]),
             const SizedBox(height: 8),
-            _buildRatingBar("1 star", 2),
+            _buildRatingBar("1 star", percents[4]),
             const SizedBox(height: 24),
             const SizedBox(height: 16),
             Divider(color: Colors.grey, thickness: 0.5),
@@ -143,13 +137,13 @@ class _ReviewsState extends State<Reviews> {
             // Dynamic review list
             ..._reviews.map((review) {
               return _buildReviewItem(
-                review["name"],
-                review["role"],
-                review["review"],
-                review["rating"],
-                review["date"],
-                review["likes"],
-                review["comments"],
+                review.name,
+                review.studentemail,
+                review.reviewtext,
+                review.rating.toDouble(),
+                "date",
+                review.likes,
+                10,
               );
             }).toList(),
             ElevatedButton.icon(
@@ -494,22 +488,18 @@ class _ReviewsState extends State<Reviews> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (reviewController.text.isNotEmpty &&
                             selectedRating > 0) {
                           Navigator.pop(context);
-                          setState(() {
-                            _reviews.insert(0, {
-                              "name": "You",
-                              "role": "Student",
-                              "review": reviewController.text,
-                              "rating": selectedRating.toDouble(),
-                              "date": "Apr 15, 2025",
-                              "likes": 0,
-                              "liked": false,
-                              "comments": 0,
-                            });
-                          });
+                          Review review = Review(name:pfp.profile.value!.name, uid: widget.uid, studentemail: pfp.profile.value!.email, rating: selectedRating, reviewtext: reviewController.text.trim(), likes: 0);
+                          Review? rev = await StudentService().postReview(review);
+
+                          if(rev != null){
+                            _reviews.insert(0, rev);
+                            setState(() {});
+                          }
+
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -531,4 +521,66 @@ class _ReviewsState extends State<Reviews> {
       },
     );
   }
+
+  getReviews() async {
+    _reviews = await StudentService().getReviews(widget.uid);
+
+    averageRating = getAvgRating();
+    percents = getPercents();
+
+    setState(() {});
+
+  }
+
+  double getAvgRating() {
+
+    int reviews = _reviews.length;
+
+    int sum = 0;
+
+    for(Review review in _reviews){
+      sum += review.rating;
+    }
+
+    setState(() {});
+
+    return (sum/reviews);
+
+  }
+
+  List<int> getPercents() {
+
+    List<int> percents = [0,0,0,0,0];
+    List<int> per = [0,0,0,0,0];
+
+    for(int i = 0; i < _reviews.length; i++){
+      print(_reviews[i].rating);
+      switch(_reviews[i].rating){
+        case 5:
+          per[0] += 1;
+          break;
+        case 4:
+          per[1] += 1;
+          break;
+        case 3:
+          per[2] += 1;
+          break;
+        case 2:
+          per[3] += 1;
+          break;
+        case 1:
+          per[4] += 1;
+      }
+
+    }
+
+    for(int i = 0; i<per.length; i++){
+
+      percents[i] = ((per[i] * 100) / _reviews.length).toInt();
+
+    }
+
+    return percents;
+  }
+
 }

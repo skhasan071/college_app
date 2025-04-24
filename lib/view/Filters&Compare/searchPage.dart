@@ -1,10 +1,14 @@
 import 'package:college_app/services/college_services.dart';
+import 'package:college_app/view/Filters&Compare/search_res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:college_app/view_model/searchController.dart';
 
+import '../../model/college.dart';
+
 class SelectionPage extends StatelessWidget {
   final controller = Get.put(SelectionController());
+  var searchCtrl = TextEditingController();
 
   final List<String> states = [
     'Delhi',
@@ -47,6 +51,7 @@ class SelectionPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 16),
 
               child: TextField(
+                controller: searchCtrl,
                 decoration: InputDecoration(
                   hintText: "Search here...",
                   prefixIcon: Icon(Icons.search),
@@ -55,12 +60,22 @@ class SelectionPage extends StatelessWidget {
                   ),
                   filled: true,
                   fillColor: Colors.white,
+                  suffixIcon: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () async {
+                            List<College> clgs = await CollegeServices().searchColleges(searchText: searchCtrl.text.trim(), streams: controller.selectedStreams.toList(), states: controller.selectedLocations.toList(), countries: controller.selectedCountries.toList());
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchRes(clgs)));
+                          },
+                          child: Text("Search", style: TextStyle(color: Colors.black),),
+                      )
+                    ],
+                  )
                 ),
-                onSubmitted: (query){
-
-                  CollegeServices.searchCollege(streams: streams);
-
-                },
               ),
             ),
 

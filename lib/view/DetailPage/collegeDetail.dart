@@ -204,7 +204,7 @@ class CollegeDetail extends StatelessWidget {
                       Get.to(() => Courses(college.id));
                       break;
                     case "Reviews":
-                      Get.to(() => Reviews());
+                      Get.to(() => Reviews(college.id));
                       break;
                     case "Placements":
                       Get.to(() => const PlacementDetails());
