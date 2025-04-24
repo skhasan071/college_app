@@ -11,7 +11,8 @@ class CustomTheme {
   final LinearGradient boxGradient;
   final List<BoxShadow> boxShadow;
   final Color saveIconColor;
-  final Color bottonNav;
+  final Color bottomNav;
+  final Color bottomIcons;
 
   const CustomTheme({
     required this.brochureBtnColor,
@@ -24,7 +25,8 @@ class CustomTheme {
     required this.boxGradient,
     required this.boxShadow,
     required this.saveIconColor,
-    required this.bottonNav,
+    required this.bottomNav,
+    required this.bottomIcons,
   });
 }
 
@@ -55,7 +57,8 @@ class AppThemes {
       ),
     ],
     saveIconColor: Colors.black,
-    bottonNav: Colors.black,
+    bottomNav: Colors.black,
+    bottomIcons: Colors.white,
   );
 
   static final coloredTheme = CustomTheme(
@@ -92,7 +95,8 @@ class AppThemes {
       ),
     ],
     saveIconColor: Colors.black,
-    bottonNav: Color(0xFFEEE6F6),
+    bottomNav: Color(0xFFEEE6F6),
+    bottomIcons: Colors.black,
   );
 
   static final emeraldTheme = CustomTheme(
@@ -121,7 +125,8 @@ class AppThemes {
       ),
     ],
     saveIconColor: Color(0xFF2E7D32),
-    bottonNav: Color(0xFFE0F4E9),
+    bottomNav: Color(0xFFE0F4E9),
+    bottomIcons: Colors.black,
   );
 
   static final sunsetTheme = CustomTheme(
@@ -150,7 +155,8 @@ class AppThemes {
       ),
     ],
     saveIconColor: Color(0xFFE64A19),
-    bottonNav: Color(0xFFFFF0E6),
+    bottomNav: Color(0xFFFFF0E6),
+    bottomIcons: Colors.black,
   );
 
   static final coolBlueTheme = CustomTheme(
@@ -179,6 +185,7 @@ class AppThemes {
       ),
     ],
     saveIconColor: Color(0xFF1E88E5),
-    bottonNav: Color(0xFFE3F2FD),
+    bottomNav: Color(0xFFE3F2FD),
+    bottomIcons: Colors.black,
   );
 }

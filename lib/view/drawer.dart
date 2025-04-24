@@ -1,4 +1,5 @@
-import 'package:college_app/view_model/themeController.dart';
+import 'package:college_app/view/Setting&Support/settting.dart';
+import 'package:college_app/view/Setting&Support/support.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -54,118 +55,6 @@ class DrawerWidget extends StatelessWidget {
                 children: [
                   _buildTile(Icons.home, 'Home'),
 
-                  //Theme Button
-                  ListTile(
-                    leading: Icon(Icons.color_lens, color: Colors.black),
-                    title: Text(
-                      'Theme',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    trailing: Obx(() {
-                      final selectedIndex =
-                          ThemeController.to.selectedThemeIndex.value;
-                      final currentColor =
-                          ThemeController.to.currentTheme.brochureBtnColor;
-
-                      final themeColors = [
-                        Colors.black,
-                        Color(0xff4B0082),
-                        Colors.green,
-                        Color(0xFFF57C00),
-                        Color(0xFF1976D2),
-                      ];
-
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: currentColor),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<int>(
-                            value: selectedIndex,
-                            icon: Icon(
-                              Icons.arrow_drop_down,
-                              color: currentColor,
-                            ),
-                            focusColor: Colors.transparent,
-                            elevation: 0,
-                            dropdownColor: Colors.white,
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                            onChanged: (int? newIndex) {
-                              if (newIndex != null) {
-                                ThemeController.to.changeTheme(newIndex);
-                              }
-                            },
-                            items: [
-                              DropdownMenuItem(
-                                value: 0,
-                                child: Text(
-                                  "Black & White",
-                                  style: TextStyle(
-                                    color: themeColors[0],
-                                    fontSize: 17,
-                                    fontFamily: 'Cursive',
-                                  ),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: 1,
-                                child: Text(
-                                  "Purple",
-                                  style: TextStyle(
-                                    color: themeColors[1],
-                                    fontSize: 17,
-                                    fontFamily: 'Cursive',
-                                  ),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: 2,
-                                child: Text(
-                                  "Emerald",
-                                  style: TextStyle(
-                                    color: themeColors[2],
-                                    fontSize: 17,
-                                    fontFamily: 'Cursive',
-                                  ),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: 3,
-                                child: Text(
-                                  "Sunset",
-                                  style: TextStyle(
-                                    color: themeColors[3],
-                                    fontSize: 17,
-                                    fontFamily: 'Cursive',
-                                  ),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: 4,
-                                child: Text(
-                                  "Cool Blue",
-                                  style: TextStyle(
-                                    color: themeColors[4],
-                                    fontSize: 17,
-                                    fontFamily: 'Cursive',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-
                   _buildTile(
                     Icons.favorite_border,
                     'Shortlist/Favorites',
@@ -197,8 +86,20 @@ class DrawerWidget extends StatelessWidget {
                   ),
                   _buildTile(Icons.insights, 'Insights'),
                   Divider(),
-                  _buildTile(Icons.support_agent, 'Support'),
-                  _buildTile(Icons.settings, 'Settings'),
+                  _buildTile(
+                    Icons.support_agent,
+                    'Support',
+                    callback: () {
+                      Get.to(() => SupportPage());
+                    },
+                  ),
+                  _buildTile(
+                    Icons.settings,
+                    'Settings',
+                    callback: () {
+                      Get.to(() => SettingsPage());
+                    },
+                  ),
                 ],
               ),
             ),
