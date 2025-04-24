@@ -1,3 +1,4 @@
+import 'package:college_app/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,6 +14,8 @@ class PlacementDetails extends StatefulWidget {
 
 class _PlacementDetailsState extends State<PlacementDetails> {
   late Placement placementData;
+  bool isLoading = true; // Loading state for the page
+  String errorMessage = ""; // To show an error message if data isn't found
 
   @override
   void initState() {
@@ -25,14 +28,25 @@ class _PlacementDetailsState extends State<PlacementDetails> {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      // Parse the JSON response and set it to the state
       final data = jsonDecode(response.body);
-      setState(() {
-        placementData = Placement.fromJson(data[0]);  // Assuming the response is an array and we take the first item
-      });
+
+      // Check if the data exists and assign it to placementData
+      if (data.isNotEmpty) {
+        setState(() {
+          placementData = Placement.fromJson(data[0]);  // Assuming the response is an array and we take the first item
+          isLoading = false; // Stop showing loader
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+          errorMessage = "No placement data available for this college."; // Set error message if no data
+        });
+      }
     } else {
-      // Handle error if any (e.g., no placement data found)
-      print('Error fetching placement data: ${response.statusCode}');
+      setState(() {
+        isLoading = false;
+        errorMessage = "Error fetching placement data."; // Set error message if there is an API error
+      });
     }
   }
 
@@ -60,80 +74,85 @@ class _PlacementDetailsState extends State<PlacementDetails> {
         ],
         backgroundColor: Colors.white,
       ),
-      body: placementData == null
-          ? Center(child: CircularProgressIndicator())
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())  // Show loader while loading data
           : SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStatCard(context, 'Average Package', placementData.averagePackage),
-                _buildStatCard(context, 'Highest Package', placementData.highestPackage),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStatCard(context, 'Placement Rate', placementData.placementRate),
-                _buildStatCard(context, 'Number of Companies Visited', placementData.numberOfCompanyVisited),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Divider(color: Colors.grey, thickness: 0.5),
-            const SizedBox(height: 22),
-            const Text(
-              'Package Distribution',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-            const SizedBox(height: 12),
-            _buildPackageBar('Above 20 LPA', double.parse(placementData.aboveTwenty) / 100),
-            _buildPackageBar('15-20 LPA', double.parse(placementData.fifteenToTwenty) / 100),
-            _buildPackageBar('10-15 LPA', double.parse(placementData.tenToFifteen) / 100),
-            _buildPackageBar('5-10 LPA', double.parse(placementData.fiveToTen) / 100),
-            const SizedBox(height: 16),
-            Divider(color: Colors.grey, thickness: 0.5),
-            const SizedBox(height: 22),
-            const Text(
-              'Top Recruiters',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 18,
-              runSpacing: 16,
-              children: placementData.companiesVisited.map((company) {
-                return _buildRecruiterChip(company);
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-            Divider(color: Colors.grey, thickness: 0.5),
-            const SizedBox(height: 22),
-            const Text(
-              'Recent Placements',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-            ),
-            const SizedBox(height: 12),
-            Column(
-              children: placementData.recentPlacements.map<Widget>((placement) {
-                // Use RegExp to match the pattern (Name - Package)
-                RegExp regExp = RegExp(r'^(.*?)(?:\s*-\s*(.*))$');
-                var match = regExp.firstMatch(placement);
-
-                if (match != null) {
-                  var name = match.group(1);  // Group 1 is the name part
-                  var package = match.group(2); // Group 2 is the package part
-
-                  // Now pass name and package to the widget
-                  return _buildRecentPlacement(name!, package!); // Pass name and package
-                }
-
-                return SizedBox.shrink(); // In case the pattern doesn't match
-              }).toList(),
-            )
+            if (errorMessage.isNotEmpty) // If error message exists, show it
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(color: Colors.red, fontSize: 18),
+                ),
+              ),
+            if (errorMessage.isEmpty) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildStatCard(context, 'Average Package', placementData.averagePackage),
+                  _buildStatCard(context, 'Highest Package', placementData.highestPackage),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildStatCard(context, 'Placement Rate', placementData.placementRate),
+                  _buildStatCard(context, 'Number of Companies Visited', placementData.numberOfCompanyVisited),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Divider(color: Colors.grey, thickness: 0.5),
+              const SizedBox(height: 22),
+              const Text(
+                'Package Distribution',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              const SizedBox(height: 12),
+              _buildPackageBar('Above 20 LPA', double.parse(placementData.aboveTwenty) / 100),
+              _buildPackageBar('15-20 LPA', double.parse(placementData.fifteenToTwenty) / 100),
+              _buildPackageBar('10-15 LPA', double.parse(placementData.tenToFifteen) / 100),
+              _buildPackageBar('5-10 LPA', double.parse(placementData.fiveToTen) / 100),
+              const SizedBox(height: 16),
+              Divider(color: Colors.grey, thickness: 0.5),
+              const SizedBox(height: 22),
+              const Text(
+                'Top Recruiters',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 18,
+                runSpacing: 16,
+                children: placementData.companiesVisited.map((company) {
+                  return _buildRecruiterChip(company);
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              Divider(color: Colors.grey, thickness: 0.5),
+              const SizedBox(height: 22),
+              const Text(
+                'Recent Placements',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              const SizedBox(height: 12),
+              Column(
+                children: placementData.recentPlacements.map<Widget>((placement) {
+                  RegExp regExp = RegExp(r'^(.*?)(?:\s*-\s*(.*))$');
+                  var match = regExp.firstMatch(placement);
+                  if (match != null) {
+                    var name = match.group(1);
+                    var package = match.group(2);
+                    return _buildRecentPlacement(name!, package!);
+                  }
+                  return SizedBox.shrink();
+                }).toList(),
+              )
+            ]
           ],
         ),
       ),
@@ -239,6 +258,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
       ),
     );
   }
+
   Widget _buildRecentPlacement(String name, String package) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -260,9 +280,8 @@ class _PlacementDetailsState extends State<PlacementDetails> {
           child: Icon(Icons.person, size: 28),
         ),
         title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(package), // Displaying the package here
+        subtitle: Text(package),
       ),
     );
   }
-
 }

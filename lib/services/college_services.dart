@@ -32,6 +32,8 @@ class CollegeServices {
     }
   }
 
+
+
   Future<List<College>> searchColleges({
     required String searchText,
     List<String>? streams,

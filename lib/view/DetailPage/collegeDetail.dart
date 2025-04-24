@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:college_app/view/Filters&Compare/compareWith.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,11 +17,13 @@ import 'package:college_app/view/DetailPage/insights.dart';
 import 'package:college_app/view/DetailPage/Q&A.dart';
 import 'package:college_app/view/DetailPage/hostel.dart';
 import 'package:college_app/view/DetailPage/cutoff.dart';
+import 'package:http/http.dart' as http;
 
+import '../../model/Placement.dart';
 import '../../model/college.dart';
 
-class CollegeDetail extends StatelessWidget {
-  College college;
+class CollegeDetail extends StatefulWidget {
+  final College college;
 
   CollegeDetail({
     required this.college,
@@ -28,24 +32,68 @@ class CollegeDetail extends StatelessWidget {
     required String state,
   });
 
+  @override
+  State<CollegeDetail> createState() => _CollegeDetailState();
+}
+
+class _CollegeDetailState extends State<CollegeDetail> {
   final tabController = Get.put(CollegeTabController());
+
   final saveCtrl = Get.put(saveController());
+  late Placement? placementData;
+  bool isLoading = true;
+  String errorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPlacementData();
+  }
+  Future<void> fetchPlacementData() async {
+    final url = 'http://localhost:8080/api/colleges/placement/${widget.college.id}';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data.isNotEmpty) {
+        setState(() {
+          placementData = Placement.fromJson(data[0]);
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+          errorMessage = "No placement data available for this college.";
+        });
+      }
+    } else {
+      setState(() {
+        isLoading = false;
+        errorMessage = "Error fetching placement data.";
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        title: Text(widget.college.name, style: const TextStyle(color: Colors.black)),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
         actions: [
           Obx(
-            () => InkWell(
+                () => InkWell(
               onTap: () {
-                saveCtrl.toggleSave(college.id);
+                saveCtrl.toggleSave(widget.college.id);
               },
-              child: Container(
+              child: Padding(
                 padding: const EdgeInsets.all(6),
                 child: Icon(
-                  saveCtrl.isSaved(college.id)
+                  saveCtrl.isSaved(widget.college.id)
                       ? Icons.bookmark
                       : Icons.bookmark_border,
                   size: 27,
@@ -59,40 +107,55 @@ class CollegeDetail extends StatelessWidget {
             onPressed: () {},
           ),
         ],
-        backgroundColor: Colors.white,
       ),
-      body: Column(
+      body:isLoading
+          ? Center(child: CircularProgressIndicator())  // Show loader while fetching
+          : placementData == null || errorMessage.isNotEmpty
+          ? Center(child: Text(errorMessage.isNotEmpty ? errorMessage : 'No data available'))
+          :
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          // ✅ College Banner Image
+          widget.college.image.isNotEmpty
+              ? Image.network(
+            widget.college.image,
+            height: 180,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          )
+              : Container(
             height: 180,
             color: Colors.grey[300],
             child: const Center(child: Icon(Icons.image, size: 50)),
           ),
+
+          // ✅ College Name and State
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  college.name,
+                  widget.college.name,
                   style: const TextStyle(
                     fontSize: 22,
-                    color: Colors.black,
                     fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     const Icon(Icons.location_on, size: 18),
                     const SizedBox(width: 4),
                     Text(
-                      college.state,
+                      widget.college.state,
                       style: const TextStyle(fontSize: 16, color: Colors.black),
                     ),
                   ],
                 ),
-
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
@@ -120,7 +183,7 @@ class CollegeDetail extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CompareWith(clg: college),
+                              builder: (context) => CompareWith(clg: widget.college),
                             ),
                           );
                         },
@@ -147,26 +210,27 @@ class CollegeDetail extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+
+          // ✅ NAAC, Rank, Establishment
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
-                  "#1\nNIRF Rank",
+                  "#${widget.college.ranking}\nNIRF Rank",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "A++\nNAAC Grade",
+                  "${widget.college.naacGrade}\nNAAC Grade",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "1961\nEstablished",
+                  "${widget.college.estYear}\nEstablished",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -201,19 +265,19 @@ class CollegeDetail extends StatelessWidget {
                 if (selectedTab != "Overview") {
                   switch (selectedTab) {
                     case "Courses":
-                      Get.to(() => Courses(college.id));
+                      Get.to(() => Courses(widget.college.id));
                       break;
                     case "Scholarship & Aid":
                       Get.to(() => Scholarships(
-                          collegeId: college.id,
-                          collegeName: college.name // Pass the college name here as well
+                          collegeId: widget.college.id,
+                          collegeName: widget.college.name // Pass the college name here as well
                       ));
                       break;
                     case "Reviews":
-                      Get.to(() => Reviews(college.id));
+                      Get.to(() => Reviews(widget.college.id));
                       break;
                     case "Placements":
-                      Get.to(() => PlacementDetails(collegeId: college.id,));
+                      Get.to(() => PlacementDetails(collegeId: widget.college.id,));
                       break;
                     case "Admission & Eligibility":
                       Get.to(() => const Admission());
@@ -287,18 +351,18 @@ class CollegeDetail extends StatelessWidget {
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10,
                               childAspectRatio: 2.0,
-                              children: const [
+                              children: [
                                 QuickHighlights(
                                   title: "Acceptance Rate",
-                                  value: "2.8%",
+                                  value: "${widget.college.acceptanceRate}",
                                 ),
                                 QuickHighlights(
                                   title: "Placement Rate",
-                                  value: "98.5%",
+                                  value: placementData!.placementRate,
                                 ),
                                 QuickHighlights(
                                   title: "Avg Package",
-                                  value: "₹25.4 LPA",
+                                  value: placementData!.averagePackage,
                                 ),
                                 QuickHighlights(
                                   title: "Student Rating",
@@ -306,26 +370,7 @@ class CollegeDetail extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const Divider(color: Colors.grey, thickness: 0.5),
                             const SizedBox(height: 20),
-                            const Text(
-                              "Popular Courses",
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            const CourseTile(
-                              course: "B.Tech Computer Science",
-                              fee: "₹2.2L/yr",
-                              duration: "4 Years • Full Time",
-                            ),
-                            const CourseTile(
-                              course: "B.Tech Mechanical",
-                              fee: "₹2.2L/yr",
-                              duration: "4 Years • Full Time",
-                            ),
                             const Divider(color: Colors.grey, thickness: 1),
                             const SizedBox(height: 20),
                             const Text(
@@ -338,8 +383,8 @@ class CollegeDetail extends StatelessWidget {
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   "Highest Package",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
@@ -347,8 +392,8 @@ class CollegeDetail extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "₹1.8 Cr/annum",
-                                  style: TextStyle(
+                                  placementData!.highestPackage,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
                                   ),
@@ -358,7 +403,7 @@ class CollegeDetail extends StatelessWidget {
                             const SizedBox(height: 6),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
+                              children:  [
                                 Text(
                                   "Average Package",
                                   style: TextStyle(
@@ -367,7 +412,7 @@ class CollegeDetail extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "₹25.4 LPA",
+                                  placementData!.averagePackage,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
@@ -389,34 +434,9 @@ class CollegeDetail extends StatelessWidget {
                             Wrap(
                               spacing: 10,
                               runSpacing: 10,
-                              children: const [
-                                RecruiterChip(name: "Google"),
-                                RecruiterChip(name: "Microsoft"),
-                                RecruiterChip(name: "Amazon"),
-                                RecruiterChip(name: "Apple"),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              "Campus Life",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: const [
-                                Expanded(
-                                  child: CampusLifeCard(title: "Library"),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: CampusLifeCard(
-                                    title: "Sports Complex",
-                                  ),
-                                ),
-                              ],
+                              children: placementData!.companiesVisited.map((company) {
+                                return _buildRecruiterChip(company);
+                              }).toList(),
                             ),
                             const SizedBox(height: 20),
                           ],
@@ -432,6 +452,22 @@ class CollegeDetail extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildRecruiterChip(String label) {
+  return Container(
+    width: 100,
+    height: 50,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: Colors.grey.shade200,
+      borderRadius: BorderRadius.circular(6),
+    ),
+    child: Text(
+      label,
+      style: const TextStyle(fontSize: 16, color: Colors.black),
+    ),
+  );
 }
 
 class QuickHighlights extends StatelessWidget {
@@ -514,32 +550,7 @@ class CourseTile extends StatelessWidget {
   }
 }
 
-class RecruiterChip extends StatelessWidget {
-  final String name;
 
-  const RecruiterChip({required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 50,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        name,
-        style: const TextStyle(
-          fontSize: 19,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
 
 class CampusLifeCard extends StatelessWidget {
   final String title;
