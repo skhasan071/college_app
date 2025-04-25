@@ -50,7 +50,7 @@ class CardStructure extends StatelessWidget {
             MaterialPageRoute(
               builder:
                   (context) =>
-                      CollegeDetail(college: clg, collegeName: '', state: ''),
+                      CollegeDetail(college: clg, collegeName: '', state: '', lat: 17, long: 18,),
             ),
           );
         },

@@ -29,7 +29,7 @@ class CollegeDetail extends StatefulWidget {
     required this.college,
     super.key,
     required String collegeName,
-    required String state,
+    required String state, required double lat, required double long,
   });
 
   @override
@@ -267,13 +267,13 @@ class _CollegeDetailState extends State<CollegeDetail> {
     Get.to(() => PlacementDetails(collegeId: widget.college.id));
     break;
     case "Admission & Eligibility":
-    Get.to(() => const Admission());
+    Get.to(() =>  Admission(collegeId: widget.college.id));
     break;
     case "Cost & Location":
     Get.to(() => const Cost());
     break;
     case "Distance from Hometown":
-    Get.to(() => const DistanceFromHometown());
+    Get.to(() => DistanceFromHometown(lat:widget.college.lat,long:widget.college.long));
     break;
     case "Latest News & Insights":
     Get.to(() => const Insights());

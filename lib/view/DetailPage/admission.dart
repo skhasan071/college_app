@@ -1,7 +1,53 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class Admission extends StatelessWidget {
-  const Admission({super.key});
+class Admission extends StatefulWidget {
+  const Admission({super.key, required this.collegeId});
+
+  final String collegeId; // Pass collegeId from the previous page
+
+  @override
+  _AdmissionState createState() => _AdmissionState();
+}
+
+class _AdmissionState extends State<Admission> {
+  bool isLoading = true;
+  String errorMessage = "";
+  late AdmissionProcess admissionProcess;
+
+  // Fetch admission process data from API
+  Future<void> fetchAdmissionProcess() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://localhost:8080/api/colleges/admission/${widget.collegeId}'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          admissionProcess = AdmissionProcess.fromJson(data);
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Failed to load admission process.';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'An error occurred: $e';
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAdmissionProcess();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +66,13 @@ class Admission extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-
         backgroundColor: Colors.white,
       ),
-
-      body: SingleChildScrollView(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : errorMessage.isNotEmpty
+          ? Center(child: Text(errorMessage))
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,9 +82,9 @@ class Admission extends StatelessWidget {
               style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            _dateTile("Application Start", "January 15, 2025", "Active"),
+            _dateTile("Application Start", admissionProcess.startDate, "Active"),
             const SizedBox(height: 12),
-            _dateTile("Application Deadline", "March 31, 2025", "75 days left"),
+            _dateTile("Application Deadline", admissionProcess.endDate, "75 days left"),
             const SizedBox(height: 24),
             Divider(color: Colors.grey, thickness: 0.5),
             Text(
@@ -44,59 +92,19 @@ class Admission extends StatelessWidget {
               style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            _examTile("JEE Main 2025", "For B.Tech Programs"),
-            const SizedBox(height: 12),
-            _examTile("GATE 2025", "For M.Tech Programs"),
+            ...admissionProcess.requiredExams
+                .map((exam) => _examTile(exam, "For All Programs"))
+                .toList(),
             const SizedBox(height: 24),
             Divider(color: Colors.grey, thickness: 0.5),
-
             Text(
               "Admission Process",
               style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _admissionStep(
-              "1",
-              "Register for Entrance Exam",
-              "Complete registration and pay exam fees",
-            ),
-            const SizedBox(height: 12),
-            _admissionStep(
-              "2",
-              "Apply to College",
-              "Submit application with required documents",
-            ),
-            const SizedBox(height: 12),
-            _admissionStep(
-              "3",
-              "Document Verification",
-              "Original document verification process",
-            ),
-            const SizedBox(height: 12),
-            _admissionStep(
-              "4",
-              "Counselling Round",
-              "Merit-based seat allocation",
-            ),
-            const SizedBox(height: 24),
-            Divider(color: Colors.grey, thickness: 0.5),
             Text(
-              "Eligibility Criteria",
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            _eligibilityBox(
-              title: "B.Tech Programs",
-              items: const [
-                "10+2 with PCM minimum 60%",
-                "Valid JEE Main Score",
-                "Age limit: 25 years",
-              ],
-            ),
-            const SizedBox(height: 12),
-            _eligibilityBox(
-              title: "M.Tech Programs",
-              items: const ["B.Tech/BE with 65% aggregate", "Valid GATE Score"],
+              admissionProcess.applicationProcess,  // Display the string directly
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
             Divider(color: Colors.grey, thickness: 0.5),
@@ -105,65 +113,8 @@ class Admission extends StatelessWidget {
               style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             ),
             _requiredDocuments(
-              title: 'M.Tech Programs',
-              items: ["Birth Certificate", "HSC Resuil", "JEE Result"],
-            ),
-            const SizedBox(height: 12),
-            _requiredDocuments(
-              title: 'B.Tech Programs',
-              items: ["Birth Certificate", "HSC Resuil", " JEE Result"],
-            ),
-
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: const Text(
-                        "Download Brochure",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        softWrap: false,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: const Text(
-                        "Apply Now",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        softWrap: false,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              title: "Documents Required",
+              items: admissionProcess.documentsRequired,
             ),
           ],
         ),
@@ -171,6 +122,7 @@ class Admission extends StatelessWidget {
     );
   }
 
+  // Method for Date Tile
   Widget _dateTile(String title, String date, String badgeText) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -189,10 +141,7 @@ class Admission extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -218,6 +167,7 @@ class Admission extends StatelessWidget {
     );
   }
 
+  // Method for Exam Tile
   Widget _examTile(String title, String subtitle) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -234,10 +184,7 @@ class Admission extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 4),
               ],
@@ -248,6 +195,7 @@ class Admission extends StatelessWidget {
     );
   }
 
+  // Method for Admission Steps
   Widget _admissionStep(String step, String title, String subtitle) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -274,10 +222,7 @@ class Admission extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -292,7 +237,8 @@ class Admission extends StatelessWidget {
     );
   }
 
-  Widget _eligibilityBox({required String title, required List<String> items}) {
+  // Method for Required Documents
+  Widget _requiredDocuments({required String title, required List<String> items}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -309,7 +255,7 @@ class Admission extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           ...items.map(
-            (e) => Padding(
+                (e) => Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Row(
                 children: [
@@ -324,38 +270,35 @@ class Admission extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _requiredDocuments({
-    required String title,
-    required List<String> items,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          const SizedBox(height: 10),
-          ...items.map(
-            (e) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
-                children: [
-                  Expanded(child: Text(e, style: TextStyle(fontSize: 16))),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+// Model for Admission Process
+class AdmissionProcess {
+  final String collegeId;
+  final List<String> requiredExams;
+  final String applicationProcess;
+  final String startDate;
+  final String endDate;
+  final List<String> documentsRequired;
+
+  AdmissionProcess({
+    required this.collegeId,
+    required this.requiredExams,
+    required this.applicationProcess,
+    required this.startDate,
+    required this.endDate,
+    required this.documentsRequired,
+  });
+
+  // Factory constructor to create an instance from JSON
+  factory AdmissionProcess.fromJson(Map<String, dynamic> json) {
+    return AdmissionProcess(
+      collegeId: json['collegeId'],
+      requiredExams: List<String>.from(json['requiredExams']),
+      applicationProcess: json['applicationProcess'],
+      startDate: json['startDate'],
+      endDate: json['endDate'],
+      documentsRequired: List<String>.from(json['documentsRequired']),
     );
   }
 }
