@@ -12,9 +12,9 @@ class Student {
   final String? image;
   List<String>? interestedStreams;
   List<String>? coursesInterested;
-  final String? preferredCourseLevel;
-  final String? modeOfStudy;
-  final String? preferredYearOfAdmission;
+  String? preferredCourseLevel;
+  String? modeOfStudy;
+  String? preferredYearOfAdmission;
   final List<String>? favorites;
 
   Student({

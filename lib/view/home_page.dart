@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getUser();
+    widget.token != "" ? getUser() : controller.isGuestIn(true);
   }
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
 
       appBar: getAppBar(),
 
-      body: Obx(() => controller.isLoggedIn.value ? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
+      body: Obx(() => controller.isLoggedIn.value || controller.isGuestIn.value? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
 
       drawer: DrawerWidget(),
 
@@ -152,7 +152,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          controller.navSelectedIndex.value = 5;
+                          if(controller.isGuestIn.value){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Please Login First"),
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.black,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }else{
+                            controller.navSelectedIndex.value = 5;
+                          }
                         },
                         child: Container(
                           height: 40,
@@ -162,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             border: Border.all(color: Colors.black, width: 2)
                           ),
-                          child: Center(child: Text(profileController.profile.value == null ? "?" : profileController.profile.value!.name[0], style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
+                          child: Center(child: Text(profileController.profile.value == null ? "?" : profileController.profile.value!.name[0].toUpperCase(), style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
                         ),
                       ),
                     ],
@@ -224,7 +235,18 @@ class _HomePageState extends State<HomePage> {
               label: "Shortlist",
               icon: Icons.list,
               callback: () {
-                controller.navSelectedIndex.value = 4;
+                if(controller.isGuestIn.value){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please Login First"),
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.black,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }else{
+                  controller.navSelectedIndex.value = 4;
+                }
               },
               selected: controller.navSelectedIndex.value == 4,
             ),
@@ -237,7 +259,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> getUser() async {
     print(widget.token);
     Student? student = await StudentService().getStudent(widget.token);
-    print("StudentID = ${student!.id}");
     profileController.profile.value = student;
     controller.isLoggedIn.value = true;
   }

@@ -32,14 +32,7 @@ class CollegeServices {
     }
   }
 
-
-
-  Future<List<College>> searchColleges({
-    required String searchText,
-    List<String>? streams,
-    List<String>? countries,
-    List<String>? states,
-  }) async {
+  Future<List<College>> searchColleges({required String searchText, List<String>? streams, List<String>? countries, List<String>? states,}) async {
     final uri = Uri.http('localhost:8080', '/api/colleges/search', {
       'search': searchText,
       if (streams != null && streams.isNotEmpty) 'stream': streams.join(','),
@@ -150,14 +143,16 @@ class CollegeServices {
       if (json is List) {
         return json.map((d) => College.fromMap(d)).toList();
       } else if (json is Map && json['message'] != null) {
-        throw Exception(json['message']);
+        print(json['message']);
+        return [];
       } else {
-        throw Exception('Unexpected response format');
+        print('Unexpected response format');
+        return [];
       }
 
-
     } else {
-      throw Exception('Failed to fetch colleges: ${response.body}');
+      print('Failed to fetch colleges: ${response.body}');
+      return [];
     }
   }
 
@@ -252,7 +247,6 @@ class CollegeServices {
       return [];
     }
   }
-
 
   static Future<Hostel?> getHostelByCollege(String collegeId) async {
     final url = Uri.parse('${_baseUrl}hostel/$collegeId');

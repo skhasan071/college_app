@@ -17,12 +17,10 @@ class Firstpage extends StatefulWidget {
 }
 
 class _FirstpageState extends State<Firstpage> {
-  var profile = Get.put(ProfileController());
 
   @override
   void initState() {
     super.initState();
-    getStud();
   }
 
   @override
@@ -126,12 +124,6 @@ class _FirstpageState extends State<Firstpage> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> getStud() async {
-    profile.profile.value = await StudentService().fetchStudentById(
-      "67f9af13c6a8979472284f41",
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/filter.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
+import 'package:college_app/main.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view_model/controller.dart';
@@ -99,16 +100,16 @@ class _CollegesState extends State<Colleges> {
                 ),
               ),
 
-              _buildSection("Colleges Based on NIRF Ranking", rankings),
+              !controller.isGuestIn.value ? rankings.isNotEmpty ? _buildSection("Colleges Based on NIRF Ranking", rankings) : Container() : Container(),
 
               _buildBox(
                 title: "Which colleges match your preferences?",
                 buttonText: "Predict My College",
               ),
 
-              _buildSection("Colleges Based on Country", countries),
-              _buildSection("Colleges Based on State", states),
-              _buildSection("Colleges Based on City", cities),
+              rankings.isNotEmpty ? _buildSection("Colleges Based on State", states) : Container(),
+              countries.isNotEmpty ? _buildSection("Colleges Based on Country", countries) : Container(),
+              cities.isNotEmpty ? _buildSection("Colleges Based on City", cities) : Container(),
               controller.isLoggedIn.value && public.isNotEmpty
                   ? _buildSection("Popular Government Colleges", public)
                   : Container(),
@@ -229,7 +230,7 @@ class _CollegesState extends State<Colleges> {
                         feeRange: data[index].fees.toString(),
                         state: data[index].state,
                         ranking: data[index].ranking.toString(),
-                        studId: profile.profile.value!.id,
+                        studId: !controller.isGuestIn.value ? profile.profile.value!.id : "Nothing",
                         clgId: data[index].id,
                         clg: data[index],
                       ),
@@ -343,24 +344,42 @@ class _CollegesState extends State<Colleges> {
   }
 
   Future<void> getColleges() async {
-    rankings = await StudentService.getCollegesByRanking(
-      profile.profile.value!.id,
-    );
-    privates = await StudentService.getPrivateCollegesByInterest(
-      profile.profile.value!.id,
-    );
-    countries = await CollegeServices.fetchFilteredColleges(
-      streams: profile.profile.value!.interestedStreams!,
-      country: "India",
-    );
-    states = await CollegeServices.fetchFilteredColleges(
-      streams: profile.profile.value!.interestedStreams!,
-      state: "Maharashtra",
-    );
-    cities = await CollegeServices.fetchFilteredColleges(
-      streams: profile.profile.value!.interestedStreams!,
-      city: "Mumbai",
-    );
+
+    if(await getToken() != null){
+      rankings = await StudentService.getCollegesByRanking(
+        profile.profile.value!.id,
+      );
+      privates = await StudentService.getPrivateCollegesByInterest(
+        profile.profile.value!.id,
+      );
+      countries = await CollegeServices.fetchFilteredColleges(
+        streams: profile.profile.value!.interestedStreams!,
+        country: "India",
+      );
+      states = await CollegeServices.fetchFilteredColleges(
+        streams: profile.profile.value!.interestedStreams!,
+        state: "Maharashtra",
+      );
+      cities = await CollegeServices.fetchFilteredColleges(
+        streams: profile.profile.value!.interestedStreams!,
+        city: "Mumbai",
+      );
+    }else{
+      countries = await CollegeServices.fetchFilteredColleges(
+        streams: profile.interestedStreams,
+        country: "India",
+      );
+      states = await CollegeServices.fetchFilteredColleges(
+        streams: profile.interestedStreams,
+        state: "Maharashtra",
+      );
+      cities = await CollegeServices.fetchFilteredColleges(
+        streams: profile.interestedStreams,
+        city: "Mumbai",
+      );
+    }
+
+
     setState(() {});
   }
 }

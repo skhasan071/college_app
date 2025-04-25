@@ -7,6 +7,7 @@ class ProfileController extends GetxController{
   Rxn<Student> profile = Rxn<Student>();
   Rx<String> userToken = "".obs;
 
-
+  RxList<String> interestedStreams= <String>[].obs;
+  RxList<String> coursesInterested= <String>[].obs;
 
 }

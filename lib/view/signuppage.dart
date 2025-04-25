@@ -42,6 +42,7 @@ class _SignupPageState extends State<SignupPage> {
         print(msgs['token']);
         profile.profile.value = msgs['student'];
         profile.userToken.value = msgs['token'];
+        saveToken(msgs['token']);
         print(profile.profile.value!.email + "------------------------");
         return true;
       } else {

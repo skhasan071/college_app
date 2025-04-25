@@ -1,3 +1,4 @@
+import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view_model/profile_controller.dart';
@@ -126,10 +127,21 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                     }),
                     UiHelper.getPrimaryBtn(title: "Next", callback: () {
 
-                      pfpCtrl.profile.value!.interestedStreams = selectedStreams.toList();
-                      pfpCtrl.profile.value!.coursesInterested = selectedCourses.toList();
+                      if(pfpCtrl.userToken.value != ""){
 
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage("")));
+                        pfpCtrl.profile.value!.interestedStreams = selectedStreams.toList();
+                        pfpCtrl.profile.value!.coursesInterested = selectedCourses.toList();
+                        pfpCtrl.profile.value!.preferredCourseLevel = selectedLevel ?? "UG";
+                        pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-Time";
+                        pfpCtrl.profile.value!.preferredYearOfAdmission = selectedYear ?? "2025";
+                        StudentService.saveCoursePreferences(token: pfpCtrl.userToken.value, coursesInterested: selectedCourses.toList(), interestedStreams: selectedStreams.toList(), modeOfStudy: selectedMode, preferredCourseLevel: selectedLevel, preferredYearOfAdmission: selectedYear);
+
+                      }else{
+                        pfpCtrl.interestedStreams.value = selectedStreams.toList();
+                        pfpCtrl..coursesInterested.value = selectedCourses.toList();
+                      }
+
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage(pfpCtrl.userToken.string)));
                     }),
                   ],
                 )
