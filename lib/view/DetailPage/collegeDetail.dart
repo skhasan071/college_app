@@ -85,23 +85,6 @@ class _CollegeDetailState extends State<CollegeDetail> {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          Obx(
-                () => InkWell(
-              onTap: () {
-                saveCtrl.toggleSave(widget.college.id);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(6),
-                child: Icon(
-                  saveCtrl.isSaved(widget.college.id)
-                      ? Icons.bookmark
-                      : Icons.bookmark_border,
-                  size: 27,
-                  color: Clr.primaryBtnClr,
-                ),
-              ),
-            ),
-          ),
           IconButton(
             icon: const Icon(Icons.share, color: Colors.black),
             onPressed: () {},

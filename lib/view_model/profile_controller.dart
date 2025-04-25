@@ -7,4 +7,6 @@ class ProfileController extends GetxController{
   Rxn<Student> profile = Rxn<Student>();
   Rx<String> userToken = "".obs;
 
+
+
 }
