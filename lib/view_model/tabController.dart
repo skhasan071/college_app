@@ -17,7 +17,7 @@ class CollegeTabController extends GetxController
     "Distance from Hometown",
     "Latest News & Insights",
     "Q & A",
-    "Hostel & Compus Life",
+    "Hostel & Campus Life",
     "Cut-offs & Ranking",
   ];
 

@@ -277,6 +277,11 @@ class _CollegeDetailState extends State<CollegeDetail> {
                       onTap: (index) {
                         final selectedTab = tabController.tabs[index];
                         if (selectedTab != "Overview") {
+                          setState(() {
+                            // Manually switch to the correct tab based on selected tab
+                            tabController.tabController.index = index;
+                          });
+
                           switch (selectedTab) {
                             case "Courses":
                               Get.to(() => Courses(widget.college.id));
@@ -285,10 +290,7 @@ class _CollegeDetailState extends State<CollegeDetail> {
                               Get.to(
                                 () => Scholarships(
                                   collegeId: widget.college.id,
-                                  collegeName:
-                                      widget
-                                          .college
-                                          .name, // Pass the college name here as well
+                                  collegeName: widget.college.name,
                                 ),
                               );
                               break;
@@ -308,7 +310,6 @@ class _CollegeDetailState extends State<CollegeDetail> {
                             case "Cost & Location":
                               Get.to(() => const Cost());
                               break;
-
                             case "Distance from Hometown":
                               Get.to(() => const DistanceFromHometown());
                               break;
@@ -324,16 +325,15 @@ class _CollegeDetailState extends State<CollegeDetail> {
                               );
                               break;
                             case "Hostel & Campus Life":
-                              Get.to(() => const Hostel());
+                              // This is where we navigate to the Hostel page correctly
+                              Get.to(
+                                () => Hostel(collegeId: widget.college.id),
+                              );
                               break;
                             case "Cut-offs & Ranking":
                               Get.to(() => const Cutoff());
                               break;
                           }
-
-                          Future.delayed(const Duration(milliseconds: 100), () {
-                            tabController.tabController.index = 0;
-                          });
                         }
                       },
                       tabs:
@@ -483,9 +483,12 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                   ],
                                 ),
                               );
-                            } else {
-                              return const SizedBox.shrink();
+                            } else if (tab == "Hostel & Campus Life") {
+                              return Hostel(
+                                collegeId: widget.college.id,
+                              ); // Show the Hostel page
                             }
+                            return const SizedBox.shrink();
                           }).toList(),
                     ),
                   ),
