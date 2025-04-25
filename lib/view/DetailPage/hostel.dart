@@ -1,16 +1,70 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Hostel extends StatefulWidget {
-  const Hostel({super.key});
+  final String collegeId; // Pass the selected collegeId from the previous screen
+
+  const Hostel({required this.collegeId, super.key});
 
   @override
   State<Hostel> createState() => _HostelState();
 }
 
 class _HostelState extends State<Hostel> {
-  final PageController _pageController = PageController();
-  int _currentSlide = 0;
-  final int _totalSlides = 8;
+  bool isLoading = true;
+  String errorMessage = "";
+  String hostelName = "";
+  List<String> hostelAmenities = [];
+  List<String> campusAmenities = [];
+  String hostelInfo = "";
+  List<String> photos = [];  // To hold the photo URLs
+
+  @override
+  void initState() {
+    super.initState();
+    fetchHostelDetails();
+  }
+
+  // Fetch hostel data from the API
+  Future<void> fetchHostelDetails() async {
+    final url = 'http://localhost:8080/api/colleges/hostel/${widget.collegeId}';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        hostelName = data['hostelName'] ?? "Hostel Name Not Available";
+        hostelAmenities = List<String>.from(data['hostelAmenities'] ?? []);
+        campusAmenities = List<String>.from(data['campusAmenities'] ?? []);
+        hostelInfo = data['hostelInfo'] ?? "No information available.";
+        photos = List<String>.from(data['photos'] ?? []);
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+        errorMessage = "Error fetching hostel data.";
+      });
+    }
+  }
+
+  // Method to build the amenities list using recruiter chip widget
+  Widget _buildRecruiterChip(String label) {
+    return Container(
+      width: 100,
+      height: 50,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 16, color: Colors.black),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,334 +85,102 @@ class _HostelState extends State<Hostel> {
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator()) // Show loader while fetching
+          : errorMessage.isNotEmpty
+          ? Center(child: Text(errorMessage)) // Show error message
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  child: SizedBox(
-                    height: 190,
-                    width: double.infinity,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: _totalSlides,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentSlide = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Icon(
-                              Icons.image,
-                              size: 40,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        );
-                      },
+            // Display Photos (if any)
+            photos.isNotEmpty
+                ? SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: photos.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    child: Image.network(
+                      photos[index],
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: 300,
                     ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      "${_currentSlide + 1}/$_totalSlides",
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                  );
+                },
+              ),
+            )
+                : const SizedBox.shrink(),
+
             const SizedBox(height: 16),
+
+            // Hostel Name
             Text(
-              "Hostel Name Here",
+              hostelName,
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
             Divider(color: Colors.grey, thickness: 0.5),
             const SizedBox(height: 22),
+
+            // Hostel Amenities
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Text(
-                  "Campus Facilities",
+                  "Hostel Amenities",
                   style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber, size: 25),
-                    SizedBox(width: 4),
-                    Text(
-                      "4.5/5",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
             const SizedBox(height: 12),
-
             Wrap(
               spacing: 16,
               runSpacing: 12,
-              children: const [
-                FacilityItem(icon: Icons.bed, label: "AC Rooms"),
-                FacilityItem(icon: Icons.wifi, label: "Free WiFi"),
-                FacilityItem(icon: Icons.restaurant, label: "Mess"),
-              ],
+              children: hostelAmenities
+                  .map((amenity) => _buildRecruiterChip(amenity))
+                  .toList(),
             ),
-
             const SizedBox(height: 16),
+
             Divider(color: Colors.grey, thickness: 0.5),
             const SizedBox(height: 22),
 
-            const HostelInfo(
-              title: "Hostel Information",
-              items: [
-                InfoItem(
-                  icon: Icons.apartment,
-                  text: "Separate hostels for boys and girls",
-                ),
-                InfoItem(icon: Icons.group, text: "2-3 students per room"),
-                InfoItem(icon: Icons.security, text: "24/7 security with CCTV"),
-                InfoItem(icon: Icons.event_seat, text: "Total Rooms"),
-              ],
-            ),
-            const SizedBox(height: 14),
-            Divider(color: Colors.grey, thickness: 0.5),
-            const SizedBox(height: 22),
-
-            const HostelInfo(
-              title: "Campus Amenities",
-              items: [
-                InfoItem(icon: Icons.fitness_center, text: "Gym"),
-                InfoItem(icon: Icons.sports_soccer, text: "Sports Complex"),
-                InfoItem(icon: Icons.library_books, text: "Library"),
-                InfoItem(icon: Icons.local_hospital, text: "Medical Center"),
-              ],
-            ),
-
-            const SizedBox(height: 14),
-            Divider(color: Colors.grey, thickness: 0.5),
-            const SizedBox(height: 22),
+            // Campus Amenities
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Text(
-                  "Student Reviews",
-                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                  "Campus Amenities",
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
                 ),
-                //View all
               ],
             ),
             const SizedBox(height: 12),
-
-            const ReviewItem(
-              name: "Sarah Johnson",
-              rating: 4,
-              review:
-                  "Great facilities and friendly environment. The rooms are spacious and well-maintained.",
+            Wrap(
+              spacing: 16,
+              runSpacing: 12,
+              children: campusAmenities
+                  .map((amenity) => _buildRecruiterChip(amenity))
+                  .toList(),
             ),
-            const ReviewItem(
-              name: "Mike Chen",
-              rating: 5,
-              review:
-                  "The campus life is vibrant with lots of activities. Hostel mess food is good too!",
+            const SizedBox(height: 16),
+
+            Divider(color: Colors.grey, thickness: 0.5),
+            const SizedBox(height: 22),
+
+            // Hostel Information
+            Text(
+              hostelInfo,
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                ),
-                onPressed: () {},
-                child: const Text(
-                  "Book Hostel Tour",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class FacilityItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const FacilityItem({super.key, required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: 28, color: Colors.black87),
-          const SizedBox(height: 6),
-          Text(label, style: const TextStyle(fontSize: 12)),
-        ],
-      ),
-    );
-  }
-}
-
-class HostelInfo extends StatelessWidget {
-  final String title;
-  final List<InfoItem> items;
-
-  const HostelInfo({super.key, required this.title, required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 6,
-                offset: const Offset(0, 5),
-              ),
-            ],
-
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Column(
-            children:
-                items
-                    .map(
-                      (item) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(item.icon, size: 28),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Text(
-                                item.text,
-                                style: const TextStyle(fontSize: 15.5),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                    .toList(),
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
-class InfoItem {
-  final IconData icon;
-  final String text;
-
-  const InfoItem({required this.icon, required this.text});
-}
-
-class ReviewItem extends StatelessWidget {
-  final String name;
-  final int rating;
-  final String review;
-
-  const ReviewItem({
-    super.key,
-    required this.name,
-    required this.rating,
-    required this.review,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(radius: 30, child: Icon(Icons.person, size: 36)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                  ),
-                ),
-                Row(
-                  children: List.generate(
-                    5,
-                    (index) => Icon(
-                      index < rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 18,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(review, style: TextStyle(fontSize: 16)),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

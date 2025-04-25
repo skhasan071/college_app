@@ -1,31 +1,32 @@
 class AdmissionProcess {
   final String id; // MongoDB ObjectId
   final String collegeId;
-  final String admissionCriteria;
+  final String startDate;
   final String applicationProcess;
-  final String importantDates;
+  final String endDate;
   final List<String> documentsRequired;
-  final String selectionProcess;
+  final List<String> requiredExams;
+
 
   AdmissionProcess({
     required this.id,
     required this.collegeId,
-    required this.admissionCriteria,
+    required this.startDate,
     required this.applicationProcess,
-    required this.importantDates,
+    required this.endDate,
     required this.documentsRequired,
-    required this.selectionProcess,
+    required this.requiredExams
   });
 
   factory AdmissionProcess.fromMap(Map<String, dynamic> map) {
     return AdmissionProcess(
       id: map['_id'] ?? '',
       collegeId: map['collegeId'] ?? '',
-      admissionCriteria: map['admissionCriteria'] ?? '',
+      startDate: map['startDate'] ?? '',
       applicationProcess: map['applicationProcess'] ?? '',
-      importantDates: map['importantDates'] ?? '',
+      requiredExams: map['requiredExams']??'',
+      endDate: map['endDate'] ?? '',
       documentsRequired: List<String>.from(map['documentsRequired'] ?? []),
-      selectionProcess: map['selectionProcess'] ?? '',
     );
   }
 
@@ -33,11 +34,11 @@ class AdmissionProcess {
     return {
       '_id': id,
       'collegeId': collegeId,
-      'admissionCriteria': admissionCriteria,
+      'startDate':startDate,
       'applicationProcess': applicationProcess,
-      'importantDates': importantDates,
+      'endDate': endDate,
       'documentsRequired': documentsRequired,
-      'selectionProcess': selectionProcess,
+      'requiredExams':requiredExams
     };
   }
 }

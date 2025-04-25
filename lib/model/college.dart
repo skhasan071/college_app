@@ -12,7 +12,8 @@ class College {
   final String type; // Expected values: "Private", "Government"
   final int courseCount;
   final int fees;
-
+  final double long;
+  final double lat;
   // ✅ New fields
   final String naacGrade;
   final String estYear;
@@ -35,6 +36,8 @@ class College {
     required this.naacGrade,
     required this.estYear,
     required this.acceptanceRate,
+    required this.long,
+    required this.lat
   });
 
   factory College.fromMap(Map<String, dynamic> map) {
@@ -52,7 +55,8 @@ class College {
       type: map['type'] ?? '',
       courseCount: map['courseCount'] ?? 10,
       fees: map['fees'] ?? 0,
-
+      lat:map['lat']?.toDouble() ?? 0,
+      long: map['long']?.toDouble()??0,
       // ✅ New fields
       naacGrade: map['naacGrade'] ?? '',
       estYear: map['estYear'] ?? '',
@@ -78,6 +82,8 @@ class College {
       // ✅ New fields
       'naacGrade': naacGrade,
       'estYear': estYear,
+      'lat':lat,
+      'long':long,
       'acceptanceRate': acceptanceRate,
     };
   }

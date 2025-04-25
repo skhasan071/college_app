@@ -11,7 +11,9 @@ class StudentService {
   static const String _baseUrl = 'http://localhost:8080/api/students';
 
   Future<Student?> fetchStudentById(String id) async {
-    final url = Uri.parse('$_baseUrl/get/$id'); // Update with your actual backend URL
+    final url = Uri.parse(
+      '$_baseUrl/get/$id',
+    ); // Update with your actual backend URL
 
     try {
       final response = await http.get(url);
@@ -30,35 +32,30 @@ class StudentService {
   }
 
   Future<Student?> getStudent(token) async {
-
-    try{
-
+    try {
       final res = await http.get(
         Uri.parse("$_baseUrl/verify-user/$token"),
         headers: {
-          "Content-Type":"application/json",
-          "authorization":"Bearer $token"
-        }
+          "Content-Type": "application/json",
+          "authorization": "Bearer $token",
+        },
       );
 
-      if(res.statusCode == 200 || res.statusCode == 201){
-
+      if (res.statusCode == 200 || res.statusCode == 201) {
         print(jsonDecode(res.body));
 
-        Map<String, dynamic> data = jsonDecode(res.body) as Map<String, dynamic>;
+        Map<String, dynamic> data =
+            jsonDecode(res.body) as Map<String, dynamic>;
 
         return Student.fromMap(data);
-
-      }else{
+      } else {
         print(jsonDecode(res.body));
         return null;
       }
-
-    }catch(err){
+    } catch (err) {
       print(err);
       return null;
     }
-
   }
 
   /// Add or update student profile
@@ -200,7 +197,10 @@ class StudentService {
     }
   }
 
-  static Future<bool> removeFromFavorites(String studentId, String collegeId,) async {
+  static Future<bool> removeFromFavorites(
+    String studentId,
+    String collegeId,
+  ) async {
     try {
       final uri = Uri.parse(
         'http://localhost:8080/api/students/favorites/remove',
@@ -224,17 +224,13 @@ class StudentService {
     }
   }
 
-
   Future<Review?> postReview(Review review) async {
     final url = Uri.parse('http://localhost:8080/api/colleges/reviews');
 
-    try{
-
+    try {
       final response = await http.post(
         url,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(review.toJson()),
       );
 
@@ -245,15 +241,16 @@ class StudentService {
         print("Failed to post review: ${response.statusCode} ${response.body}");
         return null;
       }
-
-    }catch(err){
+    } catch (err) {
       print(err);
       return null;
     }
   }
 
   Future<List<Review>> getReviews(String uid) async {
-    final url = Uri.parse('http://localhost:8080/api/colleges/reviews/getAll/$uid');
+    final url = Uri.parse(
+      'http://localhost:8080/api/colleges/reviews/getAll/$uid',
+    );
 
     final response = await http.get(url);
 
@@ -278,7 +275,7 @@ class StudentService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<dynamic> list = data['colleges'];
-        return list.map((item){
+        return list.map((item) {
           print(item);
           return College.fromMap(item);
         }).toList();

@@ -1,48 +1,143 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class QAPage extends StatefulWidget {
-  const QAPage({super.key});
+  final String collegeId;
+  final String collegeName;
+
+  const QAPage({super.key, required this.collegeId, required this.collegeName});
 
   @override
   _QAPageState createState() => _QAPageState();
 }
 
 class _QAPageState extends State<QAPage> {
-  final List<Question> _questions = [
-    Question(
-      question: 'What are the admission requirements for CS major?',
-      user: 'Sarah M.',
-      time: '2h ago',
-      upvotes: '24',
-      downvotes: '12',
-      answer:
-          'The CS program requires strong math background and programming experience...',
-    ),
-    Question(
-      question: 'How\'s the campus life during weekends?',
-      user: 'Mike R.',
-      time: '5h ago',
-      upvotes: '18',
-      downvotes: '8',
-      answer: 'Weekend campus life offers various activities including...',
-    ),
-  ];
+  final List<Question> _questions = [];
+  final List<Question> _filteredQuestions = [];
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchQuestions();
+    _searchController.addListener(filterQuestions);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void filterQuestions() {
+    final keyword = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredQuestions.clear();
+      _filteredQuestions.addAll(
+        _questions.where(
+          (q) =>
+              q.question.toLowerCase().contains(keyword) ||
+              q.answer.toLowerCase().contains(keyword) ||
+              q.user.toLowerCase().contains(keyword),
+        ),
+      );
+    });
+  }
+
+  Future<void> fetchQuestions() async {
+    final url = Uri.parse(
+      'http://localhost:8080/api/questions/${widget.collegeId}',
+    );
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+
+        setState(() {
+          _questions.clear();
+          _questions.addAll(
+            data.expand((doc) {
+              return (doc['questions'] as List).map((qa) {
+                return Question(
+                  question: qa['question'] ?? '',
+                  answer: qa['answer'] ?? '',
+                  user: qa['user'] ?? 'Anonymous',
+                  time: DateFormat(
+                    'jm',
+                  ).format(DateTime.parse(qa['createdAt'])),
+                );
+              });
+            }),
+          );
+          _filteredQuestions.clear();
+          _filteredQuestions.addAll(_questions); // initially show all
+        });
+      } else {
+        print('Failed to load questions: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching questions: $e');
+    }
+  }
+
+  Future<void> _addQuestion(
+    String collegeId,
+    String userName,
+    String questionText,
+  ) async {
+    final url = Uri.parse('http://localhost:8080/api/add-question');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'collegeId': collegeId,
+          'user': userName,
+          'question': questionText,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        final createdQuestion = responseData['data']['questions'].last;
+
+        final newQuestion = Question(
+          question: createdQuestion['question'],
+          answer: createdQuestion['answer'] ?? '',
+          user: createdQuestion['user'] ?? 'Anonymous',
+          time: DateFormat(
+            'jm',
+          ).format(DateTime.parse(createdQuestion['createdAt'])),
+        );
+
+        setState(() {
+          _questions.insert(0, newQuestion);
+          filterQuestions(); // refresh filtered list after adding
+        });
+      } else {
+        print('Failed to add question: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error adding question: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 3,
-        title: const Text(
-          'Q&A - Harvard University',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          'Q&A - ${widget.collegeName}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.white,
       ),
@@ -51,13 +146,10 @@ class _QAPageState extends State<QAPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search questions',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 24,
-                  color: Colors.black,
-                ),
+                prefixIcon: const Icon(Icons.search, color: Colors.black),
                 border: OutlineInputBorder(borderSide: BorderSide.none),
                 filled: true,
                 fillColor: Colors.grey[200],
@@ -66,22 +158,26 @@ class _QAPageState extends State<QAPage> {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _questions.length,
-              separatorBuilder:
-                  (context, index) => Divider(height: 1, color: Colors.grey),
-              itemBuilder:
-                  (context, index) => _QuestionItem(
-                    question: _questions[index],
-                    onAnswerPressed: () {
-                      setState(() {
-                        _questions[index].isAnswerVisible =
-                            !_questions[index].isAnswerVisible;
-                      });
-                    },
-                  ),
-            ),
+            child:
+                _filteredQuestions.isEmpty
+                    ? const Center(child: Text('No questions found.'))
+                    : ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: _filteredQuestions.length,
+                      separatorBuilder:
+                          (context, index) =>
+                              const Divider(height: 1, color: Colors.grey),
+                      itemBuilder:
+                          (context, index) => _QuestionItem(
+                            question: _filteredQuestions[index],
+                            onAnswerPressed: () {
+                              setState(() {
+                                _filteredQuestions[index].isAnswerVisible =
+                                    !_filteredQuestions[index].isAnswerVisible;
+                              });
+                            },
+                          ),
+                    ),
           ),
         ],
       ),
@@ -100,24 +196,9 @@ class _QAPageState extends State<QAPage> {
     );
   }
 
-  void _addQuestion(String questionText) {
-    setState(() {
-      _questions.insert(
-        0,
-        Question(
-          question: questionText,
-          user: 'New User',
-          time: DateFormat('jm').format(DateTime.now()),
-          upvotes: '0',
-          downvotes: '0',
-          answer: 'Sample answer for new question...',
-        ),
-      );
-    });
-  }
-
   void _showAddQuestionDialog() {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController _questionController = TextEditingController();
+    final TextEditingController _nameController = TextEditingController();
 
     showDialog(
       context: context,
@@ -141,29 +222,39 @@ class _QAPageState extends State<QAPage> {
             ),
             content: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Enter your question',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.all(16.0),
-                ),
-                maxLines: 8,
-                style: TextStyle(fontSize: 16),
-                keyboardType: TextInputType.multiline,
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your name',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(16.0),
+                    ),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _questionController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your question',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(16.0),
+                    ),
+                    maxLines: 8,
+                    style: const TextStyle(fontSize: 16),
+                    keyboardType: TextInputType.multiline,
+                  ),
+                ],
               ),
             ),
-
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
                   'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black, // Black text for cancel
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
               ElevatedButton(
@@ -179,8 +270,13 @@ class _QAPageState extends State<QAPage> {
                   ),
                 ),
                 onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    _addQuestion(_controller.text);
+                  if (_questionController.text.isNotEmpty &&
+                      _nameController.text.isNotEmpty) {
+                    _addQuestion(
+                      widget.collegeId,
+                      _nameController.text,
+                      _questionController.text,
+                    );
                     Navigator.pop(context);
                   }
                 },
@@ -197,8 +293,6 @@ class Question {
   String question;
   String user;
   String time;
-  String upvotes;
-  String downvotes;
   String answer;
   bool isAnswerVisible;
 
@@ -206,8 +300,6 @@ class Question {
     required this.question,
     required this.user,
     required this.time,
-    required this.upvotes,
-    required this.downvotes,
     required this.answer,
     this.isAnswerVisible = false,
   });
@@ -233,7 +325,6 @@ class _QuestionItem extends StatelessWidget {
                 radius: 30,
                 child: Icon(Icons.person, size: 30),
               ),
-
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -271,29 +362,6 @@ class _QuestionItem extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    question.upvotes,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    question.downvotes,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
           if (question.isAnswerVisible)
@@ -301,7 +369,7 @@ class _QuestionItem extends StatelessWidget {
               padding: const EdgeInsets.only(left: 32, top: 8),
               child: Text(
                 question.answer,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black,
                   fontStyle: FontStyle.italic,

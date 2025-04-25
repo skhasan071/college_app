@@ -268,6 +268,7 @@ class _CollegeDetailState extends State<CollegeDetail> {
                     case "Cost & Location":
                       Get.to(() => const Cost());
                       break;
+
                     case "Distance from Hometown":
                       Get.to(() => const DistanceFromHometown());
                       break;
@@ -277,8 +278,8 @@ class _CollegeDetailState extends State<CollegeDetail> {
                     case "Q & A":
                       Get.to(() => const QAPage());
                       break;
-                    case "Hostel & Compus Life":
-                      Get.to(()=>const Hostel());
+                    case "Hostel & Campus Life":
+                      Get.to(() => const Hostel());
                       break;
                     case "Cut-offs & Ranking":
                       Get.to(() => const Cutoff());
