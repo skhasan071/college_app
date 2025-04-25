@@ -2,8 +2,9 @@ class Hostel {
   final String id;
   final String collegeId;
   final String hostelName;
-  final List<String> amenities;
-  final int seats;
+  final List<String> hostelAmenities;
+  final String hostelInfo;
+  final List<String> campusAmenities;
   final List<String> photos;
   final List<String> videos;
 
@@ -11,8 +12,9 @@ class Hostel {
     required this.id,
     required this.collegeId,
     required this.hostelName,
-    required this.amenities,
-    required this.seats,
+    required this.hostelAmenities,
+    required this.campusAmenities,
+    required this.hostelInfo,
     required this.photos,
     required this.videos,
   });
@@ -22,8 +24,9 @@ class Hostel {
       id: map['_id'] ?? '',
       collegeId: map['collegeId'] ?? '',
       hostelName: map['hostelName'] ?? '',
-      amenities: List<String>.from(map['amenities'] ?? []),
-      seats: map['seats']?.toInt() ?? 0,
+      hostelAmenities: List<String>.from(map['hostelAmenities'] ?? []),
+      campusAmenities: List<String>.from(map['campusAmenities'] ?? []),
+      hostelInfo: map['hostelInfo']?.toInt() ?? 0,
       photos: List<String>.from(map['photos'] ?? []),
       videos: List<String>.from(map['videos'] ?? []),
     );
@@ -34,8 +37,9 @@ class Hostel {
       '_id': id,
       'collegeId': collegeId,
       'hostelName': hostelName,
-      'amenities': amenities,
-      'seats': seats,
+      'hostelAmenities': hostelAmenities,
+      'campusAmenities':campusAmenities,
+      'hostelInfo': hostelInfo,
       'photos': photos,
       'videos': videos,
     };

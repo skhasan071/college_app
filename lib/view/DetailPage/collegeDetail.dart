@@ -243,86 +243,88 @@ class _CollegeDetailState extends State<CollegeDetail> {
                 bottom: BorderSide(color: Colors.grey, width: 0.4),
               ),
             ),
-            child: TabBar(
-              isScrollable: true,
-              controller: tabController.tabController,
-              labelColor: Colors.white,
-              tabAlignment: TabAlignment.start,
-              unselectedLabelColor: Colors.black,
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 17,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
-              indicator: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              onTap: (index) {
-                final selectedTab = tabController.tabs[index];
-                if (selectedTab != "Overview") {
-                  switch (selectedTab) {
-                    case "Courses":
-                      Get.to(() => Courses(widget.college.id));
-                      break;
-                    case "Scholarship & Aid":
-                      Get.to(() => Scholarships(
-                          collegeId: widget.college.id,
-                          collegeName: widget.college.name // Pass the college name here as well
-                      ));
-                      break;
-                    case "Reviews":
-                      Get.to(() => Reviews(widget.college.id));
-                      break;
-                    case "Placements":
-                      Get.to(() => PlacementDetails(collegeId: widget.college.id,));
-                      break;
-                    case "Admission & Eligibility":
-                      Get.to(() => const Admission());
-                      break;
-                    case "Cost & Location":
-                      Get.to(() => const Cost());
-                      break;
+    child: TabBar(
+    isScrollable: true,
+    controller: tabController.tabController,
+    labelColor: Colors.white,
+    tabAlignment: TabAlignment.start,
+    unselectedLabelColor: Colors.black,
+    labelStyle: const TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 17,
+    ),
+    unselectedLabelStyle: const TextStyle(
+    fontWeight: FontWeight.normal,
+    ),
+    indicator: BoxDecoration(
+    color: Colors.black,
+    borderRadius: BorderRadius.circular(6),
+    ),
+    onTap: (index) {
+    final selectedTab = tabController.tabs[index];
+    if (selectedTab != "Overview") {
+    setState(() {
+    // Manually switch to the correct tab based on selected tab
+    tabController.tabController.index = index;
+    });
 
-                    case "Distance from Hometown":
-                      Get.to(() => const DistanceFromHometown());
-                      break;
-                    case "Latest News & Insights":
-                      Get.to(() => const Insights());
-                      break;
-                    case "Q & A":
-                      Get.to(() => const QAPage());
-                      break;
-                    case "Hostel & Campus Life":
-                      Get.to(() => const Hostel());
-                      break;
-                    case "Cut-offs & Ranking":
-                      Get.to(() => const Cutoff());
-                      break;
-                  }
+    switch (selectedTab) {
+    case "Courses":
+    Get.to(() => Courses(widget.college.id));
+    break;
+    case "Scholarship & Aid":
+    Get.to(() => Scholarships(
+    collegeId: widget.college.id,
+    collegeName: widget.college.name));
+    break;
+    case "Reviews":
+    Get.to(() => Reviews(widget.college.id));
+    break;
+    case "Placements":
+    Get.to(() => PlacementDetails(collegeId: widget.college.id));
+    break;
+    case "Admission & Eligibility":
+    Get.to(() => const Admission());
+    break;
+    case "Cost & Location":
+    Get.to(() => const Cost());
+    break;
+    case "Distance from Hometown":
+    Get.to(() => const DistanceFromHometown());
+    break;
+    case "Latest News & Insights":
+    Get.to(() => const Insights());
+    break;
+    case "Q & A":
+    Get.to(() => const QAPage());
+    break;
+    case "Hostel & Campus Life":
+    // This is where we navigate to the Hostel page correctly
+    Get.to(() => Hostel(collegeId: widget.college.id));
+    break;
+    case "Cut-offs & Ranking":
+    Get.to(() => const Cutoff());
+    break;
+    }
+    }
+    },
+    tabs: tabController.tabs
+        .map(
+    (tab) => Tab(
+    child: Padding(
+    padding: const EdgeInsets.symmetric(
+    vertical: 8.0,
+    horizontal: 12,
+    ),
+    child: Text(tab),
+    ),
+    ),
+    )
+        .toList(),
 
-                  Future.delayed(const Duration(milliseconds: 100), () {
-                    tabController.tabController.index = 0;
-                  });
-                }
-              },
-              tabs:
-                  tabController.tabs
-                      .map(
-                        (tab) => Tab(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                              horizontal: 12,
-                            ),
-                            child: Text(tab),
-                          ),
-                        ),
-                      )
-                      .toList(),
-            ),
+
+    )
+            ,
           ),
           Expanded(
             child: TabBarView(
@@ -442,9 +444,10 @@ class _CollegeDetailState extends State<CollegeDetail> {
                           ],
                         ),
                       );
-                    } else {
-                      return const SizedBox.shrink();
+                    } else if (tab == "Hostel & Campus Life") {
+                      return Hostel(collegeId: widget.college.id);  // Show the Hostel page
                     }
+                    return const SizedBox.shrink();
                   }).toList(),
             ),
           ),
