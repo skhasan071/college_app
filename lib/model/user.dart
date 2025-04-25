@@ -10,8 +10,8 @@ class Student {
   final String? city;
   final String? passedIn;
   final String? image;
-  final List<String>? interestedStreams;
-  final List<String>? coursesInterested;
+  List<String>? interestedStreams;
+  List<String>? coursesInterested;
   final String? preferredCourseLevel;
   final String? modeOfStudy;
   final String? preferredYearOfAdmission;

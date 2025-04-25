@@ -1,6 +1,9 @@
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../../constants/ui_helper.dart';
 
@@ -19,9 +22,37 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
   ];
 
   final List<String> courses = [
+    // Management
     'BBA / MBA (General)', 'MBA (Finance)', 'MBA (Marketing)', 'MBA (HR)',
-    'MBA (Operations)', 'PGDM', 'Entrepreneurship & Startups', 'Business Analytics'
+    'MBA (Operations)', 'PGDM', 'Entrepreneurship & Startups', 'Business Analytics',
+
+    // Engineering
+    'B.Tech (Computer Science)', 'B.Tech (Mechanical Engineering)', 'B.Tech (Civil Engineering)',
+    'B.Tech (Electrical Engineering)', 'B.Tech (Electronics & Communication)', 'M.Tech',
+
+    // Arts & Humanities
+    'BA (English)', 'BA (History)', 'BA (Psychology)', 'MA (English)', 'MA (Political Science)',
+    'Bachelor of Social Work (BSW)', 'Master of Social Work (MSW)',
+
+    // Science
+    'B.Sc (Physics)', 'B.Sc (Chemistry)', 'B.Sc (Mathematics)', 'M.Sc (Biotechnology)', 'M.Sc (Physics)',
+
+    // Law
+    'LLB', 'BA LLB', 'BBA LLB', 'LLM',
+
+    // Medicine
+    'MBBS', 'BDS', 'BPT (Physiotherapy)', 'B.Sc Nursing', 'BAMS', 'BHMS',
+
+    // Design
+    'B.Des (Fashion Design)', 'B.Des (Product Design)', 'BFA (Fine Arts)', 'B.Arch',
+
+    // Commerce
+    'B.Com', 'M.Com', 'CA Foundation', 'CMA Intermediate',
+
+    // Computer Applications
+    'BCA', 'MCA', 'Diploma in Computer Applications'
   ];
+
 
   final List<String> levels = ['UG', 'PG', 'Diploma/Certification'];
   final List<String> modes = ['Full-time', 'Part-time', 'Online', 'Distance learning'];
@@ -32,6 +63,8 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
   String? selectedLevel;
   String? selectedMode;
   String? selectedYear;
+
+  var pfpCtrl = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +125,10 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
                     }),
                     UiHelper.getPrimaryBtn(title: "Next", callback: () {
+
+                      pfpCtrl.profile.value!.interestedStreams = selectedStreams.toList();
+                      pfpCtrl.profile.value!.coursesInterested = selectedCourses.toList();
+
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage("")));
                     }),
                   ],

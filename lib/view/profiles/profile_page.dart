@@ -1,3 +1,4 @@
+import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/Setting&Support/policy&privacy.dart';
 import 'package:college_app/view/Setting&Support/settting.dart';
 import 'package:college_app/view/Setting&Support/support.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -135,13 +137,23 @@ class ProfilePage extends StatelessWidget {
                   Get.to(() => SupportPage());
                 },
               ),
-              const SettingsTile(icon: Icons.logout, title: "Logout"),
+              SettingsTile(icon: Icons.logout, title: "Logout", onTap: () async {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Firstpage()));
+                await delToken("");
+              },),
             ],
           ),
         ),
       ),
     );
   }
+
+  // Function to save the token
+  Future<void> delToken(String token) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
+  }
+
 }
 
 class SettingsTile extends StatelessWidget {

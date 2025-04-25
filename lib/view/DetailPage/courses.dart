@@ -267,6 +267,7 @@ class _CoursesState extends State<Courses> {
       ),
     );
   }
+
   getCourse() async {
     courses = await CollegeServices.getCoursesByCollege(widget.uid);
     setState(() {});

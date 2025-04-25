@@ -1,6 +1,8 @@
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view/login.dart';
+import 'package:college_app/view/profiles/choice_preferences.dart';
+import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:college_app/view/signuppage.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +110,7 @@ class _FirstpageState extends State<Firstpage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage("")),
+                    MaterialPageRoute(builder: (context) => CoursePreferencesPage()),
                   );
                 },
                 child: const Text(
