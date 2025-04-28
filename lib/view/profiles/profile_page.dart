@@ -10,10 +10,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../view_model/controller.dart';
+
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
   var profileController = Get.put(ProfileController());
+  var controller = Get.put(Controller());
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +143,8 @@ class ProfilePage extends StatelessWidget {
               SettingsTile(icon: Icons.logout, title: "Logout", onTap: () async {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Firstpage()));
                 await delToken("");
+                controller.navSelectedIndex.value = 0;
+                profileController.userToken("");
               },),
             ],
           ),

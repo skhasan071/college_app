@@ -9,6 +9,8 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view_model/saveController.dart';
 import 'package:get/get.dart';
 
+import '../view_model/controller.dart';
+
 class CardStructure extends StatelessWidget {
   final theme = ThemeController.to;
   final String collegeID;
@@ -20,6 +22,7 @@ class CardStructure extends StatelessWidget {
   final String studId;
   final String clgId;
   College clg;
+  var pfpController = Get.put(Controller());
 
   final double? width;
   CardStructure({
@@ -50,7 +53,7 @@ class CardStructure extends StatelessWidget {
             MaterialPageRoute(
               builder:
                   (context) =>
-                      CollegeDetail(college: clg, collegeName: '', state: '', lat: 17, long: 18,),
+                      CollegeDetail(college: clg, collegeName: clg.name, state: clg.state, lat: clg.lat, long: clg.long,),
             ),
           );
         },
@@ -80,12 +83,24 @@ class CardStructure extends StatelessWidget {
                     child: Obx(
                       () => InkWell(
                         onTap: () async {
-                          if (controller.isSaved(collegeID)) {
-                            bool success = await remove(studId, clgId);
-                            if (success) controller.toggleSave(collegeID);
-                          } else {
-                            bool success = await save(studId, clgId);
-                            if (success) controller.toggleSave(collegeID);
+                          if(pfpController.isGuestIn.value){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Login First", style: TextStyle(color: Colors.white),),
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.black,
+                                behavior: SnackBarBehavior.floating,
+                              )
+                            );
+
+                          }else{
+                            if (controller.isSaved(collegeID)) {
+                              bool success = await remove(studId, clgId);
+                              if (success) controller.toggleSave(collegeID);
+                            } else {
+                              bool success = await save(studId, clgId);
+                              if (success) controller.toggleSave(collegeID);
+                            }
                           }
                         },
                         child: Container(

@@ -24,7 +24,7 @@ class _ScholarshipsState extends State<Scholarships> {
   Future<void> fetchScholarships() async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8080/api/scholarships/${widget.collegeId}'),
+        Uri.parse('https://tc-ca-server.onrender.com/api/scholarships/${widget.collegeId}'),
       );
 
       if (response.statusCode == 200) {

@@ -10,7 +10,7 @@ import '../model/course.dart';
 
 class CollegeServices {
 
-  static const String _baseUrl = 'http://localhost:8080/api/colleges/';
+  static const String _baseUrl = 'https://tc-ca-server.onrender.com/api/colleges/';
 
   /// Get all colleges
   static Future<List<College>> getColleges() async {
@@ -33,7 +33,7 @@ class CollegeServices {
   }
 
   Future<List<College>> searchColleges({required String searchText, List<String>? streams, List<String>? countries, List<String>? states,}) async {
-    final uri = Uri.http('localhost:8080', '/api/colleges/search', {
+    final uri = Uri.https('tc-ca-server.onrender.com', '/api/colleges/search', {
       'search': searchText,
       if (streams != null && streams.isNotEmpty) 'stream': streams.join(','),
       if (countries != null && countries.isNotEmpty) 'country': countries.join(','),
@@ -110,7 +110,7 @@ class CollegeServices {
   }
 
   static Future<List<College>> fetchFilteredColleges({required List<String> streams, String? country, String? state, String? city,}) async {
-    final baseUrl = Uri.parse('http://localhost:8080/api/colleges/filter-by-stream');
+    final baseUrl = Uri.parse('https://tc-ca-server.onrender.com/api/colleges/filter-by-stream');
 
     // Create query parameters
     final queryParams = {

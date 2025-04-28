@@ -23,35 +23,7 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
   ];
 
   final List<String> courses = [
-    // Management
-    'BBA / MBA (General)', 'MBA (Finance)', 'MBA (Marketing)', 'MBA (HR)',
-    'MBA (Operations)', 'PGDM', 'Entrepreneurship & Startups', 'Business Analytics',
-
-    // Engineering
-    'B.Tech (Computer Science)', 'B.Tech (Mechanical Engineering)', 'B.Tech (Civil Engineering)',
-    'B.Tech (Electrical Engineering)', 'B.Tech (Electronics & Communication)', 'M.Tech',
-
-    // Arts & Humanities
-    'BA (English)', 'BA (History)', 'BA (Psychology)', 'MA (English)', 'MA (Political Science)',
-    'Bachelor of Social Work (BSW)', 'Master of Social Work (MSW)',
-
-    // Science
-    'B.Sc (Physics)', 'B.Sc (Chemistry)', 'B.Sc (Mathematics)', 'M.Sc (Biotechnology)', 'M.Sc (Physics)',
-
-    // Law
-    'LLB', 'BA LLB', 'BBA LLB', 'LLM',
-
-    // Medicine
-    'MBBS', 'BDS', 'BPT (Physiotherapy)', 'B.Sc Nursing', 'BAMS', 'BHMS',
-
-    // Design
-    'B.Des (Fashion Design)', 'B.Des (Product Design)', 'BFA (Fine Arts)', 'B.Arch',
-
-    // Commerce
-    'B.Com', 'M.Com', 'CA Foundation', 'CMA Intermediate',
-
-    // Computer Applications
-    'BCA', 'MCA', 'Diploma in Computer Applications'
+    "BBA/MBA(General)", "MBA(Finance)", "MBA(Marketing)", "MBA(HR)", "MBA(Operations)", "PGDM", "Entrepreneurship & Startups", "Business Analytics"
   ];
 
 
@@ -125,7 +97,7 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                     UiHelper.getSecondaryBtn(title: "Back", callback: () {
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
                     }),
-                    UiHelper.getPrimaryBtn(title: "Next", callback: () {
+                    UiHelper.getPrimaryBtn(title: "Next", callback: () async {
 
                       if(pfpCtrl.userToken.value != ""){
 
@@ -134,7 +106,8 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                         pfpCtrl.profile.value!.preferredCourseLevel = selectedLevel ?? "UG";
                         pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-Time";
                         pfpCtrl.profile.value!.preferredYearOfAdmission = selectedYear ?? "2025";
-                        StudentService.saveCoursePreferences(token: pfpCtrl.userToken.value, coursesInterested: selectedCourses.toList(), interestedStreams: selectedStreams.toList(), modeOfStudy: selectedMode, preferredCourseLevel: selectedLevel, preferredYearOfAdmission: selectedYear);
+                        Map<String, dynamic>? data = await StudentService.saveCoursePreferences(token: pfpCtrl.userToken.value, coursesInterested: selectedCourses.toList(), interestedStreams: selectedStreams.toList(), modeOfStudy: selectedMode, preferredCourseLevel: selectedLevel, preferredYearOfAdmission: selectedYear);
+                        print(data.toString());
 
                       }else{
                         pfpCtrl.interestedStreams.value = selectedStreams.toList();

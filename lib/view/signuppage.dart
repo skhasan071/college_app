@@ -1,4 +1,5 @@
 import 'package:college_app/view/profiles/complete_profile_page.dart';
+import 'package:college_app/view_model/data_loader.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
@@ -25,6 +26,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
   var profile = Get.put(ProfileController());
+  var loader = Get.put(Loader());
 
   Future<bool> _handleSignUp() async {
     String email = emailController.text.trim();
@@ -32,6 +34,7 @@ class _SignupPageState extends State<SignupPage> {
     String name = fullNameController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
+      loader.isLoading(true);
       Map<String, dynamic> msgs = await AuthService.registerStudent(
         name,
         email,
@@ -44,24 +47,29 @@ class _SignupPageState extends State<SignupPage> {
         profile.userToken.value = msgs['token'];
         saveToken(msgs['token']);
         print(profile.profile.value!.email + "------------------------");
+        loader.isLoading(false);
         return true;
       } else {
         String string = msgs['message'];
+        loader.isLoading(false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(string),
-            backgroundColor: Colors.purple,
-            duration: Duration(seconds: 2),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.black,
+            behavior: SnackBarBehavior.floating,
           ),
         );
         return false;
       }
     } else {
+      loader.isLoading(false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please fill in both fields"),
-          backgroundColor: Colors.purple,
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text("Please Fill the required details"),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.black,
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
@@ -158,33 +166,35 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
             const SizedBox(height: 25),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(2),
+            Obx(
+              ()=> !loader.isLoading.value ? SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  onPressed: () async {
+                    bool isSigned = await _handleSignUp();
+
+                    if (isSigned) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CompleteProfilePage(),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text(
+                    "Sign Up",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
-                onPressed: () async {
-                  bool isSigned = await _handleSignUp();
-
-                  if (isSigned) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CompleteProfilePage(),
-                      ),
-                    );
-                  }
-                },
-                child: const Text(
-                  "Sign Up",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
+              ) : Center(child: CircularProgressIndicator(),),
             ),
             const SizedBox(height: 25),
             SizedBox(

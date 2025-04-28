@@ -20,7 +20,7 @@ class _AdmissionState extends State<Admission> {
   Future<void> fetchAdmissionProcess() async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8080/api/colleges/admission/${widget.collegeId}'),
+        Uri.parse('https://tc-ca-server.onrender.com/api/colleges/admission/${widget.collegeId}'),
       );
 
       if (response.statusCode == 200) {

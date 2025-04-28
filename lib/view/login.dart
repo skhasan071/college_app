@@ -3,12 +3,15 @@ import 'package:college_app/view/signuppage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../services/google_signin_api.dart';
+import '../view_model/data_loader.dart';
 import 'emailverification.dart';
 import 'home_page.dart';
 import 'mobilenoauth.dart';
@@ -23,6 +26,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  var loader = Get.put(Loader());
+
   bool isPasswordVisible = false;
 
   Future<void> _handleLogin() async {
@@ -30,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     String password = passwordController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
+      loader.isLoading(true);
       Map<String, dynamic> map = await AuthService.loginStudent(
         email,
         password,
@@ -38,29 +45,31 @@ class _LoginPageState extends State<LoginPage> {
       if (map["success"]) {
         String token = map['token'];
 
-        print("Token =============== $token");
-
         await saveToken(token);
 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage(token)),
         );
+        loader.isLoading(false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(map["message"]),
-            backgroundColor: Colors.purple,
-            duration: Duration(seconds: 2),
+            content: Text(map['message']),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.black,
+            behavior: SnackBarBehavior.floating,
           ),
         );
+        loader.isLoading(false);
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please fill in both fields"),
-          backgroundColor: Colors.purple,
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text("Please fill all the required field"),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.black,
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
@@ -86,7 +95,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 10),
             Center(
               child: RichText(
@@ -162,22 +170,24 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(height: 25),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(2),
+            Obx(
+                ()=> !loader.isLoading.value ? SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    onPressed: _handleLogin,
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                   ),
-                ),
-                onPressed: _handleLogin,
-                child: const Text(
-                  "Login",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
+                ) : Center(child: CircularProgressIndicator(color: Colors.black,)),
             ),
             const SizedBox(height: 20),
 

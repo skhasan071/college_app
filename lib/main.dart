@@ -1,7 +1,6 @@
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view_model/themeController.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,12 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   Get.put(ThemeController());
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(DevicePreview(builder: (context) => MyApp()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -25,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    loadToken();
+    delToken("");
   }
 
   @override

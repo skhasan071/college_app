@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             border: Border.all(color: Colors.black, width: 2)
                           ),
-                          child: Center(child: Text(profileController.profile.value == null ? "?" : profileController.profile.value!.name[0].toUpperCase(), style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
+                          child: Center(child: Text(controller.isGuestIn.value ? "?" : "P", style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
                         ),
                       ),
                     ],

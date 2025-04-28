@@ -24,12 +24,15 @@ import '../../model/college.dart';
 
 class CollegeDetail extends StatefulWidget {
   final College college;
+  var lat, long;
 
   CollegeDetail({
     required this.college,
     super.key,
     required String collegeName,
     required String state,
+    required lat,
+    required long,
   });
 
   @override
@@ -50,7 +53,7 @@ class _CollegeDetailState extends State<CollegeDetail> {
     fetchPlacementData();
   }
   Future<void> fetchPlacementData() async {
-    final url = 'http://localhost:8080/api/colleges/placement/${widget.college.id}';
+    final url = 'https://tc-ca-server.onrender.com/api/colleges/placement/${widget.college.id}';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -263,23 +266,23 @@ class _CollegeDetailState extends State<CollegeDetail> {
                       Get.to(() => PlacementDetails(collegeId: widget.college.id,));
                       break;
                     case "Admission & Eligibility":
-                      Get.to(() => const Admission());
+                      Get.to(() => Admission(collegeId: widget.college.id,));
                       break;
                     case "Cost & Location":
                       Get.to(() => const Cost());
                       break;
 
                     case "Distance from Hometown":
-                      Get.to(() => const DistanceFromHometown());
+                      Get.to(() => DistanceFromHometown(lat: widget.lat, long: widget.long,));
                       break;
                     case "Latest News & Insights":
-                      Get.to(() => const Insights());
+                      Get.to(() => Insights());
                       break;
                     case "Q & A":
-                      Get.to(() => const QAPage());
+                      Get.to(() => QAPage(collegeId: widget.college.id, collegeName: widget.college.name,));
                       break;
                     case "Hostel & Campus Life":
-                      Get.to(() => const Hostel());
+                      Get.to(() => Hostel(collegeId: widget.college.id,));
                       break;
                     case "Cut-offs & Ranking":
                       Get.to(() => const Cutoff());

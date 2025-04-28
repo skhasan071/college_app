@@ -28,48 +28,7 @@ class _CollegesState extends State<Colleges> {
   var saveCtrl = Get.put(saveController());
   var profile = Get.put(ProfileController());
 
-  List<College> colleges = [
-    College(
-      id: '1',
-      name: 'IIT Delhi - Indian Institute of Technology',
-      city: '',
-      state: 'Delhi',
-      country: '',
-      ranking: 27,
-      brochure: '',
-      lat:12.8 ,
-      long:78.2 ,
-      image: '',
-      collegeInfo: '',
-      stream: '',
-      type: '',
-      courseCount: 18,
-      fees: 20000,
-      naacGrade: "A++",
-      estYear: "1995",
-      acceptanceRate: "65%",
-    ),
-    College(
-        id: '2',
-        name: 'IIT Bombay',
-        city: '',
-        state: 'Maharashtra',
-        country: '',
-        ranking: 15,
-        lat:12.8 ,
-        long:78.2 ,
-        brochure: '',
-        image: '',
-        collegeInfo: '',
-        stream: '',
-        type: '',
-        courseCount: 19,
-        fees: 90000,
-        naacGrade: "A++",
-        estYear: "1995",
-        acceptanceRate: "65%"
-    ),
-  ];
+  List<College> colleges = [];
   List<College> countries = [];
   List<College> states = [];
   List<College> cities = [];
@@ -351,7 +310,7 @@ class _CollegesState extends State<Colleges> {
 
   Future<void> getColleges() async {
 
-    if(await getToken() != null){
+    if(controller.isLoggedIn.value){
       rankings = await StudentService.getCollegesByRanking(
         profile.profile.value!.id,
       );

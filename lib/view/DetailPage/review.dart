@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../view_model/controller.dart';
+
 class Reviews extends StatefulWidget {
 
   String uid;
@@ -24,6 +26,7 @@ class _ReviewsState extends State<Reviews> {
   bool isUserLoggedIn = false;
   List<Review> _reviews = [];
   var pfp = Get.find<ProfileController>();
+  var controller = Get.put(Controller());
   double averageRating = 0;
   List<int> percents = [0,0,0,0,0];
 
@@ -489,15 +492,30 @@ class _ReviewsState extends State<Reviews> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (reviewController.text.isNotEmpty &&
-                            selectedRating > 0) {
-                          Navigator.pop(context);
-                          Review review = Review(name:pfp.profile.value!.name, uid: widget.uid, studentemail: pfp.profile.value!.email, rating: selectedRating, reviewtext: reviewController.text.trim(), likes: 0);
-                          Review? rev = await StudentService().postReview(review);
 
-                          if(rev != null){
-                            _reviews.insert(0, rev);
-                            setState(() {});
+                        if(controller.isGuestIn.value){
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Please Login First"),
+                              duration: Duration(seconds: 3),
+                              backgroundColor: Colors.black,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }else{
+
+                          if (reviewController.text.isNotEmpty &&
+                              selectedRating > 0) {
+                            Navigator.pop(context);
+                            Review review = Review(name:pfp.profile.value!.name, uid: widget.uid, studentemail: pfp.profile.value!.email, rating: selectedRating, reviewtext: reviewController.text.trim(), likes: 0);
+                            Review? rev = await StudentService().postReview(review);
+
+                            if(rev != null){
+                              _reviews.insert(0, rev);
+                              setState(() {});
+                            }
+
                           }
 
                         }

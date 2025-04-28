@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
 
-  static const String baseUrl = 'http://localhost:8080/api/students/student';
+  static const String baseUrl = 'https://tc-ca-server.onrender.com/api/students/student';
 
   // 🔹 Register Student
   static Future<Map<String, dynamic>> registerStudent(String name, String email, String password) async {

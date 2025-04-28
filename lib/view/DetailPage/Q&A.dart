@@ -48,7 +48,7 @@ class _QAPageState extends State<QAPage> {
 
   Future<void> fetchQuestions() async {
     final url = Uri.parse(
-      'http://localhost:8080/api/questions/${widget.collegeId}',
+      'https://tc-ca-server.onrender.com/api/questions/${widget.collegeId}',
     );
 
     try {
@@ -88,7 +88,7 @@ class _QAPageState extends State<QAPage> {
     String userName,
     String questionText,
   ) async {
-    final url = Uri.parse('http://localhost:8080/api/add-question');
+    final url = Uri.parse('https://tc-ca-server.onrender.com/api/add-question');
 
     try {
       final response = await http.post(

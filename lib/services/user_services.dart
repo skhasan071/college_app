@@ -8,7 +8,7 @@ import '../model/college.dart';
 import '../model/review.dart';
 
 class StudentService {
-  static const String _baseUrl = 'http://localhost:8080/api/students';
+  static const String _baseUrl = 'https://tc-ca-server.onrender.com/api/students';
 
   Future<Student?> fetchStudentById(String id) async {
     final url = Uri.parse(
@@ -117,8 +117,8 @@ class StudentService {
     String? modeOfStudy,
   }) async {
     try {
-      final uri = Uri.parse('http://localhost:8080/api/students/preferences');
-      final response = await http.post(
+      final uri = Uri.parse('https://tc-ca-server.onrender.com/api/students/preferences');
+      final response = await http.put(
         uri,
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ class StudentService {
     required String collegeId,
   }) async {
     try {
-      final uri = Uri.parse('http://localhost:8080/api/students/favorites/add');
+      final uri = Uri.parse('https://tc-ca-server.onrender.com/api/students/favorites/add');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
@@ -174,7 +174,7 @@ class StudentService {
   static Future<List<College>> getFavoriteColleges(String studentId) async {
     try {
       final uri = Uri.parse(
-        'http://localhost:8080/api/students/favorites/$studentId',
+        'https://tc-ca-server.onrender.com/api/students/favorites/$studentId',
       );
       final response = await http.get(uri);
 
@@ -203,7 +203,7 @@ class StudentService {
   ) async {
     try {
       final uri = Uri.parse(
-        'http://localhost:8080/api/students/favorites/remove',
+        'https://tc-ca-server.onrender.com/api/students/favorites/remove',
       );
       final response = await http.post(
         uri,
@@ -225,7 +225,7 @@ class StudentService {
   }
 
   Future<Review?> postReview(Review review) async {
-    final url = Uri.parse('http://localhost:8080/api/colleges/reviews');
+    final url = Uri.parse('https://tc-ca-server.onrender.com/api/colleges/reviews');
 
     try {
       final response = await http.post(
@@ -249,7 +249,7 @@ class StudentService {
 
   Future<List<Review>> getReviews(String uid) async {
     final url = Uri.parse(
-      'http://localhost:8080/api/colleges/reviews/getAll/$uid',
+      'https://tc-ca-server.onrender.com/api/colleges/reviews/getAll/$uid',
     );
 
     final response = await http.get(url);
@@ -267,7 +267,7 @@ class StudentService {
   static Future<List<College>> getCollegesByRanking(String studentId) async {
     try {
       final uri = Uri.parse(
-        'http://localhost:8080/api/students/rankings?studentId=$studentId',
+        'https://tc-ca-server.onrender.com/api/students/rankings?studentId=$studentId',
       );
 
       final response = await http.get(uri);
@@ -294,7 +294,7 @@ class StudentService {
   ) async {
     try {
       final uri = Uri.parse(
-        'http://localhost:8080/api/students/private-colleges',
+        'https://tc-ca-server.onrender.com/api/students/private-colleges',
       );
 
       final response = await http.post(
