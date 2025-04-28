@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class DistanceFromHometown extends StatefulWidget {
   final double lat;
@@ -9,7 +11,7 @@ class DistanceFromHometown extends StatefulWidget {
   const DistanceFromHometown({
     super.key,
     required this.lat,
-    required this.long,
+    required this.long, required String collegeId,
   });
 
   @override
@@ -59,12 +61,7 @@ class _DistanceFromHometownState extends State<DistanceFromHometown> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Location services are disabled. Please enable them!"),
-          backgroundColor: Colors.purple,
-        ),
-      );
+      Get.snackbar("Error",'please enable your location to fetch distance');
       setState(() {
         isLoading = false;
       });

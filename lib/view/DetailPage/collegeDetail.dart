@@ -24,15 +24,18 @@ import '../../model/college.dart';
 
 class CollegeDetail extends StatefulWidget {
   final College college;
-  var lat, long;
+  final String collegeName;
+  final String state;
+  final double lat;    // Make these properly typed
+  final double long;
 
-  CollegeDetail({
+  const CollegeDetail({
     required this.college,
+    required this.collegeName,
+    required this.state,
+    required this.lat,
+    required this.long,
     super.key,
-    required String collegeName,
-    required String state,
-    required lat,
-    required long,
   });
 
   @override
@@ -273,7 +276,15 @@ class _CollegeDetailState extends State<CollegeDetail> {
                       break;
 
                     case "Distance from Hometown":
-                      Get.to(() => DistanceFromHometown(lat: widget.lat, long: widget.long,));
+                      if (widget.lat != null && widget.long != null) {
+                        Get.to(() => DistanceFromHometown(
+                          collegeId:widget.college.id,
+                          lat: widget.lat!,
+                          long: widget.long!,
+                        ));
+                      } else {
+                        Get.snackbar('Error', 'Location data is missing.');
+                      }
                       break;
                     case "Latest News & Insights":
                       Get.to(() => Insights());
