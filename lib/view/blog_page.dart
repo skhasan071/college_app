@@ -1,7 +1,9 @@
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'blog_detail_page.dart';  // Import the detail page
+import 'blog_detail_page.dart'; // Import the detail page
 
 class BlogPage extends StatefulWidget {
   @override
@@ -13,7 +15,9 @@ class _BlogPageState extends State<BlogPage> {
 
   // Fetch blogs from the backend
   Future<void> fetchBlogs() async {
-    final response = await http.get(Uri.parse('https://tc-ca-server.onrender.com/api/blogs'));  // Change to your backend URL
+    final response = await http.get(
+      Uri.parse('https://tc-ca-server.onrender.com/api/blogs'),
+    ); // Change to your backend URL
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
@@ -28,64 +32,87 @@ class _BlogPageState extends State<BlogPage> {
   @override
   void initState() {
     super.initState();
-    fetchBlogs();  // Fetch blogs when the page is loaded
+    fetchBlogs(); // Fetch blogs when the page is loaded
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // "Describe what your blog is about" Heading
-                Text(
-                  'Blogs To enhance you knowledge',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'all latest topics',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-                SizedBox(height: 16),
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // "Describe what your blog is about" Heading
+                  Text(
+                    'Blogs To enhance you knowledge',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'all latest topics',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  SizedBox(height: 16),
 
-                // "Featured blog posts" Heading
-                Text(
-                  'Featured blog posts',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16),
+                  // "Featured blog posts" Heading
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: theme.backgroundGradient,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Featured blog posts',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16),
 
-                // List of blog cards
-                blogs.isEmpty
-                    ? Center(child: CircularProgressIndicator())  // Show loading indicator while fetching
-                    : ListView.builder(
-                  itemCount: blogs.length,
-                  itemBuilder: (context, index) {
-                    return BlogCard(
-                      title: blogs[index]['title'],
-                      category: blogs[index]['category'],
-                      readingTime: blogs[index]['readingTime'],
-                      description: blogs[index]['description'],
-                      image: blogs[index]['image'] ?? 'assets/default-image.jpg',  // Use default image if none
-                      blog: blogs[index],  // Pass the entire blog to the detail page
-                    );
-                  },
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ],
+                        // List of blog cards
+                        blogs.isEmpty
+                            ? Center(
+                              child: CircularProgressIndicator(),
+                            ) // Show loading indicator while fetching
+                            : ListView.builder(
+                              itemCount: blogs.length,
+                              itemBuilder: (context, index) {
+                                return BlogCard(
+                                  title: blogs[index]['title'],
+                                  category: blogs[index]['category'],
+                                  readingTime: blogs[index]['readingTime'],
+                                  description: blogs[index]['description'],
+                                  image:
+                                      blogs[index]['image'] ??
+                                      'assets/default-image.jpg', // Use default image if none
+                                  blog:
+                                      blogs[index], // Pass the entire blog to the detail page
+                                );
+                              },
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                            ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -129,14 +156,8 @@ class BlogCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  category,
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Text(
-                  readingTime,
-                  style: TextStyle(color: Colors.grey),
-                ),
+                Text(category, style: TextStyle(color: Colors.grey)),
+                Text(readingTime, style: TextStyle(color: Colors.grey)),
               ],
             ),
 
@@ -150,10 +171,7 @@ class BlogCard extends StatelessWidget {
             SizedBox(height: 8),
 
             // Blog description
-            Text(
-              description,
-              style: TextStyle(color: Colors.grey),
-            ),
+            Text(description, style: TextStyle(color: Colors.grey)),
 
             SizedBox(height: 16),
 
@@ -169,10 +187,7 @@ class BlogCard extends StatelessWidget {
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text('Read more'),
-                  Icon(Icons.arrow_forward),
-                ],
+                children: [Text('Read more'), Icon(Icons.arrow_forward)],
               ),
             ),
           ],

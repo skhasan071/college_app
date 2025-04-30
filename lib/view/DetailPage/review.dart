@@ -3,6 +3,7 @@ import 'package:college_app/services/college_services.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view_model/profile_controller.dart';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import '../../view_model/controller.dart';
 
 class Reviews extends StatefulWidget {
-
   String uid;
 
   Reviews(this.uid, {super.key});
@@ -28,7 +28,7 @@ class _ReviewsState extends State<Reviews> {
   var pfp = Get.find<ProfileController>();
   var controller = Get.put(Controller());
   double averageRating = 0;
-  List<int> percents = [0,0,0,0,0];
+  List<int> percents = [0, 0, 0, 0, 0];
 
   @override
   void initState() {
@@ -46,7 +46,6 @@ class _ReviewsState extends State<Reviews> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 3,
@@ -64,111 +63,120 @@ class _ReviewsState extends State<Reviews> {
         backgroundColor: Colors.white,
       ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      averageRating.toStringAsFixed(1),
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
+      body: Obx(() {
+        final theme = ThemeController.to.currentTheme;
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        averageRating.toStringAsFixed(1),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      _buildStarRating(averageRating),
+
+                      const SizedBox(height: 4),
+                      const Text(
+                        "Based on 2,456 reviews",
+                        style: TextStyle(color: Colors.black, fontSize: 1),
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (isUserLoggedIn) {
+                        _showReviewDialog(context);
+                      } else {
+                        _showLoginPrompt(context);
+                      }
+                    },
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.filterSelectedColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 15,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero, // No rounded border
                       ),
                     ),
-                    _buildStarRating(averageRating),
-
-                    const SizedBox(height: 4),
-                    const Text(
-                      "Based on 2,456 reviews",
-                      style: TextStyle(color: Colors.black, fontSize: 1),
-                    ),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (isUserLoggedIn) {
-                      _showReviewDialog(context);
-                    } else {
-                      _showLoginPrompt(context);
-                    }
-                  },
-
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 15,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero, // No rounded border
+                    child: const Text(
+                      "Write a Review",
+                      style: TextStyle(fontSize: 17),
                     ),
                   ),
-                  child: const Text(
-                    "Write a Review",
-                    style: TextStyle(fontSize: 17),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Divider(color: Colors.grey, thickness: 0.5),
+              const SizedBox(height: 22),
+
+              // Rating distribution
+              _buildRatingBar("5 star", percents[0]),
+              const SizedBox(height: 8),
+              _buildRatingBar("4 star", percents[1]),
+              const SizedBox(height: 8),
+              _buildRatingBar("3 star", percents[2]),
+              const SizedBox(height: 8),
+              _buildRatingBar("2 star", percents[3]),
+              const SizedBox(height: 8),
+              _buildRatingBar("1 star", percents[4]),
+              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              Divider(color: Colors.grey, thickness: 0.5),
+              const SizedBox(height: 22),
+
+              // Dynamic review list
+              ..._reviews.map((review) {
+                return _buildReviewItem(
+                  review.name,
+                  review.studentemail,
+                  review.reviewtext,
+                  review.rating.toDouble(),
+                  "date",
+                  review.likes,
+                  10,
+                );
+              }).toList(),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _showFilterPopup(context);
+                },
+                icon: const Icon(Icons.filter_list, size: 30),
+                label: const Text(
+                  "Filter Reviews",
+                  style: TextStyle(fontSize: 19),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 9,
+                    vertical: 8,
+                  ),
+                  backgroundColor: theme.filterSelectedColor,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Divider(color: Colors.grey, thickness: 0.5),
-            const SizedBox(height: 22),
-
-            // Rating distribution
-            _buildRatingBar("5 star", percents[0]),
-            const SizedBox(height: 8),
-            _buildRatingBar("4 star", percents[1]),
-            const SizedBox(height: 8),
-            _buildRatingBar("3 star", percents[2]),
-            const SizedBox(height: 8),
-            _buildRatingBar("2 star", percents[3]),
-            const SizedBox(height: 8),
-            _buildRatingBar("1 star", percents[4]),
-            const SizedBox(height: 24),
-            const SizedBox(height: 16),
-            Divider(color: Colors.grey, thickness: 0.5),
-            const SizedBox(height: 22),
-
-            // Dynamic review list
-            ..._reviews.map((review) {
-              return _buildReviewItem(
-                review.name,
-                review.studentemail,
-                review.reviewtext,
-                review.rating.toDouble(),
-                "date",
-                review.likes,
-                10,
-              );
-            }).toList(),
-            ElevatedButton.icon(
-              onPressed: () {
-                _showFilterPopup(context);
-              },
-              icon: const Icon(Icons.filter_list, size: 30),
-              label: const Text(
-                "Filter Reviews",
-                style: TextStyle(fontSize: 19),
               ),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
-                backgroundColor: Colors.grey.shade900,
-                foregroundColor: Colors.white,
-                minimumSize: const Size.fromHeight(48),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-              ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -307,52 +315,72 @@ class _ReviewsState extends State<Reviews> {
   }
 
   Widget _buildStarRating(double rating, {double iconSize = 20}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(5, (index) {
-        if (rating >= index + 1) {
-          return Icon(Icons.star, color: Colors.black, size: iconSize);
-        } else if (rating > index) {
-          return Icon(Icons.star_half, color: Colors.black, size: iconSize);
-        } else {
-          return Icon(Icons.star_border, color: Colors.black, size: iconSize);
-        }
-      }),
-    );
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(5, (index) {
+          if (rating >= index + 1) {
+            return Icon(Icons.star, color: theme.starColor, size: iconSize);
+          } else if (rating > index) {
+            return Icon(
+              Icons.star_half,
+              color: theme.starColor,
+              size: iconSize,
+            );
+          } else {
+            return Icon(
+              Icons.star_border,
+              color: theme.starColor,
+              size: iconSize,
+            );
+          }
+        }),
+      );
+    });
   }
 
   Widget _buildRatingBar(String label, int percent) {
-    return Row(
-      children: [
-        Text(label),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Stack(
-            children: [
-              Container(
-                height: 8,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              FractionallySizedBox(
-                widthFactor: percent / 100,
-                child: Container(
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Row(
+        children: [
+          Text(
+            label,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Stack(
+              children: [
+                Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-              ),
-            ],
+                FractionallySizedBox(
+                  widthFactor: percent / 100,
+                  child: Container(
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: theme.filterSelectedColor,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Text("$percent%"),
-      ],
-    );
+          const SizedBox(width: 8),
+          Text(
+            "$percent%",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildReviewItem(
@@ -364,69 +392,78 @@ class _ReviewsState extends State<Reviews> {
     int likes,
     int comments,
   ) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 30,
-            child: Icon(Icons.person, color: Colors.black, size: 36),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 30, child: Icon(Icons.person, size: 36)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
                       ),
-                    ),
-                    _buildStarRating(rating, iconSize: 18),
-                  ],
-                ),
-                Text(
-                  role,
-                  style: const TextStyle(color: Colors.black, fontSize: 15),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  review,
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Posted on $date",
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                      _buildStarRating(rating, iconSize: 18),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.thumb_up_alt_outlined,
-                      size: 25,
-                      color: Colors.grey,
+                  Text(
+                    role,
+                    style: const TextStyle(
+                      color: Color(0xFF42A5F5),
+                      fontSize: 15,
                     ),
-                    const SizedBox(width: 4),
-                    Text("$likes", style: TextStyle(fontSize: 15)),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    review,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Posted on $date",
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.thumb_up_alt_outlined,
+                        size: 25,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "$likes",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color(0xFF42A5F5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   void _showReviewDialog(BuildContext context) {
@@ -440,6 +477,7 @@ class _ReviewsState extends State<Reviews> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) {
+        final theme = ThemeController.to.currentTheme;
         return Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom + 16,
@@ -481,7 +519,7 @@ class _ReviewsState extends State<Reviews> {
                           index < selectedRating
                               ? Icons.star
                               : Icons.star_border,
-                          color: Colors.black,
+                          color: theme.starColor,
                           size: 35,
                         ),
                       );
@@ -492,8 +530,7 @@ class _ReviewsState extends State<Reviews> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-
-                        if(controller.isGuestIn.value){
+                        if (controller.isGuestIn.value) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -503,25 +540,31 @@ class _ReviewsState extends State<Reviews> {
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
-                        }else{
-
+                        } else {
                           if (reviewController.text.isNotEmpty &&
                               selectedRating > 0) {
                             Navigator.pop(context);
-                            Review review = Review(name:pfp.profile.value!.name, uid: widget.uid, studentemail: pfp.profile.value!.email, rating: selectedRating, reviewtext: reviewController.text.trim(), likes: 0);
-                            Review? rev = await StudentService().postReview(review);
+                            Review review = Review(
+                              name: pfp.profile.value!.name,
+                              uid: widget.uid,
+                              studentemail: pfp.profile.value!.email,
+                              rating: selectedRating,
+                              reviewtext: reviewController.text.trim(),
+                              likes: 0,
+                            );
+                            Review? rev = await StudentService().postReview(
+                              review,
+                            );
 
-                            if(rev != null){
+                            if (rev != null) {
                               _reviews.insert(0, rev);
                               setState(() {});
                             }
-
                           }
-
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                        backgroundColor: theme.filterSelectedColor,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: const RoundedRectangleBorder(
@@ -547,33 +590,29 @@ class _ReviewsState extends State<Reviews> {
     percents = getPercents();
 
     setState(() {});
-
   }
 
   double getAvgRating() {
-
     int reviews = _reviews.length;
 
     int sum = 0;
 
-    for(Review review in _reviews){
+    for (Review review in _reviews) {
       sum += review.rating;
     }
 
     setState(() {});
 
-    return (sum/reviews);
-
+    return (sum / reviews);
   }
 
   List<int> getPercents() {
+    List<int> percents = [0, 0, 0, 0, 0];
+    List<int> per = [0, 0, 0, 0, 0];
 
-    List<int> percents = [0,0,0,0,0];
-    List<int> per = [0,0,0,0,0];
-
-    for(int i = 0; i < _reviews.length; i++){
+    for (int i = 0; i < _reviews.length; i++) {
       print(_reviews[i].rating);
-      switch(_reviews[i].rating){
+      switch (_reviews[i].rating) {
         case 5:
           per[0] += 1;
           break;
@@ -589,16 +628,12 @@ class _ReviewsState extends State<Reviews> {
         case 1:
           per[4] += 1;
       }
-
     }
 
-    for(int i = 0; i<per.length; i++){
-
+    for (int i = 0; i < per.length; i++) {
       percents[i] = ((per[i] * 100) / _reviews.length).toInt();
-
     }
 
     return percents;
   }
-
 }

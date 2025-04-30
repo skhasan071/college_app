@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:http/http.dart' as http;
 
 class Admission extends StatefulWidget {
@@ -20,7 +22,9 @@ class _AdmissionState extends State<Admission> {
   Future<void> fetchAdmissionProcess() async {
     try {
       final response = await http.get(
-        Uri.parse('https://tc-ca-server.onrender.com/api/colleges/admission/${widget.collegeId}'),
+        Uri.parse(
+          'https://tc-ca-server.onrender.com/api/colleges/admission/${widget.collegeId}',
+        ),
       );
 
       if (response.statusCode == 200) {
@@ -51,75 +55,162 @@ class _AdmissionState extends State<Admission> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 3,
-        title: const Text(
-          'Admissions & Eligibility',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+
+      return Scaffold(
         backgroundColor: Colors.white,
-      ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : errorMessage.isNotEmpty
-          ? Center(child: Text(errorMessage))
-          : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Important Dates",
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            _dateTile("Application Start", admissionProcess.startDate, "Active"),
-            const SizedBox(height: 12),
-            _dateTile("Application Deadline", admissionProcess.endDate, "75 days left"),
-            const SizedBox(height: 24),
-            Divider(color: Colors.grey, thickness: 0.5),
-            Text(
-              "Required Exams",
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            ...admissionProcess.requiredExams
-                .map((exam) => _examTile(exam, "For All Programs"))
-                .toList(),
-            const SizedBox(height: 24),
-            Divider(color: Colors.grey, thickness: 0.5),
-            Text(
-              "Admission Process",
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              admissionProcess.applicationProcess,  // Display the string directly
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 24),
-            Divider(color: Colors.grey, thickness: 0.5),
-            Text(
-              "Required Documents",
-              style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-            ),
-            _requiredDocuments(
-              title: "Documents Required",
-              items: admissionProcess.documentsRequired,
-            ),
-          ],
+        appBar: AppBar(
+          elevation: 3,
+          title: const Text(
+            'Admissions & Eligibility',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: Colors.white,
         ),
-      ),
-    );
+        body:
+            isLoading
+                ? Center(child: CircularProgressIndicator())
+                : errorMessage.isNotEmpty
+                ? Center(child: Text(errorMessage))
+                : SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        margin: const EdgeInsets.only(bottom: 24),
+                        decoration: BoxDecoration(
+                          gradient: theme.backgroundGradient,
+
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Important Dates",
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                                color: theme.filterSelectedColor,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            _dateTile(
+                              "Application Start",
+                              admissionProcess.startDate,
+                              "Active",
+                            ),
+                            const SizedBox(height: 12),
+                            _dateTile(
+                              "Application Deadline",
+                              admissionProcess.endDate,
+                              "75 days left",
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+                      Divider(color: Colors.grey, thickness: 0.5),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        margin: const EdgeInsets.only(bottom: 24),
+                        decoration: BoxDecoration(
+                          gradient: theme.backgroundGradient,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Required Exams",
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                                color: theme.filterSelectedColor,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            ...admissionProcess.requiredExams
+                                .map(
+                                  (exam) => _examTile(exam, "For All Programs"),
+                                )
+                                .toList(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      Divider(color: Colors.grey, thickness: 1),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        margin: const EdgeInsets.only(bottom: 24),
+                        decoration: BoxDecoration(
+                          gradient: theme.backgroundGradient,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Admission Process",
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                                color: theme.filterSelectedColor,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              admissionProcess
+                                  .applicationProcess, // Display the string directly
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Divider(color: Colors.grey, thickness: 0.5),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        margin: const EdgeInsets.only(bottom: 24),
+                        decoration: BoxDecoration(
+                          gradient: theme.backgroundGradient,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Required Documents",
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                                color: theme.filterSelectedColor,
+                              ),
+                            ),
+                            _requiredDocuments(
+                              title: "Documents Required",
+                              items: admissionProcess.documentsRequired,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+      );
+    });
   }
 
   // Method for Date Tile
@@ -141,7 +232,10 @@ class _AdmissionState extends State<Admission> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -184,7 +278,10 @@ class _AdmissionState extends State<Admission> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 4),
               ],
@@ -222,7 +319,10 @@ class _AdmissionState extends State<Admission> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -238,37 +338,48 @@ class _AdmissionState extends State<Admission> {
   }
 
   // Method for Required Documents
-  Widget _requiredDocuments({required String title, required List<String> items}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          const SizedBox(height: 10),
-          ...items.map(
-                (e) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
-                children: [
-                  const Icon(Icons.check_circle, size: 20, color: Colors.black),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(e, style: TextStyle(fontSize: 16))),
-                ],
+  Widget _requiredDocuments({
+    required String title,
+    required List<String> items,
+  }) {
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            ...items.map(
+              (e) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      size: 20,
+                      color: theme.filterSelectedColor,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(e, style: TextStyle(fontSize: 16))),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
