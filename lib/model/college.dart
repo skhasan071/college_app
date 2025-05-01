@@ -11,7 +11,7 @@ class College {
   final String stream; // Expected values: "Engineering", "Medical", etc.
   final String type; // Expected values: "Private", "Government"
   final int courseCount;
-  final int fees;
+  final String feeRange;
   final double long;
   final double lat;
   // ✅ New fields
@@ -32,7 +32,7 @@ class College {
     required this.stream,
     required this.type,
     required this.courseCount,
-    required this.fees,
+    required this.feeRange,
     required this.naacGrade,
     required this.estYear,
     required this.acceptanceRate,
@@ -54,7 +54,7 @@ class College {
       stream: map['stream'] ?? '',
       type: map['type'] ?? '',
       courseCount: map['courseCount'] ?? 10,
-      fees: map['fees'] ?? 0,
+      feeRange: map['feeRange'] ??'',
       lat:map['lat']?.toDouble() ?? 0,
       long: map['long']?.toDouble()??0,
       // ✅ New fields
@@ -78,7 +78,7 @@ class College {
       'stream': stream,
       'type': type,
       'courseCount': courseCount,
-      'fees': fees,
+      'feeRange': feeRange,
       // ✅ New fields
       'naacGrade': naacGrade,
       'estYear': estYear,

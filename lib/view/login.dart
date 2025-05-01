@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: Column(
@@ -89,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                 text: TextSpan(
                   text: "Log In",
                   style: const TextStyle(
+                   color: Colors.black,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
@@ -101,6 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                 text: TextSpan(
                   text: "Login here to continue to app",
                   style: const TextStyle(
+                    color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.w100,
                   ),

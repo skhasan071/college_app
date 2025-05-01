@@ -44,7 +44,7 @@ class SearchRes extends StatelessWidget{
                       collegeID: clg.id,
                       collegeName: clg.name,
                       coursesCount: 0,
-                      feeRange: 12000.toString(),
+                      feeRange: clg.feeRange,
                       state: clg.state,
                       ranking: clg.ranking.toString(),
                       studId:  ctrl.isGuestIn.value ? "Nothing": controller.profile.value!.id ,

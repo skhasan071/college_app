@@ -1,5 +1,8 @@
+import 'package:college_app/view/DetailPage/admission.dart';
+import 'package:college_app/view/DetailPage/distanceFromHome.dart';
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';
+import 'package:college_app/view/welcomescreen.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +33,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: token == null || token == "" ? Firstpage() : HomePage(token!),
+       home: token == null || token == "" ? Firstpage() : HomePage(token!),
+
+
     );
   }
 

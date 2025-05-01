@@ -79,6 +79,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
@@ -91,6 +92,7 @@ class _SignupPageState extends State<SignupPage> {
                   text: "Sign Up",
                   style: const TextStyle(
                     fontSize: 32,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -104,6 +106,7 @@ class _SignupPageState extends State<SignupPage> {
                   text: "SignUp here to continue to app",
                   style: const TextStyle(
                     fontSize: 20,
+                    color: Colors.black,
                     fontWeight: FontWeight.w100,
                   ),
                 ),
