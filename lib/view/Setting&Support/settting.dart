@@ -34,13 +34,16 @@ class SettingsPage extends StatelessWidget {
                 "Update your Name, Mobile Number, Study In, Passed In, City.",
             icon: Icons.account_circle_outlined,
             onTap: () => Get.to(() => CompleteProfilePage(isEditing: true)),
+            iconColor: const Color(0xFF1E88E5), // Blue 600
           ),
+
           const Divider(),
 
           _buildTile(
             title: "Choose theme",
             subtitle: "System default",
             icon: Icons.brightness_6_outlined,
+            iconColor: Color(0xFF8E24AA), // Purple 600
             onTap: () => Get.to(() => ThemePage()),
           ),
           const Divider(),
@@ -52,7 +55,12 @@ class SettingsPage extends StatelessWidget {
                 onChanged: (val) {
                   setState(() => isNotificationOn = val);
                 },
-                secondary: const Icon(Icons.notifications_none, size: 35),
+                secondary: const Icon(
+                  Icons.notifications_none,
+                  size: 35,
+                  color: Color(0xFFF4511E),
+                ), // Deep Orange 600
+
                 title: const Text(
                   "Notifications",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -69,6 +77,7 @@ class SettingsPage extends StatelessWidget {
             title: "Language",
             subtitle: "English",
             icon: Icons.language,
+            iconColor: Color(0xFF43A047), // Green 600
             onTap: () => Get.to(() => const LanguagePage()),
           ),
           const Divider(),
@@ -77,8 +86,10 @@ class SettingsPage extends StatelessWidget {
             title: "Version",
             subtitle: "1.0.0",
             icon: Icons.info_outline,
+            iconColor: Color(0xFF757575), // Grey 600
             onTap: () {},
           ),
+
           const Divider(),
         ],
       ),
@@ -90,9 +101,10 @@ class SettingsPage extends StatelessWidget {
     String? subtitle,
     required IconData icon,
     required VoidCallback onTap,
+    Color iconColor = Colors.black, // Default color
   }) {
     return ListTile(
-      leading: Icon(icon, size: 35),
+      leading: Icon(icon, size: 35, color: iconColor),
       title: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),

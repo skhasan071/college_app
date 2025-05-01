@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:college_app/view/Filters&Compare/compareWith.dart';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:college_app/view_model/tabController.dart';
@@ -26,7 +26,7 @@ class CollegeDetail extends StatefulWidget {
   final College college;
   final String collegeName;
   final String state;
-  final double lat;    // Make these properly typed
+  final double lat; // Make these properly typed
   final double long;
 
   const CollegeDetail({
@@ -55,8 +55,10 @@ class _CollegeDetailState extends State<CollegeDetail> {
     super.initState();
     fetchPlacementData();
   }
+
   Future<void> fetchPlacementData() async {
-    final url = 'https://tc-ca-server.onrender.com/api/colleges/placement/${widget.college.id}';
+    final url =
+        'https://tc-ca-server.onrender.com/api/colleges/placement/${widget.college.id}';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -80,13 +82,15 @@ class _CollegeDetailState extends State<CollegeDetail> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.college.name, style: const TextStyle(color: Colors.black)),
+        title: Text(
+          widget.college.name,
+          style: const TextStyle(color: Colors.black),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -97,374 +101,483 @@ class _CollegeDetailState extends State<CollegeDetail> {
           ),
         ],
       ),
-      body:isLoading
-          ? Center(child: CircularProgressIndicator())  // Show loader while fetching
-          : placementData == null || errorMessage.isNotEmpty
-          ? Center(child: Text(errorMessage.isNotEmpty ? errorMessage : 'No data available'))
-          :
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ✅ College Banner Image
-          widget.college.image.isNotEmpty
-              ? Image.network(
-            widget.college.image,
-            height: 180,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          )
-              : Container(
-            height: 180,
-            color: Colors.grey[300],
-            child: const Center(child: Icon(Icons.image, size: 50)),
-          ),
-
-          // ✅ College Name and State
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+      body: Obx(() {
+        final theme = ThemeController.to.currentTheme;
+        return isLoading
+            ? Center(
+              child: CircularProgressIndicator(),
+            ) // Show loader while fetching
+            : placementData == null || errorMessage.isNotEmpty
+            ? Center(
+              child: Text(
+                errorMessage.isNotEmpty ? errorMessage : 'No data available',
+              ),
+            )
+            : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.college.name,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                // ✅ College Banner Image
+                widget.college.image.isNotEmpty
+                    ? Image.network(
+                      widget.college.image,
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                    : Container(
+                      height: 180,
+                      color: Colors.grey[300],
+                      child: const Center(child: Icon(Icons.image, size: 50)),
+                    ),
+
+                // ✅ College Name and State
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.college.name,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on, size: 18),
+                          const SizedBox(width: 4),
+                          Text(
+                            widget.college.state,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Apply Now logic
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                              ),
+                              child: const Text(
+                                "Apply Now",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            CompareWith(clg: widget.college),
+                                  ),
+                                );
+                              },
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                side: const BorderSide(color: Colors.green),
+                              ),
+                              child: const Text(
+                                "Compare",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, size: 18),
-                    const SizedBox(width: 4),
-                    Text(
-                      widget.college.state,
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Apply Now logic
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                        ),
-                        child: const Text(
-                          "Apply Now",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CompareWith(clg: widget.college),
-                            ),
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                          side: const BorderSide(color: Colors.black),
-                        ),
-                        child: const Text(
-                          "Compare",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
 
-          // ✅ NAAC, Rank, Establishment
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "#${widget.college.ranking}\nNIRF Rank",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${widget.college.naacGrade}\nNAAC Grade",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${widget.college.estYear}\nEstablished",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 15),
-          Container(
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: Colors.grey, width: 0.4),
-                bottom: BorderSide(color: Colors.grey, width: 0.4),
-              ),
-            ),
-            child: TabBar(
-              isScrollable: true,
-              controller: tabController.tabController,
-              labelColor: Colors.white,
-              tabAlignment: TabAlignment.start,
-              unselectedLabelColor: Colors.black,
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 17,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
-              indicator: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              onTap: (index) {
-                final selectedTab = tabController.tabs[index];
-                if (selectedTab != "Overview") {
-                  switch (selectedTab) {
-                    case "Courses":
-                      Get.to(() => Courses(widget.college.id));
-                      break;
-                    case "Scholarship & Aid":
-                      Get.to(() => Scholarships(
-                          collegeId: widget.college.id,
-                          collegeName: widget.college.name // Pass the college name here as well
-                      ));
-                      break;
-                    case "Reviews":
-                      Get.to(() => Reviews(widget.college.id));
-                      break;
-                    case "Placements":
-                      Get.to(() => PlacementDetails(collegeId: widget.college.id,));
-                      break;
-                    case "Admission & Eligibility":
-                      Get.to(() => Admission(collegeId: widget.college.id,));
-                      break;
-                    case "Cost & Location":
-                      Get.to(() => const Cost());
-                      break;
+                //  NAAC, Rank, Establishment in Chips
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildinfo("${widget.college.ranking}", "NIRF Rank"),
 
-                    case "Distance from Hometown":
-                      if (widget.lat != null && widget.long != null) {
-                        Get.to(() => DistanceFromHometown(
-                          collegeId:widget.college.id,
-                          lat: widget.lat!,
-                          long: widget.long!,
-                        ));
-                      } else {
-                        Get.snackbar('Error', 'Location data is missing.');
+                      _buildinfo("${widget.college.naacGrade}", "NAAC Grade"),
+
+                      _buildinfo("${widget.college.estYear}", "Established"),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(color: Colors.grey, width: 0.4),
+                      bottom: BorderSide(color: Colors.grey, width: 0.4),
+                    ),
+                  ),
+                  child: TabBar(
+                    isScrollable: true,
+                    controller: tabController.tabController,
+                    labelColor: Colors.white,
+                    tabAlignment: TabAlignment.start,
+                    unselectedLabelColor: Colors.black,
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
+                    indicator: BoxDecoration(
+                      color: theme.filterSelectedColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    onTap: (index) {
+                      final selectedTab = tabController.tabs[index];
+                      if (selectedTab != "Overview") {
+                        switch (selectedTab) {
+                          case "Courses":
+                            Get.to(() => Courses(widget.college.id));
+                            break;
+                          case "Scholarship & Aid":
+                            Get.to(
+                              () => Scholarships(
+                                collegeId: widget.college.id,
+                                collegeName:
+                                    widget
+                                        .college
+                                        .name, // Pass the college name here as well
+                              ),
+                            );
+                            break;
+                          case "Reviews":
+                            Get.to(() => Reviews(widget.college.id));
+                            break;
+                          case "Placements":
+                            Get.to(
+                              () => PlacementDetails(
+                                collegeId: widget.college.id,
+                              ),
+                            );
+                            break;
+                          case "Admission & Eligibility":
+                            Get.to(
+                              () => Admission(collegeId: widget.college.id),
+                            );
+                            break;
+                          case "Cost & Location":
+                            Get.to(
+                              () => Cost(
+                                collegeId: widget.college.id,
+                                collegeName: widget.college.name,
+                              ),
+                            );
+                            break;
+
+                          case "Distance from Hometown":
+                            if (widget.lat != null && widget.long != null) {
+                              Get.to(
+                                () => DistanceFromHometown(
+                                  collegeId: widget.college.id,
+                                  lat: widget.lat!,
+                                  long: widget.long!,
+                                ),
+                              );
+                            } else {
+                              Get.snackbar(
+                                'Error',
+                                'Location data is missing.',
+                              );
+                            }
+                            break;
+                          case "Latest News & Insights":
+                            Get.to(() => Insights());
+                            break;
+                          case "Q & A":
+                            Get.to(
+                              () => QAPage(
+                                collegeId: widget.college.id,
+                                collegeName: widget.college.name,
+                              ),
+                            );
+                            break;
+                          case "Hostel & Campus Life":
+                            Get.to(() => Hostel(collegeId: widget.college.id));
+                            break;
+                          case "Cut-offs & Ranking":
+                            Get.to(
+                              () => Cutoff(
+                                collegeId: widget.college.id,
+                                collegeName: widget.college.name,
+                              ),
+                            );
+                            break;
+                        }
+
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          tabController.tabController.index = 0;
+                        });
                       }
-                      break;
-                    case "Latest News & Insights":
-                      Get.to(() => Insights());
-                      break;
-                    case "Q & A":
-                      Get.to(() => QAPage(collegeId: widget.college.id, collegeName: widget.college.name,));
-                      break;
-                    case "Hostel & Campus Life":
-                      Get.to(() => Hostel(collegeId: widget.college.id,));
-                      break;
-                    case "Cut-offs & Ranking":
-                      Get.to(() => const Cutoff());
-                      break;
-                  }
+                    },
+                    tabs:
+                        tabController.tabs
+                            .map(
+                              (tab) => Tab(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                    horizontal: 12,
+                                  ),
+                                  child: Text(tab),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: tabController.tabController,
+                    children:
+                        tabController.tabs.map((tab) {
+                          if (tab == "Overview") {
+                            return SingleChildScrollView(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Quick Highlights Container
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      gradient: theme.backgroundGradient,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Quick Highlights",
+                                          style: TextStyle(
+                                            fontSize: 23,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        GridView.count(
+                                          crossAxisCount: 2,
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          crossAxisSpacing: 10,
+                                          mainAxisSpacing: 10,
+                                          childAspectRatio: 2.0,
+                                          children: [
+                                            QuickHighlights(
+                                              title: "Acceptance Rate",
+                                              value:
+                                                  "${widget.college.acceptanceRate}",
+                                            ),
+                                            QuickHighlights(
+                                              title: "Placement Rate",
+                                              value:
+                                                  placementData!.placementRate,
+                                            ),
+                                            QuickHighlights(
+                                              title: "Avg Package",
+                                              value:
+                                                  placementData!.averagePackage,
+                                            ),
+                                            QuickHighlights(
+                                              title: "Student Rating",
+                                              value: "4.8/5.0",
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
 
-                  Future.delayed(const Duration(milliseconds: 100), () {
-                    tabController.tabController.index = 0;
-                  });
-                }
-              },
-              tabs:
-                  tabController.tabs
-                      .map(
-                        (tab) => Tab(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                              horizontal: 12,
-                            ),
-                            child: Text(tab),
-                          ),
-                        ),
-                      )
-                      .toList(),
-            ),
-          ),
-          Expanded(
-            child: TabBarView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: tabController.tabController,
-              children:
-                  tabController.tabs.map((tab) {
-                    if (tab == "Overview") {
-                      return SingleChildScrollView(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Quick Highlights",
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
+                                  const SizedBox(height: 20),
+                                  const Divider(
+                                    color: Colors.grey,
+                                    thickness: 1,
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Placement Statistics
+                                  Text(
+                                    "Placement Statistics",
+                                    style: TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Highest Package",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        placementData!.highestPackage,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: theme.filterSelectedColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Average Package",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        placementData!.averagePackage,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: theme.filterSelectedColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 15),
+                                  const Divider(
+                                    color: Colors.grey,
+                                    thickness: 1,
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Top Recruiters
+                                  const Text(
+                                    "Top Recruiters",
+                                    style: TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children:
+                                        placementData!.companiesVisited.map((
+                                          company,
+                                        ) {
+                                          return _buildRecruiterChip(company);
+                                        }).toList(),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            GridView.count(
-                              crossAxisCount: 2,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              childAspectRatio: 2.0,
-                              children: [
-                                QuickHighlights(
-                                  title: "Acceptance Rate",
-                                  value: "${widget.college.acceptanceRate}",
-                                ),
-                                QuickHighlights(
-                                  title: "Placement Rate",
-                                  value: placementData!.placementRate,
-                                ),
-                                QuickHighlights(
-                                  title: "Avg Package",
-                                  value: placementData!.averagePackage,
-                                ),
-                                QuickHighlights(
-                                  title: "Student Rating",
-                                  value: "4.8/5.0",
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Divider(color: Colors.grey, thickness: 1),
-                            const SizedBox(height: 20),
-                            const Text(
-                              "Placement Statistics",
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Highest Package",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Text(
-                                  placementData!.highestPackage,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children:  [
-                                Text(
-                                  "Average Package",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Text(
-                                  placementData!.averagePackage,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 15),
-                            const Divider(color: Colors.grey, thickness: 1),
-                            const SizedBox(height: 20),
-                            const Text(
-                              "Top Recruiters",
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: placementData!.companiesVisited.map((company) {
-                                return _buildRecruiterChip(company);
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  }).toList(),
-            ),
-          ),
-        ],
-      ),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        }).toList(),
+                  ),
+                ),
+              ],
+            );
+      }),
     );
   }
 }
 
+Widget _buildinfo(String topText, String bottomText) {
+  return Obx(() {
+    final theme = ThemeController.to.currentTheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: theme.backgroundGradient,
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: theme.boxShadow,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            topText,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          Text(bottomText, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
+    );
+  });
+}
+
 Widget _buildRecruiterChip(String label) {
-  return Container(
-    width: 100,
-    height: 50,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      color: Colors.grey.shade200,
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Text(
-      label,
-      style: const TextStyle(fontSize: 16, color: Colors.black),
-    ),
-  );
+  return Obx(() {
+    final theme = ThemeController.to.currentTheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      margin: const EdgeInsets.only(right: 8, bottom: 8),
+      decoration: BoxDecoration(
+        gradient: theme.backgroundGradient,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 16, color: Colors.black),
+      ),
+    );
+  });
 }
 
 class QuickHighlights extends StatelessWidget {
@@ -479,7 +592,7 @@ class QuickHighlights extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey.shade200,
+        color: Colors.white,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,8 +659,6 @@ class CourseTile extends StatelessWidget {
     );
   }
 }
-
-
 
 class CampusLifeCard extends StatelessWidget {
   final String title;
