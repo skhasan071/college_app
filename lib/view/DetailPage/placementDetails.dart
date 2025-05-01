@@ -110,42 +110,29 @@ class _PlacementDetailsState extends State<PlacementDetails> {
                             gradient: theme.backgroundGradient,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Column(
+                          child: Wrap(
+                            spacing: 8, // horizontal space between cards
+                            runSpacing: 12, // vertical space between lines
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _buildStatCard(
-                                    context,
-                                    'Average Package',
-                                    placementData.averagePackage,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  _buildStatCard(
-                                    context,
-                                    'Highest Package',
-                                    placementData.highestPackage,
-                                  ),
-                                ],
+                              _buildStatCard(
+                                context,
+                                'Average Package',
+                                placementData.averagePackage,
                               ),
-                              const SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _buildStatCard(
-                                    context,
-                                    'Placement Rate',
-                                    placementData.placementRate,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  _buildStatCard(
-                                    context,
-                                    'Number of Companies Visited',
-                                    placementData.numberOfCompanyVisited,
-                                  ),
-                                ],
+                              _buildStatCard(
+                                context,
+                                'Highest Package',
+                                placementData.highestPackage,
+                              ),
+                              _buildStatCard(
+                                context,
+                                'Placement Rate',
+                                placementData.placementRate,
+                              ),
+                              _buildStatCard(
+                                context,
+                                'Number of Companies Visited',
+                                placementData.numberOfCompanyVisited,
                               ),
                             ],
                           ),
@@ -233,6 +220,8 @@ class _PlacementDetailsState extends State<PlacementDetails> {
   Widget _buildStatCard(BuildContext context, String title, String value) {
     return Container(
       width: (MediaQuery.of(context).size.width / 2) - 30,
+
+      height: 110,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),

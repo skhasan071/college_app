@@ -3,6 +3,7 @@ import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../../constants/ui_helper.dart'; // adjust the path as needed
@@ -15,7 +16,17 @@ class CompleteProfilePage extends StatelessWidget {
   final mobileController = TextEditingController();
   var profile = Get.find<ProfileController>();
 
-  final List<String> studyingItems = ["SSC", "HSC"];
+  final List<String> studyingItems = [
+    'SSC',
+    'HSC',
+    'Engineering Colleges',
+    'Management Colleges',
+    'Business Schools',
+    'Arts & Humanities Colleges',
+    'Law Schools',
+    'Medical Colleges',
+    'Design Institutes',
+  ];
   final List<String> passingYearItems = [
     "2000",
     "2001",
@@ -53,7 +64,7 @@ class CompleteProfilePage extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-        
+
                 const SizedBox(height: 16),
                 Text(
                   isEditing ? "Update your Profile" : "Complete your Profile",
@@ -71,12 +82,12 @@ class CompleteProfilePage extends StatelessWidget {
                   style: const TextStyle(color: Colors.black),
                 ),
                 const SizedBox(height: 24),
-        
+
                 const Text("Enter your name"),
                 const SizedBox(height: 8),
                 UiHelper.getTextField(hint: "Name", controller: nameController),
                 const SizedBox(height: 16),
-        
+
                 const Text("Enter your email *"),
                 const SizedBox(height: 8),
                 UiHelper.getTextField(
@@ -85,16 +96,21 @@ class CompleteProfilePage extends StatelessWidget {
                   pre: const Icon(Icons.email_outlined),
                 ),
                 const SizedBox(height: 16),
-        
+
                 const Text("Enter your mobile number *"),
                 const SizedBox(height: 8),
                 UiHelper.getTextField(
                   hint: "Mobile",
                   controller: mobileController,
                   pre: const Icon(Icons.phone_outlined),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(10),
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                 ),
                 const SizedBox(height: 16),
-        
+
                 buildDropdown(
                   "Studying in",
                   (val) => studyingIn = val,
@@ -132,13 +148,38 @@ class CompleteProfilePage extends StatelessWidget {
                         String name = nameController.text.trim();
                         String email = emailController.text.trim();
                         String phNo = mobileController.text.trim();
-        
+
                         studyingIn ??= studyingItems[0];
-        
+
                         passedIn ??= passingYearItems[0];
-        
+
                         city ??= cities[0];
-        
+
+                        if (phNo.length != 10) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please enter a 10-digit mobile number",
+                              ),
+                              backgroundColor: Colors.purple,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                          return;
+                        }
+
+                        if (!RegExp(r'^[6-9]\d{9}$').hasMatch(phNo)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please enter a valid mobile number",
+                              ),
+                              backgroundColor: Colors.purple,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                          return;
+                        }
                         if (name.isNotEmpty &&
                             email.isNotEmpty &&
                             phNo.isNotEmpty &&
@@ -146,7 +187,7 @@ class CompleteProfilePage extends StatelessWidget {
                             passedIn != null &&
                             city != null) {
                           print(profile.userToken.value);
-        
+
                           Map<String, dynamic>? data =
                               await StudentService.addOrUpdateStudent(
                                 token: profile.userToken.value,

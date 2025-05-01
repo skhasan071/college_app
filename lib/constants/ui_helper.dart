@@ -1,6 +1,7 @@
 import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class UiHelper {
   static getPrimaryBtn({
@@ -54,13 +55,18 @@ class UiHelper {
   }
 
   static getTextField({
-    required hint,
-    required controller,
+    required String hint,
+    required TextEditingController controller,
     Icon? pre,
     Icon? suf,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return TextField(
       controller: controller,
+      keyboardType: keyboardType,
+      inputFormatters:
+          inputFormatters, // Accept input formatters as an optional parameter
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.zero,
