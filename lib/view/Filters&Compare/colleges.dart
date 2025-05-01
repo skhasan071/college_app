@@ -74,6 +74,7 @@ class _CollegesState extends State<Colleges> {
               _buildBox(
                 title: "Which colleges match your preferences?",
                 buttonText: "Predict My College",
+                pageNo: 3
               ),
 
               rankings.isNotEmpty
@@ -95,6 +96,7 @@ class _CollegesState extends State<Colleges> {
               _buildBox(
                 title: "Want the latest insights on colleges?",
                 buttonText: "Read Insights",
+                pageNo: 2
               ),
             ],
           ),
@@ -205,7 +207,7 @@ class _CollegesState extends State<Colleges> {
                             collegeID: data[index].id,
                             collegeName: data[index].name,
                             coursesCount: data[index].courseCount,
-                            feeRange: data[index].fees.toString(),
+                            feeRange: data[index].feeRange,
                             state: data[index].state,
                             ranking: data[index].ranking.toString(),
                             studId:
@@ -266,7 +268,7 @@ class _CollegesState extends State<Colleges> {
     });
   }
 
-  Widget _buildBox({required String title, required String buttonText}) {
+  Widget _buildBox({required String title, required String buttonText, required int pageNo}) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
 
@@ -298,7 +300,7 @@ class _CollegesState extends State<Colleges> {
                 child: UiHelper.getPrimaryBtn(
                   title: buttonText,
                   callback: () {
-                    controller.navSelectedIndex.value = 3;
+                    controller.navSelectedIndex.value = pageNo;
                   },
                 ),
               ),

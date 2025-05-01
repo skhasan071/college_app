@@ -165,23 +165,22 @@ class SelectionPage extends StatelessWidget {
     Function(String) onTap, {
     required bool isGreyBox,
   }) {
-    return Obx(() {
-      final theme = ThemeController.to.currentTheme;
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          GridView.count(
+    final theme = ThemeController.to.currentTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 12),
+        Obx(
+          () => GridView.count(
             crossAxisCount: 3,
             crossAxisSpacing: 6,
             mainAxisSpacing: 6,
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             childAspectRatio: 1,
             children:
                 items.map((item) {
@@ -191,7 +190,7 @@ class SelectionPage extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.grey[300],
                         border:
                             isSelected
                                 ? Border.all(
@@ -199,51 +198,34 @@ class SelectionPage extends StatelessWidget {
                                   width: 2,
                                 )
                                 : null,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow:
-                            isGreyBox
-                                ? [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    blurRadius: 4,
-                                    offset: Offset(1, 2),
-                                  ),
-                                ]
-                                : [],
                       ),
                       child: Text(
                         item,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
+                        style: TextStyle(color: Colors.black, fontSize: 18),
                       ),
                     ),
                   );
                 }).toList(),
           ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 
   Widget buildStreamSection(String title, List<String> items) {
-    return Obx(() {
-      final theme = ThemeController.to.currentTheme;
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+        ),
+        Obx(
+          () => Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -255,17 +237,13 @@ class SelectionPage extends StatelessWidget {
                     return GestureDetector(
                       onTap: () => controller.toggleStream(item),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
-                          color:
-                              isSelected
-                                  ? theme.filterSelectedColor
-                                  : Colors.transparent,
+                          color: isSelected ? Colors.black : Colors.transparent,
                           border: Border.all(color: Colors.black),
-                          borderRadius: BorderRadius.zero,
                         ),
                         child: Text(
                           item,
@@ -279,8 +257,8 @@ class SelectionPage extends StatelessWidget {
                   }).toList(),
             ),
           ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 }

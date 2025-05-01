@@ -18,7 +18,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
   String? selectedState;
   String? selectedCategory;
   String? selectedGender;
-  String? selectedCourse;
   String? selectedExam;
   String? selectedRankType;
   String rank = '';
@@ -160,11 +159,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
               _buildLabel("Select your Gender"),
               _buildDropdown(selectedGender, (value) {
                 setState(() => selectedGender = value);
-              }, genders),
-
-              _buildLabel("Select Preferred Course (Optional)"),
-              _buildDropdown(selectedCourse, (value) {
-                setState(() => selectedCourse = value);
               }, genders),
 
               const SizedBox(height: 14),

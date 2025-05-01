@@ -74,7 +74,9 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
                     SizedBox(
                       height: 35,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.navSelectedIndex.value = 3;
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),

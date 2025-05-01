@@ -18,64 +18,61 @@ class SearchRes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final theme = ThemeController.to.currentTheme;
-      return Scaffold(
-        backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white,
 
-        appBar: AppBar(
-          title: Text(
-            "Search",
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          backgroundColor: theme.filterSelectedColor,
-          centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
+      appBar: AppBar(
+        title: Text(
+          "Search",
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
 
-        body:
-            colleges.isNotEmpty
-                ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: colleges.length,
-                    itemBuilder: (context, index) {
-                      College clg = colleges[index];
+      body:
+          colleges.isNotEmpty
+              ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                  itemCount: colleges.length,
+                  itemBuilder: (context, index) {
+                    College clg = colleges[index];
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 15,
-                        ),
-                        child: CardStructure(
-                          clg: clg,
-                          collegeID: clg.id,
-                          collegeName: clg.name,
-                          coursesCount: 0,
-                          feeRange: 12000.toString(),
-                          state: clg.state,
-                          ranking: clg.ranking.toString(),
-                          studId:
-                              ctrl.isGuestIn.value
-                                  ? "Nothing"
-                                  : controller.profile.value!.id,
-                          clgId: clg.id,
-                        ),
-                      );
-                    },
-                  ),
-                )
-                : Center(
-                  child: Text(
-                    "No Colleges Found",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 15,
+                      ),
+                      child: CardStructure(
+                        clg: clg,
+                        collegeID: clg.id,
+                        collegeName: clg.name,
+                        coursesCount: 0,
+                        feeRange: clg.feeRange,
+                        state: clg.state,
+                        ranking: clg.ranking.toString(),
+                        studId:
+                            ctrl.isGuestIn.value
+                                ? "Nothing"
+                                : controller.profile.value!.id,
+                        clgId: clg.id,
+                      ),
+                    );
+                  },
+                ),
+              )
+              : Center(
+                child: Text(
+                  "No Colleges Found",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
                   ),
                 ),
-      );
-    });
+              ),
+    );
   }
 }

@@ -73,9 +73,7 @@ class CardStructure extends StatelessWidget {
                     height: 150,
                     width: double.infinity,
                     decoration: BoxDecoration(color: Colors.grey.shade300),
-                    child: const Center(
-                      child: Icon(Icons.image, size: 40, color: Colors.grey),
-                    ),
+                    child: Image.network(clg.image, fit: BoxFit.cover,),
                   ),
                   Positioned(
                     top: 8,
@@ -84,6 +82,7 @@ class CardStructure extends StatelessWidget {
                       () => InkWell(
                         onTap: () async {
                           if(pfpController.isGuestIn.value){
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text("Login First", style: TextStyle(color: Colors.white),),
@@ -96,10 +95,30 @@ class CardStructure extends StatelessWidget {
                           }else{
                             if (controller.isSaved(collegeID)) {
                               bool success = await remove(studId, clgId);
-                              if (success) controller.toggleSave(collegeID);
+                              if (success){
+                                controller.toggleSave(collegeID);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Removed from Shortlist", style: TextStyle(color: Colors.white),),
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: Colors.black,
+                                      behavior: SnackBarBehavior.floating,
+                                    )
+                                );
+                              }
                             } else {
                               bool success = await save(studId, clgId);
-                              if (success) controller.toggleSave(collegeID);
+                              if (success){
+                                controller.toggleSave(collegeID);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Added To Shortlist", style: TextStyle(color: Colors.white),),
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: Colors.black,
+                                      behavior: SnackBarBehavior.floating,
+                                    )
+                                );
+                              }
                             }
                           }
                         },

@@ -73,7 +73,7 @@ class _DistanceFromHometownState extends State<DistanceFromHometown> {
       setState(() {
         isLoading = false;
       });
-      return;
+      return;                                                                                                                                                                   
     }
 
     permission = await Geolocator.requestPermission();

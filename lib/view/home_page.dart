@@ -6,7 +6,6 @@ import 'package:college_app/view/college_predictor_page.dart';
 import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:college_app/view/drawer.dart';
 import 'package:college_app/view/predicted_college.dart';
-import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:college_app/view/profiles/profile_page.dart';
 import 'package:college_app/view/Filters&Compare/searchPage.dart';
 import 'package:college_app/view/Filters&Compare/shortlistCollegePage.dart';
@@ -90,7 +89,7 @@ class _HomePageState extends State<HomePage> {
 
       body: Obx(() => controller.isLoggedIn.value || controller.isGuestIn.value? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
 
-      drawer: DrawerWidget(),
+      drawer: DrawerWidget(scaffoldKey),
 
       bottomNavigationBar: getBottomNavBar(),
     );
