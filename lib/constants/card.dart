@@ -53,7 +53,7 @@ class CardStructure extends StatelessWidget {
             MaterialPageRoute(
               builder:
                   (context) =>
-                      CollegeDetail(college: clg, collegeName: clg.name, state: clg.state, lat: clg.lat, long: clg.long,),
+                      CollegeDetail(college: clg,collegeImage:clg.image,collegeName: clg.name, state: clg.state, lat: clg.lat, long: clg.long,),
             ),
           );
         },
@@ -175,7 +175,7 @@ class CardStructure extends StatelessWidget {
                         _buildInfoColumn(
                           "Courses Offered",
                           "$coursesCount courses",
-                          themes,
+                          themes
                         ),
                         _buildInfoColumn("Total Fees Range", feeRange, themes),
                       ],
@@ -242,9 +242,11 @@ class CardStructure extends StatelessWidget {
             color: themes.courseCountColor,
           ),
         ),
+
       ],
     );
   }
+
 
   static Future<bool> save(studId, clgId) async {
     Map<String, dynamic>? msg = await StudentService.addToFavorites(

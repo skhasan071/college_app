@@ -25,6 +25,7 @@ import '../../model/college.dart';
 class CollegeDetail extends StatefulWidget {
   final College college;
   final String collegeName;
+  final String collegeImage;
   final String state;
   final double lat; // Make these properly typed
   final double long;
@@ -32,6 +33,7 @@ class CollegeDetail extends StatefulWidget {
   const CollegeDetail({
     required this.college,
     required this.collegeName,
+    required this.collegeImage,
     required this.state,
     required this.lat,
     required this.long,
@@ -271,7 +273,7 @@ class _CollegeDetailState extends State<CollegeDetail> {
                       if (selectedTab != "Overview") {
                         switch (selectedTab) {
                           case "Courses":
-                            Get.to(() => Courses(widget.college.id));
+                            Get.to(() => Courses(widget.college.id,collegeImage: widget.college.image,collegeName:widget.college.name));
                             break;
                           case "Scholarship & Aid":
                             Get.to(

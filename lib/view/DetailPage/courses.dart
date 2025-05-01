@@ -6,8 +6,10 @@ import 'package:get/get.dart';
 
 class Courses extends StatefulWidget {
   String uid;
+  Courses(this.uid, {super.key, required this.collegeImage, required this.collegeName});
+  final String collegeImage;
+  final String collegeName;
 
-  Courses(this.uid, {super.key});
 
   @override
   State<Courses> createState() => _CoursesState();
@@ -15,6 +17,7 @@ class Courses extends StatefulWidget {
 
 class _CoursesState extends State<Courses> {
   List<Course> courses = [];
+
 
   @override
   void initState() {
@@ -137,12 +140,13 @@ class _CoursesState extends State<Courses> {
             width: 75,
             height: 75,
             decoration: BoxDecoration(color: Colors.grey.shade300),
-            child: const Center(
-              child: Text(
-                'College\nLogo',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 10),
-              ),
+            child:  Center(
+              child: Image.network(
+                widget.collegeImage,
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
             ),
           ),
           const SizedBox(width: 12),
@@ -150,7 +154,7 @@ class _CoursesState extends State<Courses> {
           // 🔥 Wrap with Expanded
           Expanded(
             child: Text(
-              'Oxford University',
+              widget.collegeName,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               softWrap: true,
               overflow: TextOverflow.visible,
