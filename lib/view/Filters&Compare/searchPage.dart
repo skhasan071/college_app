@@ -11,15 +11,15 @@ class SelectionPage extends StatelessWidget {
   final controller = Get.put(SelectionController());
   var searchCtrl = TextEditingController();
 
-  final List<String> states = [
-    'Delhi',
-    'Maharastra',
-    'Benguluru',
-    'Karnataka',
-    'Kolkata',
-    'Others',
+  // Countries
+  final List<String> countries = [
+    'India',
+    'USA',
+    'Germany',
+    'UK',
+    'France',
+    'Japan',
   ];
-
   final List<String> streams = [
     'Engineering',
     'Management',
@@ -31,14 +31,18 @@ class SelectionPage extends StatelessWidget {
     'Humanities',
   ];
 
-  final List<String> countries = [
-    'India',
-    'USA',
-    'Germany',
-    'UK',
-    'France',
-    'Japan',
-  ];
+  // Mapping of countries to their states
+  final Map<String, List<String>> countryStates = {
+    'India': ['Delhi', 'Maharastra', 'Benguluru', 'Karnataka', 'Kolkata'],
+    'USA': ['California', 'Texas', 'Florida', 'New York'],
+    'Germany': ['Berlin', 'Hamburg', 'Munich'],
+    'UK': ['England', 'Scotland', 'Wales'],
+    'France': ['Paris', 'Lyon', 'Marseille'],
+    'Japan': ['Tokyo', 'Osaka', 'Kyoto'],
+  };
+
+  // Initially display all states (this will update based on selected country)
+  RxList<String> displayedStates = RxList<String>([]);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,6 @@ class SelectionPage extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
-
                 child: TextField(
                   controller: searchCtrl,
                   decoration: InputDecoration(
@@ -88,7 +91,7 @@ class SelectionPage extends StatelessWidget {
                           },
                           child: Text(
                             "Search",
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: theme.filterSelectedColor),
                           ),
                         ),
                       ],
@@ -104,24 +107,6 @@ class SelectionPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: buildGridSection(
-                  "Search by States",
-                  states,
-                  controller.selectedLocations,
-                  controller.toggleLocation,
-                  isGreyBox: true,
-                ),
-              ),
-              SizedBox(height: 24),
-
-              buildStreamSection("Search by Streams", streams),
-              SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: theme.backgroundGradient,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: buildGridSection(
                   "Search by Country",
                   countries,
                   controller.selectedCountries,
@@ -129,6 +114,43 @@ class SelectionPage extends StatelessWidget {
                   isGreyBox: true,
                 ),
               ),
+              SizedBox(height: 24),
+
+              // Display states only after a country is selected
+              Obx(() {
+                if (controller.selectedCountries.isNotEmpty) {
+                  // Clear the displayed states list
+                  displayedStates.clear();
+                  // Loop through all selected countries and add their states to displayedStates
+                  for (String country in controller.selectedCountries) {
+                    displayedStates.addAll(countryStates[country] ?? []);
+                  }
+                  // Ensure unique states are displayed
+                  displayedStates = RxList<String>(
+                    displayedStates.toSet().toList(),
+                  );
+                  return Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      gradient: theme.backgroundGradient,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: buildGridSection(
+                      "Search by States",
+                      displayedStates,
+                      controller.selectedLocations,
+                      controller.toggleLocation,
+                      isGreyBox: true,
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              }),
+
+              SizedBox(height: 24),
+
+              buildStreamSection("Search by Streams", streams),
             ],
           ),
         ),
@@ -175,7 +197,7 @@ class SelectionPage extends StatelessWidget {
                                 ? Border.all(
                                   color: theme.filterSelectedColor,
                                   width: 2,
-                                ) // Using current theme color
+                                )
                                 : null,
                         borderRadius: BorderRadius.circular(8),
                         boxShadow:

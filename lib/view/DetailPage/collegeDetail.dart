@@ -84,6 +84,19 @@ class _CollegeDetailState extends State<CollegeDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    double containerHeight;
+
+    if (screenHeight >= 800) {
+      // For large phones/tablets (e.g., iPhone 14 Pro Max, Android phablets)
+      containerHeight = screenHeight * 0.85;
+    } else if (screenHeight >= 600) {
+      // For medium-sized phones
+      containerHeight = screenHeight * 0.78;
+    } else {
+      // For small phones
+      containerHeight = screenHeight * 0.72;
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -113,272 +126,275 @@ class _CollegeDetailState extends State<CollegeDetail> {
                 errorMessage.isNotEmpty ? errorMessage : 'No data available',
               ),
             )
-            : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ✅ College Banner Image
-                widget.college.image.isNotEmpty
-                    ? Image.network(
-                      widget.college.image,
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                    : Container(
-                      height: 180,
-                      color: Colors.grey[300],
-                      child: const Center(child: Icon(Icons.image, size: 50)),
-                    ),
+            : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ✅ College Banner Image
+                  widget.college.image.isNotEmpty
+                      ? Image.network(
+                        widget.college.image,
+                        height: 180,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                      : Container(
+                        height: 180,
+                        color: Colors.grey[300],
+                        child: const Center(child: Icon(Icons.image, size: 50)),
+                      ),
 
-                // ✅ College Name and State
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.college.name,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                  // ✅ College Name and State
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.college.name,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on, size: 18),
-                          const SizedBox(width: 4),
-                          Text(
-                            widget.college.state,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Apply Now logic
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                              ),
-                              child: const Text(
-                                "Apply Now",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on, size: 18),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.college.state,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.blue,
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) =>
-                                            CompareWith(clg: widget.college),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // Apply Now logic
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Apply Now",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                              CompareWith(clg: widget.college),
+                                    ),
+                                  );
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero,
+                                  ),
+                                  side: const BorderSide(color: Colors.green),
+                                ),
+                                child: const Text(
+                                  "Compare",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  //  NAAC, Rank, Establishment in Chips
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildinfo("${widget.college.ranking}", "NIRF Rank"),
+
+                        _buildinfo("${widget.college.naacGrade}", "NAAC Grade"),
+
+                        _buildinfo("${widget.college.estYear}", "Established"),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Colors.grey, width: 0.4),
+                        bottom: BorderSide(color: Colors.grey, width: 0.4),
+                      ),
+                    ),
+                    child: TabBar(
+                      isScrollable: true,
+                      controller: tabController.tabController,
+                      labelColor: Colors.white,
+                      tabAlignment: TabAlignment.start,
+                      unselectedLabelColor: Colors.black,
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
+                      unselectedLabelStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                      indicator: BoxDecoration(
+                        color: theme.filterSelectedColor,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      onTap: (index) {
+                        final selectedTab = tabController.tabs[index];
+                        if (selectedTab != "Overview") {
+                          switch (selectedTab) {
+                            case "Courses":
+                              Get.to(() => Courses(widget.college.id));
+                              break;
+                            case "Scholarship & Aid":
+                              Get.to(
+                                () => Scholarships(
+                                  collegeId: widget.college.id,
+                                  collegeName:
+                                      widget
+                                          .college
+                                          .name, // Pass the college name here as well
+                                ),
+                              );
+                              break;
+                            case "Reviews":
+                              Get.to(() => Reviews(widget.college.id));
+                              break;
+                            case "Placements":
+                              Get.to(
+                                () => PlacementDetails(
+                                  collegeId: widget.college.id,
+                                ),
+                              );
+                              break;
+                            case "Admission & Eligibility":
+                              Get.to(
+                                () => Admission(collegeId: widget.college.id),
+                              );
+                              break;
+                            case "Cost & Location":
+                              Get.to(
+                                () => Cost(
+                                  collegeId: widget.college.id,
+                                  collegeName: widget.college.name,
+                                ),
+                              );
+                              break;
+
+                            case "Distance from Hometown":
+                              if (widget.lat != null && widget.long != null) {
+                                Get.to(
+                                  () => DistanceFromHometown(
+                                    collegeId: widget.college.id,
+                                    lat: widget.lat!,
+                                    long: widget.long!,
                                   ),
                                 );
-                              },
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                                side: const BorderSide(color: Colors.green),
-                              ),
-                              child: const Text(
-                                "Compare",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                //  NAAC, Rank, Establishment in Chips
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildinfo("${widget.college.ranking}", "NIRF Rank"),
-
-                      _buildinfo("${widget.college.naacGrade}", "NAAC Grade"),
-
-                      _buildinfo("${widget.college.estYear}", "Established"),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 15),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(color: Colors.grey, width: 0.4),
-                      bottom: BorderSide(color: Colors.grey, width: 0.4),
-                    ),
-                  ),
-                  child: TabBar(
-                    isScrollable: true,
-                    controller: tabController.tabController,
-                    labelColor: Colors.white,
-                    tabAlignment: TabAlignment.start,
-                    unselectedLabelColor: Colors.black,
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
-                    ),
-                    unselectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                    indicator: BoxDecoration(
-                      color: theme.filterSelectedColor,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    onTap: (index) {
-                      final selectedTab = tabController.tabs[index];
-                      if (selectedTab != "Overview") {
-                        switch (selectedTab) {
-                          case "Courses":
-                            Get.to(() => Courses(widget.college.id));
-                            break;
-                          case "Scholarship & Aid":
-                            Get.to(
-                              () => Scholarships(
-                                collegeId: widget.college.id,
-                                collegeName:
-                                    widget
-                                        .college
-                                        .name, // Pass the college name here as well
-                              ),
-                            );
-                            break;
-                          case "Reviews":
-                            Get.to(() => Reviews(widget.college.id));
-                            break;
-                          case "Placements":
-                            Get.to(
-                              () => PlacementDetails(
-                                collegeId: widget.college.id,
-                              ),
-                            );
-                            break;
-                          case "Admission & Eligibility":
-                            Get.to(
-                              () => Admission(collegeId: widget.college.id),
-                            );
-                            break;
-                          case "Cost & Location":
-                            Get.to(
-                              () => Cost(
-                                collegeId: widget.college.id,
-                                collegeName: widget.college.name,
-                              ),
-                            );
-                            break;
-
-                          case "Distance from Hometown":
-                            if (widget.lat != null && widget.long != null) {
+                              } else {
+                                Get.snackbar(
+                                  'Error',
+                                  'Location data is missing.',
+                                );
+                              }
+                              break;
+                            case "Latest News & Insights":
+                              Get.to(() => Insights());
+                              break;
+                            case "Q & A":
                               Get.to(
-                                () => DistanceFromHometown(
+                                () => QAPage(
                                   collegeId: widget.college.id,
-                                  lat: widget.lat!,
-                                  long: widget.long!,
+                                  collegeName: widget.college.name,
                                 ),
                               );
-                            } else {
-                              Get.snackbar(
-                                'Error',
-                                'Location data is missing.',
+                              break;
+                            case "Hostel & Campus Life":
+                              Get.to(
+                                () => Hostel(collegeId: widget.college.id),
                               );
-                            }
-                            break;
-                          case "Latest News & Insights":
-                            Get.to(() => Insights());
-                            break;
-                          case "Q & A":
-                            Get.to(
-                              () => QAPage(
-                                collegeId: widget.college.id,
-                                collegeName: widget.college.name,
-                              ),
-                            );
-                            break;
-                          case "Hostel & Campus Life":
-                            Get.to(() => Hostel(collegeId: widget.college.id));
-                            break;
-                          case "Cut-offs & Ranking":
-                            Get.to(
-                              () => Cutoff(
-                                collegeId: widget.college.id,
-                                collegeName: widget.college.name,
-                              ),
-                            );
-                            break;
-                        }
+                              break;
+                            case "Cut-offs & Ranking":
+                              Get.to(
+                                () => Cutoff(
+                                  collegeId: widget.college.id,
+                                  collegeName: widget.college.name,
+                                ),
+                              );
+                              break;
+                          }
 
-                        Future.delayed(const Duration(milliseconds: 100), () {
-                          tabController.tabController.index = 0;
-                        });
-                      }
-                    },
-                    tabs:
-                        tabController.tabs
-                            .map(
-                              (tab) => Tab(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8.0,
-                                    horizontal: 12,
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            tabController.tabController.index = 0;
+                          });
+                        }
+                      },
+                      tabs:
+                          tabController.tabs
+                              .map(
+                                (tab) => Tab(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                      horizontal: 12,
+                                    ),
+                                    child: Text(tab),
                                   ),
-                                  child: Text(tab),
                                 ),
-                              ),
-                            )
-                            .toList(),
+                              )
+                              .toList(),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    controller: tabController.tabController,
-                    children:
-                        tabController.tabs.map((tab) {
-                          if (tab == "Overview") {
-                            return SingleChildScrollView(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
+                  Container(
+                    height: containerHeight,
+                    padding: EdgeInsets.all(16),
+                    child: TabBarView(
+                      physics: NeverScrollableScrollPhysics(),
+                      controller: tabController.tabController,
+                      children:
+                          tabController.tabs.map((tab) {
+                            if (tab == "Overview") {
+                              return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // Quick Highlights Container
@@ -522,15 +538,15 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                   ),
                                   const SizedBox(height: 20),
                                 ],
-                              ),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        }).toList(),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          }).toList(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
       }),
     );

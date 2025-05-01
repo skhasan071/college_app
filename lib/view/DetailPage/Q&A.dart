@@ -147,7 +147,7 @@ class _QAPageState extends State<QAPage> {
           backgroundColor: Colors.white,
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(6),
           child: Column(
             children: [
               Padding(
