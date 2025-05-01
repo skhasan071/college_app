@@ -1,10 +1,10 @@
 import 'package:college_app/services/college_services.dart';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/model/course.dart';
 import 'package:get/get.dart';
 
 class Courses extends StatefulWidget {
-
   String uid;
 
   Courses(this.uid, {super.key});
@@ -24,95 +24,108 @@ class _CoursesState extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 3,
-          title: const Text(
-            'Courses & Fees',
-            style: TextStyle(fontWeight: FontWeight.bold),
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 3,
+            title: const Text(
+              'Courses & Fees',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            backgroundColor: Colors.white,
           ),
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.white,
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCollegeLogo(),
-            const SizedBox(height: 10),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCollegeLogo(),
+              const SizedBox(height: 10),
 
-            Container(
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.grey, width: 0.4),
-                  bottom: BorderSide(color: Colors.grey, width: 0.4),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.grey, width: 0.4),
+                    bottom: BorderSide(color: Colors.grey, width: 0.4),
+                  ),
                 ),
-              ),
-              child: TabBar(
-                isScrollable: true,
-                labelColor: Colors.white,
-                tabAlignment: TabAlignment.start,
-                unselectedLabelColor: Colors.black,
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 17,
-                ),
-                unselectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                ),
-                indicator: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabs:
-                    [
-                      'All Courses',
-                          'Engineering',
-                          'Medical',
-                          'Business',
-                          'Arts',
-                        ]
-                        .map(
-                          (title) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 2,
+                child: TabBar(
+                  isScrollable: true,
+                  labelColor: Colors.white,
+                  tabAlignment: TabAlignment.start,
+                  unselectedLabelColor: Colors.black,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                  indicator: BoxDecoration(
+                    color: theme.filterSelectedColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  tabs:
+                      [
+                            'All Courses',
+                            'Engineering',
+                            'Medical',
+                            'Business',
+                            'Arts',
+                          ]
+                          .map(
+                            (title) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 2,
+                              ),
+                              child: Tab(child: Text(title)),
                             ),
-                            child: Tab(child: Text(title)),
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 10),
-            courses.isNotEmpty ? Expanded(
-              child: TabBarView(
-                children: [
-                  _buildCourseList(courses),
-                  _buildCourseList(courses),
-                  _buildCourseList(courses),
-                  _buildCourseList(courses),
-                  _buildCourseList(courses),
-                ],
-              ),
-            ) : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(child: Text("No Course Offered", style: TextStyle(color: Colors.black, fontSize: 20),),),
-              ],
-            ),
-          ],
+              courses.isNotEmpty
+                  ? Expanded(
+                    child: TabBarView(
+                      children: List.generate(
+                        5,
+                        (index) => Container(
+                          decoration: BoxDecoration(
+                            gradient: theme.backgroundGradient,
+                            boxShadow: theme.boxShadow,
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          child: _buildCourseList(courses),
+                        ),
+                      ),
+                    ),
+                  )
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          "No Course Offered",
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildCollegeLogo() {
@@ -178,72 +191,77 @@ class _CoursesState extends State<Courses> {
     required String eligibility,
     required String intake,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade200,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  courseName,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade200,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    courseName,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
+                const SizedBox(width: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(duration, style: const TextStyle(fontSize: 12)),
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(4),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _buildCourseDetail('Annual Fees', fees),
+            _buildCourseDetail('Eligibility', eligibility),
+            _buildCourseDetail('Next Intake', intake),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.filterSelectedColor,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
                 ),
-                child: Text(duration, style: const TextStyle(fontSize: 12)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _buildCourseDetail('Annual Fees', fees),
-          _buildCourseDetail('Eligibility', eligibility),
-          _buildCourseDetail('Next Intake', intake),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-              ),
-              onPressed: () {},
-              child: const Text(
-                'Apply Now',
-                style: TextStyle(color: Colors.white),
+                onPressed: () {},
+                child: const Text(
+                  'Apply Now',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildCourseDetail(String label, String value) {
@@ -272,5 +290,4 @@ class _CoursesState extends State<Courses> {
     courses = await CollegeServices.getCoursesByCollege(widget.uid);
     setState(() {});
   }
-
 }

@@ -140,11 +140,30 @@ class ProfilePage extends StatelessWidget {
                   Get.to(() => SupportPage());
                 },
               ),
-              SettingsTile(icon: Icons.logout, title: "Logout", onTap: () async {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Firstpage()));
-                await delToken("");
-                controller.navSelectedIndex.value = 0;
-                profileController.userToken("");
+              SettingsTile(icon: Icons.logout, title: "Logout", onTap: (){
+
+                showDialog(context: context, builder: (context)=> AlertDialog(
+
+                  title: Text("Logout", style: TextStyle(color: Colors.black),),
+
+                  content: Text("Are you sure you want to Logout?"),
+
+                  actions: [
+
+                    OutlinedButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text("No")),
+
+                    ElevatedButton(onPressed: () async {
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Firstpage()), (Route<dynamic> route) => false);
+                      await delToken("");
+                      controller.navSelectedIndex.value = 0;
+                      profileController.userToken("");
+                    }, child: Text("Yes"))
+
+                  ],
+
+                ));
               },),
             ],
           ),

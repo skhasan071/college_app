@@ -47,7 +47,9 @@ class SelectionPage extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: ListView(
           children: [
+
             Padding(
+
               padding: EdgeInsets.symmetric(vertical: 16),
 
               child: TextField(
@@ -77,6 +79,7 @@ class SelectionPage extends StatelessWidget {
                   )
                 ),
               ),
+
             ),
 
             buildGridSection(
@@ -203,4 +206,5 @@ class SelectionPage extends StatelessWidget {
       ],
     );
   }
+
 }

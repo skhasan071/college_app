@@ -4,8 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../view_model/controller.dart';
+
 class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({super.key});
+
+  var controller = Get.put(Controller());
+  GlobalKey<ScaffoldState> scaffoldKey;
+
+  DrawerWidget(this.scaffoldKey, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +59,34 @@ class DrawerWidget extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  _buildTile(Icons.home, 'Home'),
+
+                  _buildTile(Icons.home, 'Home', callback: (){
+                    controller.navSelectedIndex.value = 0;
+                    scaffoldKey.currentState?.closeDrawer();
+                  }),
 
                   _buildTile(
                     Icons.favorite_border,
                     'Shortlist/Favorites',
                     trailing: _badge('24'),
+                    callback: (){
+                      if(controller.isGuestIn.value){
+                        scaffoldKey.currentState?.closeDrawer();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please Login First"),
+                            duration: Duration(seconds: 3),
+                            backgroundColor: Colors.black,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }else{
+                        controller.navSelectedIndex.value = 4;
+                        scaffoldKey.currentState?.closeDrawer();
+                      }
+                    }
                   ),
+
                   ExpansionTile(
                     leading: Icon(Icons.account_balance, color: Colors.black),
                     iconColor: Colors.black,
@@ -80,11 +107,16 @@ class DrawerWidget extends StatelessWidget {
                       _buildSubTile(
                         Icons.info_outline,
                         'All about Management',
-                        () {},
+                        () {
+
+                        },
                       ),
                     ],
                   ),
-                  _buildTile(Icons.insights, 'Insights'),
+                  _buildTile(Icons.insights, 'Insights', callback: (){
+                    controller.navSelectedIndex.value = 2;
+                    scaffoldKey.currentState?.closeDrawer();
+                  }),
                   Divider(),
                   _buildTile(
                     Icons.support_agent,
@@ -110,7 +142,23 @@ class DrawerWidget extends StatelessWidget {
               title: Text('Name Surname'),
               subtitle: Text('hello@gmail.com'),
               trailing: Icon(Icons.more_vert),
-              onTap: () {},
+              onTap: () {
+
+                if(controller.isGuestIn.value){
+                  scaffoldKey.currentState?.closeDrawer();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please Login First"),
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.black,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }else{
+                  controller.navSelectedIndex.value = 5;
+                  scaffoldKey.currentState?.closeDrawer();
+                }
+              },
             ),
           ],
         ),

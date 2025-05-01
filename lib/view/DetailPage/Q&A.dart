@@ -1,4 +1,6 @@
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -128,82 +130,99 @@ class _QAPageState extends State<QAPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 3,
-        title: Text(
-          'Q&A - ${widget.collegeName}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Scaffold(
         backgroundColor: Colors.white,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search questions',
-                prefixIcon: const Icon(Icons.search, color: Colors.black),
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                filled: true,
-                fillColor: Colors.grey[200],
-                contentPadding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-            ),
+        appBar: AppBar(
+          elevation: 3,
+          title: Text(
+            'Q&A - ${widget.collegeName}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          Expanded(
-            child:
-                _filteredQuestions.isEmpty
-                    ? const Center(child: Text('No questions found.'))
-                    : ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: _filteredQuestions.length,
-                      separatorBuilder:
-                          (context, index) =>
-                              const Divider(height: 1, color: Colors.grey),
-                      itemBuilder:
-                          (context, index) => _QuestionItem(
-                            question: _filteredQuestions[index],
-                            onAnswerPressed: () {
-                              setState(() {
-                                _filteredQuestions[index].isAnswerVisible =
-                                    !_filteredQuestions[index].isAnswerVisible;
-                              });
-                            },
-                          ),
-                    ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showAddQuestionDialog,
-        icon: const Icon(Icons.add, size: 20),
-        label: const Text(
-          'Ask a Question',
-          style: TextStyle(fontWeight: FontWeight.w500),
+          backgroundColor: Colors.white,
         ),
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      ),
-    );
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search questions',
+                    prefixIcon: const Icon(Icons.search, color: Colors.black),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+
+              _filteredQuestions.isEmpty
+                  ? const Center(child: Text('No questions found.'))
+                  : ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: _filteredQuestions.length,
+                    separatorBuilder:
+                        (context, index) =>
+                            const Divider(height: 1, color: Colors.grey),
+                    itemBuilder:
+                        (context, index) => _QuestionItem(
+                          question: _filteredQuestions[index],
+                          onAnswerPressed: () {
+                            setState(() {
+                              _filteredQuestions[index].isAnswerVisible =
+                                  !_filteredQuestions[index].isAnswerVisible;
+                            });
+                          },
+                        ),
+                  ),
+            ],
+          ),
+        ),
+
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: _showAddQuestionDialog,
+          icon: const Icon(Icons.add, size: 20),
+          label: const Text(
+            'Ask a Question',
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+          backgroundColor: theme.filterSelectedColor,
+          foregroundColor: Colors.white,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+      );
+    });
   }
 
   void _showAddQuestionDialog() {
     final TextEditingController _questionController = TextEditingController();
     final TextEditingController _nameController = TextEditingController();
 
+    final theme = ThemeController.to.currentTheme;
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
+            backgroundColor: Colors.white,
             title: const Text(
               'Ask a Question',
               style: TextStyle(
@@ -239,7 +258,9 @@ class _QAPageState extends State<QAPage> {
                     controller: _questionController,
                     decoration: const InputDecoration(
                       hintText: 'Enter your question',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blueAccent),
+                      ),
                       contentPadding: EdgeInsets.all(16.0),
                     ),
                     maxLines: 8,
@@ -259,7 +280,7 @@ class _QAPageState extends State<QAPage> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
+                  backgroundColor: theme.filterSelectedColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
@@ -280,7 +301,7 @@ class _QAPageState extends State<QAPage> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Submit', style: TextStyle(fontSize: 16)),
+                child: Text('Submit', style: TextStyle(fontSize: 16)),
               ),
             ],
             actionsPadding: const EdgeInsets.all(16),

@@ -18,7 +18,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
   String? selectedState;
   String? selectedCategory;
   String? selectedGender;
-  String? selectedCourse;
   String? selectedExam;
   String? selectedRankType;
   String rank = '';
@@ -61,7 +60,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     'Puducherry',
     'Chandigarh',
     'Andaman and Nicobar Islands',
-    'Lakshadweep'
+    'Lakshadweep',
   ];
 
   final List<String> exams = [
@@ -79,7 +78,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     'IPU CET',
     'AMUEEE',
     'CUET',
-    'Other'
+    'Other',
   ];
 
   final List<String> categories = [
@@ -89,7 +88,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     'ST',
     'EWS',
     'PWD',
-    'Other'
+    'Other',
   ];
 
   final List<String> genders = ['Male', 'Female', 'Other'];
@@ -115,12 +114,20 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
             children: [
               const Text(
                 "Your Score. Your College.",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
               const SizedBox(height: 10),
               const Text(
                 "College Predictor",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900,  color: Colors.black),
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                ),
               ),
               const SizedBox(height: 12),
               const Text(
@@ -154,11 +161,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                 setState(() => selectedGender = value);
               }, genders),
 
-              _buildLabel("Select Preferred Course (Optional)"),
-              _buildDropdown(selectedCourse, (value) {
-                setState(() => selectedCourse = value);
-              }, genders),
-
               const SizedBox(height: 14),
 
               TextField(
@@ -179,11 +181,15 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () async {
-
-                      List<College> colleges = await CollegeServices.predictColleges(examType: selectedExam! ?? exams.first, category: selectedCategory! ?? categories.first, rankType: selectedRankType! ?? rankTypes.first, rankOrPercentile: rank);
+                      List<College> colleges =
+                          await CollegeServices.predictColleges(
+                            examType: selectedExam! ?? exams.first,
+                            category: selectedCategory! ?? categories.first,
+                            rankType: selectedRankType! ?? rankTypes.first,
+                            rankOrPercentile: rank,
+                          );
                       controller.predictedClg.value = colleges;
                       controller.navSelectedIndex.value = 6;
-
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
@@ -197,7 +203,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -210,24 +216,33 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
       padding: const EdgeInsets.only(top: 16.0, bottom: 8),
       child: Text(
         label,
-        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16,color: Colors.black),
+        style: const TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+          color: Colors.black,
+        ),
       ),
     );
   }
 
-  Widget _buildDropdown(String? selectedValue, ValueChanged<String?> onChanged, List<String> list) {
+  Widget _buildDropdown(
+    String? selectedValue,
+    ValueChanged<String?> onChanged,
+    List<String> list,
+  ) {
     return DropdownButtonFormField<String>(
       value: selectedValue ?? list.first,
-      items: list.map((opt) {
-        return DropdownMenuItem(
-          value: opt,
-          child: Text(opt),
-        );
-      }).toList(),
+      items:
+          list.map((opt) {
+            return DropdownMenuItem(value: opt, child: Text(opt));
+          }).toList(),
       onChanged: onChanged,
       decoration: const InputDecoration(
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black, width: 6), // Bold black border
+          borderSide: BorderSide(
+            color: Colors.black,
+            width: 6,
+          ), // Bold black border
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 12),
       ),

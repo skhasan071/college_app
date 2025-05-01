@@ -13,6 +13,7 @@ class CustomTheme {
   final Color saveIconColor;
   final Color bottomNav;
   final Color bottomIcons;
+  final LinearGradient chipGradient;
 
   const CustomTheme({
     required this.brochureBtnColor,
@@ -27,6 +28,7 @@ class CustomTheme {
     required this.saveIconColor,
     required this.bottomNav,
     required this.bottomIcons,
+    required this.chipGradient,
   });
 }
 
@@ -59,6 +61,7 @@ class AppThemes {
     saveIconColor: Colors.black,
     bottomNav: Colors.black,
     bottomIcons: Colors.white,
+    chipGradient: LinearGradient(colors: [Colors.white, Colors.grey]),
   );
 
   static final coloredTheme = CustomTheme(
@@ -97,6 +100,11 @@ class AppThemes {
     saveIconColor: Colors.black,
     bottomNav: Color(0xFFEEE6F6),
     bottomIcons: Colors.black,
+    chipGradient: LinearGradient(
+      colors: [Color(0xFFF4EFFF), Color(0xFFE1D9F7)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
   );
 
   static final emeraldTheme = CustomTheme(
@@ -127,6 +135,11 @@ class AppThemes {
     saveIconColor: Color(0xFF2E7D32),
     bottomNav: Color(0xFFE0F4E9),
     bottomIcons: Colors.black,
+    chipGradient: LinearGradient(
+      colors: [Color(0xFFE8F5E9), Color(0xFFD0F0C0)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
   );
 
   static final sunsetTheme = CustomTheme(
@@ -157,6 +170,11 @@ class AppThemes {
     saveIconColor: Color(0xFFE64A19),
     bottomNav: Color(0xFFFFF0E6),
     bottomIcons: Colors.black,
+    chipGradient: LinearGradient(
+      colors: [Color(0xFFFFF3E0), Color(0xFFFFCCBC)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
   );
 
   static final coolBlueTheme = CustomTheme(
@@ -187,5 +205,10 @@ class AppThemes {
     saveIconColor: Color(0xFF1E88E5),
     bottomNav: Color(0xFFE3F2FD),
     bottomIcons: Colors.black,
+    chipGradient: LinearGradient(
+      colors: [Color(0xFFE3F2FD), Color(0xFFB3E5FC)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
   );
 }

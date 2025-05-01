@@ -15,7 +15,6 @@ import 'package:get/get.dart';
 import '../../services/user_services.dart';
 import '../DetailPage/collegeDetail.dart';
 
-
 class Colleges extends StatefulWidget {
   Colleges({super.key});
 
@@ -35,7 +34,7 @@ class _CollegesState extends State<Colleges> {
   List<College> rankings = [];
   List<College> privates = [];
   List<College> public = [];
-  bool isLoading = false;  // To track loading state
+  bool isLoading = false; // To track loading state
 
   @override
   void initState() {
@@ -63,16 +62,30 @@ class _CollegesState extends State<Colleges> {
                 ),
               ),
 
-              !controller.isGuestIn.value ? rankings.isNotEmpty ? _buildSection("Colleges Based on NIRF Ranking", rankings) : Container() : Container(),
+              !controller.isGuestIn.value
+                  ? rankings.isNotEmpty
+                      ? _buildSection(
+                        "Colleges Based on NIRF Ranking",
+                        rankings,
+                      )
+                      : Container()
+                  : Container(),
 
               _buildBox(
                 title: "Which colleges match your preferences?",
                 buttonText: "Predict My College",
+                pageNo: 3
               ),
 
-              rankings.isNotEmpty ? _buildSection("Colleges Based on State", states) : Container(),
-              countries.isNotEmpty ? _buildSection("Colleges Based on Country", countries) : Container(),
-              cities.isNotEmpty ? _buildSection("Colleges Based on City", cities) : Container(),
+              rankings.isNotEmpty
+                  ? _buildSection("Colleges Based on State", states)
+                  : Container(),
+              countries.isNotEmpty
+                  ? _buildSection("Colleges Based on Country", countries)
+                  : Container(),
+              cities.isNotEmpty
+                  ? _buildSection("Colleges Based on City", cities)
+                  : Container(),
               controller.isLoggedIn.value && public.isNotEmpty
                   ? _buildSection("Popular Government Colleges", public)
                   : Container(),
@@ -83,6 +96,7 @@ class _CollegesState extends State<Colleges> {
               _buildBox(
                 title: "Want the latest insights on colleges?",
                 buttonText: "Read Insights",
+                pageNo: 2
               ),
             ],
           ),
@@ -155,51 +169,55 @@ class _CollegesState extends State<Colleges> {
 
                 // Cards
                 SizedBox(
-                  height: 420,
+                  height: 430,
                   child: ListView.builder(
                     controller: scrollController,
                     scrollDirection: Axis.horizontal,
                     itemCount: data.length,
                     itemBuilder:
                         (context, index) => GestureDetector(
-                      onTap: () async {
-                        setState(() {
-                          isLoading = true;  // Show loader on click
-                        });
+                          onTap: () async {
+                            setState(() {
+                              isLoading = true; // Show loader on click
+                            });
 
-                        // Simulate loading delay (e.g., 1 second)
-                        await Future.delayed(Duration(seconds: 5));
+                            // Simulate loading delay (e.g., 1 second)
+                            await Future.delayed(Duration(seconds: 5));
 
-                        // Navigate to CollegeDetail
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CollegeDetail(
-                              college: data[index],
-                              collegeName: data[index].name,
-                              lat:data[index].lat,
-                              long:data[index].long,
-                              state: data[index].state,
-                            ),
+                            // Navigate to CollegeDetail
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => CollegeDetail(
+                                      college: data[index],
+                                      collegeName: data[index].name,
+                                      lat: data[index].lat,
+                                      long: data[index].long,
+                                      state: data[index].state,
+                                    ),
+                              ),
+                            );
+
+                            setState(() {
+                              isLoading = false; // Hide loader after navigation
+                            });
+                          },
+                          child: CardStructure(
+                            collegeID: data[index].id,
+                            collegeName: data[index].name,
+                            coursesCount: data[index].courseCount,
+                            feeRange: data[index].feeRange,
+                            state: data[index].state,
+                            ranking: data[index].ranking.toString(),
+                            studId:
+                                !controller.isGuestIn.value
+                                    ? profile.profile.value!.id
+                                    : "Nothing",
+                            clgId: data[index].id,
+                            clg: data[index],
                           ),
-                        );
-
-                        setState(() {
-                          isLoading = false;  // Hide loader after navigation
-                        });
-                      },
-                      child: CardStructure(
-                        collegeID: data[index].id,
-                        collegeName: data[index].name,
-                        coursesCount: data[index].courseCount,
-                        feeRange: data[index].feeRange,
-                        state: data[index].state,
-                        ranking: data[index].ranking.toString(),
-                        studId: !controller.isGuestIn.value ? profile.profile.value!.id : "Nothing",
-                        clgId: data[index].id,
-                        clg: data[index],
-                      ),
-                    ),
+                        ),
                   ),
                 ),
               ],
@@ -250,7 +268,7 @@ class _CollegesState extends State<Colleges> {
     });
   }
 
-  Widget _buildBox({required String title, required String buttonText}) {
+  Widget _buildBox({required String title, required String buttonText, required int pageNo}) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
 
@@ -282,7 +300,7 @@ class _CollegesState extends State<Colleges> {
                 child: UiHelper.getPrimaryBtn(
                   title: buttonText,
                   callback: () {
-                    controller.navSelectedIndex.value = 3;
+                    controller.navSelectedIndex.value = pageNo;
                   },
                 ),
               ),
@@ -309,8 +327,7 @@ class _CollegesState extends State<Colleges> {
   }
 
   Future<void> getColleges() async {
-
-    if(controller.isLoggedIn.value){
+    if (controller.isLoggedIn.value) {
       rankings = await StudentService.getCollegesByRanking(
         profile.profile.value!.id,
       );
@@ -329,7 +346,7 @@ class _CollegesState extends State<Colleges> {
         streams: profile.profile.value!.interestedStreams!,
         city: "Mumbai",
       );
-    }else{
+    } else {
       countries = await CollegeServices.fetchFilteredColleges(
         streams: profile.interestedStreams,
         country: "India",
@@ -343,7 +360,6 @@ class _CollegesState extends State<Colleges> {
         city: "Mumbai",
       );
     }
-
 
     setState(() {});
   }
