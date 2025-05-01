@@ -207,7 +207,7 @@ class _CollegesState extends State<Colleges> {
                             collegeID: data[index].id,
                             collegeName: data[index].name,
                             coursesCount: data[index].courseCount,
-                            feeRange: data[index].fees.toString(),
+                            feeRange: data[index].feeRange,
                             state: data[index].state,
                             ranking: data[index].ranking.toString(),
                             studId:

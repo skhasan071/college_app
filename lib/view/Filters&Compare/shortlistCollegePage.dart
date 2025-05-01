@@ -142,7 +142,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                             collegeID: clg.id,
                             collegeName: clg.name,
                             coursesCount: 10,
-                            feeRange: '₹2.97 L - 6.87 L',
+                            feeRange: clg.feeRange,
                             state: clg.country,
                             ranking: clg.ranking.toString(),
                             studId: profile.profile.value!.id,

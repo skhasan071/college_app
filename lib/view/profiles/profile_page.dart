@@ -1,4 +1,3 @@
-import 'package:college_app/main.dart';
 import 'package:college_app/view/FirstPage.dart';
 import 'package:college_app/view/Setting&Support/policy&privacy.dart';
 import 'package:college_app/view/Setting&Support/settting.dart';
