@@ -190,7 +190,7 @@ class SelectionPage extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: Colors.white,
                         border:
                             isSelected
                                 ? Border.all(
@@ -213,6 +213,7 @@ class SelectionPage extends StatelessWidget {
   }
 
   Widget buildStreamSection(String title, List<String> items) {
+    final theme = ThemeController.to.currentTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -242,7 +243,10 @@ class SelectionPage extends StatelessWidget {
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
-                          color: isSelected ? Colors.black : Colors.transparent,
+                          color:
+                              isSelected
+                                  ? theme.filterSelectedColor
+                                  : Colors.transparent,
                           border: Border.all(color: Colors.black),
                         ),
                         child: Text(
