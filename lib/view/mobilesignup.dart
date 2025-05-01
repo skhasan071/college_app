@@ -16,9 +16,9 @@ class _MobileSignupState extends State<MobileSignup> {
     String fullName = nameController.text.trim();
 
     if (fullName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter your full name")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Please enter your full name")));
       return;
     }
 
@@ -29,9 +29,12 @@ class _MobileSignupState extends State<MobileSignup> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OtpScreen(
-              phone: phone, sessionId: sessionId, fullName: fullName,
-            ),
+            builder:
+                (context) => OtpScreen(
+                  phone: phone,
+                  sessionId: sessionId,
+                  fullName: fullName,
+                ),
           ),
         );
       } else {
@@ -55,13 +58,10 @@ class _MobileSignupState extends State<MobileSignup> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/otp_image.png',
-                height: 150,
-              ),
+              Image.asset('assets/otp_image.png', height: 150),
               SizedBox(height: 20),
               Text(
-                "Login with a Mobile Number",
+                "Sign Up with a Mobile Number",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
@@ -88,8 +88,10 @@ class _MobileSignupState extends State<MobileSignup> {
                   children: [
                     Text(
                       "+91",
-                      style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(width: 10),
                     Expanded(

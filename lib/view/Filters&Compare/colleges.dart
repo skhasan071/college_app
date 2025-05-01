@@ -195,6 +195,7 @@ class _CollegesState extends State<Colleges> {
                                       lat: data[index].lat,
                                       long: data[index].long,
                                       state: data[index].state,
+                                      collegeImage:data[index].image,
                                     ),
                               ),
                             );

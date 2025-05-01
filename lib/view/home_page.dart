@@ -15,6 +15,7 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../view_model/controller.dart';
 import '../view_model/profile_controller.dart';
+import 'Setting&Support/notification_page.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -146,7 +147,14 @@ class _HomePageState extends State<HomePage> {
                         icon: Icon(Icons.search, color: Colors.black),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NotificationPage(),
+                            ),
+                          );
+                        },
                         icon: Icon(Icons.notifications, color: Colors.black),
                       ),
                       GestureDetector(

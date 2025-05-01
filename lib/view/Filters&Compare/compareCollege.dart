@@ -97,7 +97,7 @@ class CompareColleges extends StatelessWidget {
                             (context) => CollegeDetail(
                               college: clg,
                               collegeName: '',
-                              state: '', lat: 24, long: 24,
+                              state: '', lat: 24, long: 24,collegeImage:''
                             ),
                       ),
                     );
