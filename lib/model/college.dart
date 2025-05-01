@@ -54,7 +54,7 @@ class College {
       stream: map['stream'] ?? '',
       type: map['type'] ?? '',
       courseCount: map['courseCount'] ?? 10,
-      feeRange: map['feeRange'] ??'',
+      feeRange: map['feeRange'] ?? '',
       lat:map['lat']?.toDouble() ?? 0,
       long: map['long']?.toDouble()??0,
       // ✅ New fields
