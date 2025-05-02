@@ -1,50 +1,47 @@
 import 'package:flutter/material.dart';
-import '../services/apiservice.dart';
+import 'package:flutter/services.dart';
+import '../../services/otp_service.dart'; // Make sure it's named like this
 import 'otpscreen.dart';
 
-class MobileSignup extends StatefulWidget {
+class Mobilenoauth extends StatefulWidget {
   @override
-  _MobileSignupState createState() => _MobileSignupState();
+  _MobilenoauthState createState() => _MobilenoauthState();
 }
 
-class _MobileSignupState extends State<MobileSignup> {
+class _MobilenoauthState extends State<Mobilenoauth> {
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
+  final OtpService otpService =
+      OtpService(); // baseUrl is set in the service file
 
-  void sendOtpAndNavigate() async {
-    String phone = phoneController.text.trim();
-    String fullName = nameController.text.trim();
+  bool isLoading = false;
 
-    if (fullName.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please enter your full name")));
+  Future<void> handleContinue() async {
+    String phone = '+91${phoneController.text.trim()}';
+
+    if (phoneController.text.trim().length != 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Enter a valid 10-digit mobile number")),
+      );
       return;
     }
 
-    if (phone.length == 10) {
-      String? sessionId = await ApiService.sendOtp(phone);
-      if (sessionId != null) {
-        // Navigate to OTP Screen with session ID
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (context) => OtpScreen(
-                  phone: phone,
-                  sessionId: sessionId,
-                  fullName: fullName,
-                ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to send OTP. Try again.")),
-        );
-      }
+    setState(() => isLoading = true);
+
+    bool success = await otpService.sendOtp(phone);
+
+    setState(() => isLoading = false);
+
+    if (success) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => OtpScreen(phone: phone, sessionId: '', fullName: ''),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter a valid 10-digit mobile number")),
+        SnackBar(content: Text("Failed to send OTP. Please try again.")),
       );
     }
   }
@@ -61,21 +58,13 @@ class _MobileSignupState extends State<MobileSignup> {
               Image.asset('assets/otp_image.png', height: 150),
               SizedBox(height: 20),
               Text(
-                "Sign Up with a Mobile Number",
+                "Login with a Mobile Number",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),
               Text(
-                "Enter your mobile number We will send you an OTP to verify.",
+                "Enter your mobile number. We will send you an OTP to verify.",
                 style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: "Full Name",
-                  border: OutlineInputBorder(),
-                ),
               ),
               SizedBox(height: 20),
               Container(
@@ -97,8 +86,13 @@ class _MobileSignupState extends State<MobileSignup> {
                     Expanded(
                       child: TextField(
                         controller: phoneController,
+
                         keyboardType: TextInputType.number,
                         maxLength: 10,
+                        inputFormatters: [
+                          FilteringTextInputFormatter
+                              .digitsOnly, // Only allows digits
+                        ],
                         decoration: InputDecoration(
                           counterText: "",
                           border: InputBorder.none,
@@ -114,17 +108,20 @@ class _MobileSignupState extends State<MobileSignup> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: sendOtpAndNavigate,
+                  onPressed: isLoading ? null : handleContinue,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
-                    "Continue",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                  child:
+                      isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                            "Continue",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                 ),
               ),
             ],

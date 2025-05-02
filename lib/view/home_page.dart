@@ -1,7 +1,7 @@
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/model/user.dart';
 import 'package:college_app/services/user_services.dart';
-import 'package:college_app/view/blog_page.dart';
+import 'package:college_app/view/Blogs/blog_page.dart';
 import 'package:college_app/view/college_predictor_page.dart';
 import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:college_app/view/drawer.dart';

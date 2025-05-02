@@ -1,77 +1,78 @@
-import 'package:college_app/services/auth_services.dart';
-import 'package:college_app/view/signuppage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:college_app/view/profiles/complete_profile_page.dart';
+import 'package:college_app/view_model/data_loader.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../../services/auth_services.dart';
+import '../../services/google_signin_api.dart';
+import '../home_page.dart';
+import 'login.dart';
+import 'mobilesignup.dart';
 
-import '../services/google_signin_api.dart';
-import '../view_model/data_loader.dart';
-import 'emailverification.dart';
-import 'home_page.dart';
-import 'mobilenoauth.dart';
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
+  final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  bool isPasswordVisible = false;
+  var profile = Get.put(ProfileController());
   var loader = Get.put(Loader());
 
-  bool isPasswordVisible = false;
-
-  Future<void> _handleLogin() async {
+  Future<bool> _handleSignUp() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
+    String name = fullNameController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
       loader.isLoading(true);
-      Map<String, dynamic> map = await AuthService.loginStudent(
+      Map<String, dynamic> msgs = await AuthService.registerStudent(
+        name,
         email,
         password,
       );
 
-      if (map["success"]) {
-        String token = map['token'];
-
-        await saveToken(token);
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(token)),
-        );
+      if (msgs['success']) {
+        print(msgs['token']);
+        profile.profile.value = msgs['student'];
+        profile.userToken.value = msgs['token'];
+        saveToken(msgs['token']);
+        print(profile.profile.value!.email + "------------------------");
         loader.isLoading(false);
+        return true;
       } else {
+        String string = msgs['message'];
+        loader.isLoading(false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(map['message']),
+            content: Text(string),
             duration: Duration(seconds: 3),
             backgroundColor: Colors.black,
             behavior: SnackBarBehavior.floating,
           ),
         );
-        loader.isLoading(false);
+        return false;
       }
     } else {
+      loader.isLoading(false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Please fill all the required field"),
+          content: Text("Please Fill the required details"),
           duration: Duration(seconds: 3),
           backgroundColor: Colors.black,
           behavior: SnackBarBehavior.floating,
         ),
       );
+      return false;
     }
   }
 
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,23 +89,24 @@ class _LoginPageState extends State<LoginPage> {
             Center(
               child: RichText(
                 text: TextSpan(
-                  text: "Log In",
+                  text: "Sign Up",
                   style: const TextStyle(
-                   color: Colors.black,
                     fontSize: 32,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
             Center(
               child: RichText(
                 text: TextSpan(
-                  text: "Login here to continue to app",
+                  text: "SignUp here to continue to app",
                   style: const TextStyle(
-                    color: Colors.black,
                     fontSize: 20,
+                    color: Colors.black,
                     fontWeight: FontWeight.w100,
                   ),
                 ),
@@ -113,13 +115,14 @@ class _LoginPageState extends State<LoginPage> {
 
             const SizedBox(height: 50),
             const Text(
-              "Email",
+              "Name*",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             TextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
+              controller: fullNameController,
+              keyboardType: TextInputType.name,
               decoration: InputDecoration(
+                hintText: "Enter your name",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(2),
                 ),
@@ -127,13 +130,29 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 15),
             const Text(
-              "Password",
+              "Email*",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                hintText: "Enter your email",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            const Text(
+              "Password*",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             TextField(
               controller: passwordController,
               obscureText: !isPasswordVisible,
               decoration: InputDecoration(
+                hintText: "Enter your password",
                 suffixIcon: IconButton(
                   icon: Icon(
                     isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -149,48 +168,64 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
+            const SizedBox(height: 25),
+            Obx(
+              ()=> !loader.isLoading.value ? SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  onPressed: () async {
+                    bool isSigned = await _handleSignUp();
+
+                    if (isSigned) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CompleteProfilePage(),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text(
+                    "Sign Up",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ) : Center(child: CircularProgressIndicator(),),
+            ),
+            const SizedBox(height: 25),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  side: const BorderSide(color: Colors.black),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const EmailVerification(),
-                    ),
+                    MaterialPageRoute(builder: (context) => MobileSignup()),
                   );
                 },
                 child: const Text(
-                  "Forgot Password ?",
+                  "Sign up with Mobile Number",
                   style: TextStyle(
-                    fontSize: 16,
                     color: Colors.black,
-                    fontWeight: FontWeight.w100,
-                    decoration: TextDecoration.underline,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 25),
-            Obx(
-                ()=> !loader.isLoading.value ? SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    onPressed: _handleLogin,
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ),
-                ) : Center(child: CircularProgressIndicator(color: Colors.black,)),
             ),
             const SizedBox(height: 20),
 
@@ -207,50 +242,7 @@ class _LoginPageState extends State<LoginPage> {
                   elevation: 2,
                 ),
                 onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Mobilenoauth()),
-                  );
-                },
-                icon: Image.asset(
-                  'assets/Mobile_authlogo.png',
-                  height: 43,
-                  width: 43,
-                ),
-                label: const Text(
-                  "Log in with Mobile Number",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(2),
-                    side: const BorderSide(color: Colors.black),
-                  ),
-                  elevation: 2,
-                ),
-                onPressed: () async {
-                  signIn2();
-
-                  // bool isLogged = await login(); // Calling signIn method properly with async
-                  // if (isLogged) {
-                  //   print("hello");
-                  //   Navigator.pushReplacement(
-                  //       context,
-                  //       MaterialPageRoute(builder: (context) => HomePage())
-                  //   );
-                  // }
+                  // await signIn(); // Calling signIn method properly with async
                 },
                 icon: Image.asset(
                   'assets/gmail-logo.jpg',
@@ -258,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: 43,
                 ),
                 label: const Text(
-                  "Log in with Gmail",
+                  "Sign Up with Gmail",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,
@@ -267,15 +259,15 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 20),
             Center(
               child: RichText(
                 text: TextSpan(
-                  text: "Don't have an account? ",
+                  text: "Already have an account? ",
                   style: const TextStyle(fontSize: 16, color: Colors.black),
                   children: [
                     TextSpan(
-                      text: "Sign up",
+                      text: "Login",
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.blue,
@@ -287,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SignupPage(),
+                                  builder: (context) => const LoginPage(),
                                 ),
                               );
                             },
@@ -302,92 +294,57 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Function to save the token
+  Future<void> saveToken(String token) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
+  }
+
   // Future signIn() async {
   //   final user = await GoogleSignInApi.login();
   //
   //   if (user == null) {
+  //
   //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
-  //     print("Signin failed");
+  //     print("failed");
   //   } else {
   //     // Get the email from the signed-in user
   //     final String email = user.email;
   //
   //     // Send the email to the backend to check if it's already in the database
   //     final response = await http.post(
-  //       Uri.parse("http://localhost:4000/auth/google-auth"),
+  //       Uri.parse("http://localhost:4000/auth/check-email"),
   //       headers: {"Content-Type": "application/json"},
   //       body: jsonEncode({"email": email}),
   //     );
   //
   //     if (response.statusCode == 200) {
-  //       print("Signin successful");
+  //       print("Successful");
   //       final data = jsonDecode(response.body);
   //
-  //       // Check the backend response to see if the user exists or not
+  //       // Check the backend response to see if the user should be redirected
   //       if (data['redirect']) {
-  //         // If redirect is true, it means the user is new or authenticated
+  //         // If redirect is true, it means the user does not exist
+  //         print("Redirecting to Dashboard (new user)");
+  //
+  //         // Navigate to the Dashboard page for new user
   //         Navigator.of(context).pushReplacement(
-  //           MaterialPageRoute(builder: (context) => HomePage("")), // Redirect to HomePage (Dashboard)
+  //             MaterialPageRoute(builder: (context) => HomePage()) // Replace with actual Dashboard page
+  //         );
+  //       } else {
+  //         // If redirect is false, it means the user already exists
+  //         print("User already exists, redirecting to another page");
+  //
+  //         // Redirect to a different screen (e.g., Profile or Welcome page for existing users)
+  //         Navigator.of(context).pushReplacement(
+  //             MaterialPageRoute(builder: (context) => HomePage()) // Replace with your desired page
   //         );
   //       }
   //     } else {
-  //       print(jsonDecode(response.body));
   //       // If the server returns an error
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error checking user")));
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(content: Text("Error checking user"))
+  //       );
   //     }
-  //   }
-  // }
-
-  Future signIn2() async {
-    try {
-      // Sign in with Google
-      final user = await GoogleSignIn().signIn();
-
-      if (user == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Signin Failed")));
-        return;
-      }
-
-      // Get the Google SignIn authentication
-      final GoogleSignInAuthentication authentication =
-          await user.authentication;
-
-      // Send the access token to the backend for verification
-      final response = await http.post(
-        Uri.parse("http://localhost:8080/auth/google-auth"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": user.email, "name": user.displayName}),
-      );
-
-      if (response.statusCode == 200) {
-        print("Signin successful");
-        final data = jsonDecode(response.body);
-        if (data['redirect']) {
-          print(data['token']);
-          await saveToken(data['token']);
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomePage(data['token'])),
-          );
-        }
-      } else {
-        print(jsonDecode(response.body));
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Error checking user")));
-      }
-    } catch (e) {
-      print("Error: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error during sign-in")));
-    }
-  }
-
-  // Function to save the token
-  Future<void> saveToken(String token) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_token', token);
-  }
+  //   }   }
 }

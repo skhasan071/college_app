@@ -1,5 +1,5 @@
 import 'package:college_app/services/user_services.dart';
-import 'package:college_app/view/FirstPage.dart';
+import 'package:college_app/view/SignUpLogin/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';

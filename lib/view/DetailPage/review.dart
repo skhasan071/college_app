@@ -1,6 +1,6 @@
 import 'package:college_app/model/review.dart';
 import 'package:college_app/services/user_services.dart';
-import 'package:college_app/view/FirstPage.dart';
+import 'package:college_app/view/SignUpLogin/FirstPage.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:get/get.dart';

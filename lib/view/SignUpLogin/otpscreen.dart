@@ -5,7 +5,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
-import '../services/apiservice.dart';
+import '../../services/apiservice.dart';
 
 class OtpScreen extends StatefulWidget {
 
