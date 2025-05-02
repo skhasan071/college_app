@@ -10,7 +10,7 @@ Future<void> main() async {
   Get.put(ThemeController());
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    DevicePreview(builder: (context) => MyApp())
+      MyApp()
   );
 }
 
