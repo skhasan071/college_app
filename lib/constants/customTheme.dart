@@ -41,9 +41,13 @@ class AppThemes {
     filterSelectedColor: Colors.black,
     filterTextColor: Colors.white,
     backgroundGradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.white, Colors.white],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.grey.shade200,
+        Colors.grey.shade400,
+        Colors.grey.shade600,
+      ],
     ),
     boxGradient: LinearGradient(
       begin: Alignment.topLeft,
