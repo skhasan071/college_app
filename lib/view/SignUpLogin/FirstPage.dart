@@ -61,7 +61,7 @@ class _FirstpageState extends State<Firstpage> {
                 height: 48,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
