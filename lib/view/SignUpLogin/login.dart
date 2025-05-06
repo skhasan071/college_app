@@ -1,6 +1,5 @@
 import 'package:college_app/services/auth_services.dart';
 import 'package:college_app/view/SignUpLogin/signuppage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../../services/google_signin_api.dart';
 import '../../view_model/data_loader.dart';
 import '../emailverification.dart';
 import '../home_page.dart';
@@ -47,11 +45,13 @@ class _LoginPageState extends State<LoginPage> {
 
         await saveToken(token);
 
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(token)),
+            MaterialPageRoute(builder: (context) => HomePage(token)),
+                (route) => false
         );
         loader.isLoading(false);
+
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

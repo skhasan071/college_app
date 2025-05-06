@@ -184,11 +184,11 @@ class _SignupPageState extends State<SignupPage> {
                     bool isSigned = await _handleSignUp();
 
                     if (isSigned) {
-                      Navigator.push(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                           builder: (context) => CompleteProfilePage(),
-                        ),
+                        ), (route) => false,
                       );
                     }
                   },
@@ -346,5 +346,5 @@ class _SignupPageState extends State<SignupPage> {
   //           SnackBar(content: Text("Error checking user"))
   //       );
   //     }
-  //   }   }
+  //  }}
 }
