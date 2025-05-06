@@ -156,8 +156,14 @@ class CollegeServices {
     }
   }
 
-  static Future<List<College>> predictColleges({required String examType, required String category, required String rankType, required dynamic rankOrPercentile,}) async {
-    final uri = Uri.parse('${_baseUrl}predict');
+  static Future<List<College>> predictColleges({
+    required String examType,
+    required String category,
+    required String rankType,
+    required dynamic rankOrPercentile,
+    required String state, // ✅ new field
+  }) async {
+    final uri = Uri.parse('http://localhost:8080/api/colleges/predict');
 
     try {
       final response = await http.post(
@@ -170,12 +176,13 @@ class CollegeServices {
           'category': category,
           'rankType': rankType,
           'rankOrPercentile': rankOrPercentile,
+          'state': state, // ✅ send state
         }),
       );
 
       if (response.statusCode == 200) {
         final List data = json.decode(response.body);
-        final colleges = data.map((item) => College.fromMap(item as Map<String, dynamic>)).toList();
+        final colleges = data.map((item) => College.fromMap(item)).toList();
         return colleges;
       } else {
         print('Error: ${response.body}');

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:college_app/view_model/tabController.dart';
 import 'package:college_app/view_model/saveController.dart';
-import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view/DetailPage/courses.dart';
 import 'package:college_app/view/DetailPage/review.dart';
 import 'package:college_app/view/DetailPage/placementDetails.dart';
