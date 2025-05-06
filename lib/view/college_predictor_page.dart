@@ -181,13 +181,30 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () async {
-                      List<College> colleges =
-                          await CollegeServices.predictColleges(
-                            examType: selectedExam! ?? exams.first,
-                            category: selectedCategory! ?? categories.first,
-                            rankType: selectedRankType! ?? rankTypes.first,
-                            rankOrPercentile: rank,
-                          );
+                      // Check for invalid exam-state combo
+                      if (selectedExam == "MHT-CET" && selectedState != "Maharashtra") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "MHT-CET is not valid for ${selectedState ?? 'this state'}. Please select Maharashtra or change exam.",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor: Colors.black,
+                            behavior: SnackBarBehavior.floating,
+                            duration: Duration(seconds: 4),
+                          ),
+                        );
+                        return; // ⛔ don’t proceed
+                      }
+
+                      List<College> colleges = await CollegeServices.predictColleges(
+                        examType: selectedExam!,
+                        category: selectedCategory!,
+                        rankType: selectedRankType!,
+                        rankOrPercentile: rank,
+                        state: selectedState!,
+                      );
+
                       controller.predictedClg.value = colleges;
                       controller.navSelectedIndex.value = 6;
                     },

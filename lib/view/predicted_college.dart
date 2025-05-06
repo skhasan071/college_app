@@ -8,9 +8,6 @@ import 'package:get/get_core/src/get_main.dart';
 import '../view_model/controller.dart';
 
 class CollegeResultsPage extends StatefulWidget {
-
-  List<College> colleges = [];
-
   CollegeResultsPage({super.key});
 
   @override
@@ -20,14 +17,8 @@ class CollegeResultsPage extends StatefulWidget {
 class _CollegeResultPageState extends State<CollegeResultsPage> {
   int selectedFilterIndex = 0;
   List<String> filters = ['View all', 'Filter 1', 'Filter 2', 'Filter 3', 'Filter 4'];
-  var controller = Get.find<Controller>();
-  var profile = Get.find<ProfileController>();
-
-  @override
-  void initState() {
-    super.initState();
-    widget.colleges = controller.predictedClg;
-  }
+  final controller = Get.find<Controller>();
+  final profile = Get.find<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +46,7 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
                   style: TextStyle(fontSize: 14, color: Colors.black87),
                 ),
                 const SizedBox(height: 24),
+
                 Row(
                   children: [
                     Expanded(
@@ -75,7 +67,7 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
                       height: 35,
                       child: ElevatedButton(
                         onPressed: () {
-                          controller.navSelectedIndex.value = 3;
+                          controller.navSelectedIndex.value = 3; // back to predictor form
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
@@ -90,50 +82,70 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
                   ],
                 ),
                 const SizedBox(height: 28),
-                controller.predictedClg.isNotEmpty ? SizedBox(
-                  height: 36,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: filters.length,
-                    itemBuilder: (context, index) {
-                      final isSelected = index == selectedFilterIndex;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedFilterIndex = index;
-                            });
+
+                Obx(() {
+                  if (controller.predictedClg.isEmpty) {
+                    return const Center(child: Text("No Colleges Found"));
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 36,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: filters.length,
+                          itemBuilder: (context, index) {
+                            final isSelected = index == selectedFilterIndex;
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() => selectedFilterIndex = index);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: isSelected ? Colors.black : Colors.grey[200],
+                                  foregroundColor: isSelected ? Colors.white : Colors.black,
+                                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: const BorderSide(color: Colors.black),
+                                  ),
+                                ),
+                                child: Text(filters[index]),
+                              ),
+                            );
                           },
-                          style: TextButton.styleFrom(
-                            backgroundColor: isSelected ? Colors.black : Colors.grey[200],
-                            foregroundColor: isSelected ? Colors.white : Colors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: const BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          child: Text(filters[index]),
                         ),
-                      );
-                    },
-                  ),
-                ) : Center(child: Text("No Colleges Found"),),
-          
-                const SizedBox(height: 24),
-                // Placeholder for future card section
-                ListView.builder(itemBuilder: (context, index){
-          
-                  College clg = widget.colleges[index];
+                      ),
+                      const SizedBox(height: 24),
 
-
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CardStructure(clg: clg, collegeID: clg.id, collegeName: clg.name, coursesCount: 0, feeRange: "0", state: clg.state, ranking: clg.ranking.toString(), studId: profile.profile.value!.id, clgId: clg.id,),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.predictedClg.length,
+                        itemBuilder: (context, index) {
+                          final clg = controller.predictedClg[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CardStructure(
+                              clg: clg,
+                              collegeID: clg.id,
+                              collegeName: clg.name,
+                              coursesCount: 0,
+                              feeRange: clg.feeRange,
+                              state: clg.state,
+                              ranking: clg.ranking.toString(),
+                              studId: profile.profile.value!.id,
+                              clgId: clg.id,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   );
-
-                }, shrinkWrap: true, itemCount: widget.colleges.length,)
+                }),
               ],
             ),
           ),
