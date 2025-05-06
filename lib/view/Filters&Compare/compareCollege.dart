@@ -9,11 +9,22 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class CompareColleges extends StatelessWidget {
   final College clg;
+  final College college;
+  final String collegeId;
+  final String collegeName;
+  final String ranking;
+  final String feeRange;
+  final String state;
 
   const CompareColleges({
     super.key,
     required this.clg,
-    required College college,
+    required this.college,
+    required this.collegeName,
+    required this.collegeId,
+    required this.ranking,
+    required this.feeRange,
+    required this.state,
   });
   @override
   Widget build(BuildContext context) {
@@ -66,71 +77,19 @@ class CompareColleges extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: _collegeLogoWithName(
-                      'Indian Institute of Technology, Bombay',
-                    ),
-                  ),
+                  Expanded(child: _collegeLogoWithName(collegeName)),
                 ],
               ),
               const SizedBox(height: 12),
 
-              _infoRow('Location', ['New Delhi, India', 'Mumbai, India']),
-              _infoRow('Cutoff', ['650 – 720', '680 – 730']),
-              _infoRow('Fees', ['₹2.5 LPA', '₹3 LPA']),
-              _infoRow('Courses Offered', [
-                'B.Tech, M.Tech, MBA',
-                'B.Tech, M.Sc, MBA',
-              ]),
-              _infoRow('Rating', ['4.7 / 5', '4.5 / 5']),
-              _infoRow('NIRF Ranking', ['#2', '#3']),
-              _infoRow('Admission Probability', ['High', 'Medium']),
+              _infoRow('Location', [clg.state, college.state]),
+              _infoRow('Cutoff', ['650 – 720', ' - ']),
+              _infoRow('Fees', ['₹2.5 LPA', feeRange]),
+              _infoRow('Courses Offered', [' - ', ' - ']),
+              _infoRow('Rating', [' - ', ' - ']),
+              _infoRow('NIRF Ranking', [ranking, "#$ranking"]),
+              _infoRow('Admission Probability', [' - ', ' - ']),
               const Divider(color: Colors.black, thickness: 1),
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => CollegeDetail(
-                                college: clg,
-                                collegeName: '',
-                                state: '',
-                                lat: 24,
-                                long: 24,
-                                collegeImage: '',
-                              ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.filterSelectedColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
-                      ),
-                    ),
-                    child: Text("View Details"),
-                  ),
-
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.filterSelectedColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
-                      ),
-                    ),
-                    child: Text("View Details"),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

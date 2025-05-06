@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:college_app/view/Filters&Compare/compareWith.dart';
+import 'package:college_app/view_model/controller.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +20,7 @@ import 'package:college_app/view/DetailPage/Q&A.dart';
 import 'package:college_app/view/DetailPage/hostel.dart';
 import 'package:college_app/view/DetailPage/cutoff.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/Placement.dart';
 import '../../model/college.dart';
@@ -27,6 +30,9 @@ class CollegeDetail extends StatefulWidget {
   final String collegeName;
   final String collegeImage;
   final String state;
+  final String ranking;
+  final String feeRange;
+
   final double lat; // Make these properly typed
   final double long;
 
@@ -35,6 +41,9 @@ class CollegeDetail extends StatefulWidget {
     required this.collegeName,
     required this.collegeImage,
     required this.state,
+    required this.ranking,
+    required this.feeRange,
+
     required this.lat,
     required this.long,
     super.key,
@@ -45,6 +54,18 @@ class CollegeDetail extends StatefulWidget {
 }
 
 class _CollegeDetailState extends State<CollegeDetail> {
+  SharedPreferences? prefs;
+  bool isUserLoggedIn = false;
+  var pfp = Get.find<ProfileController>();
+  var controller = Get.put(Controller());
+
+  Future<void> _loadPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isUserLoggedIn = prefs?.getString('auth_token') != null;
+    });
+  }
+
   final tabController = Get.put(CollegeTabController());
 
   final saveCtrl = Get.put(saveController());
@@ -56,6 +77,7 @@ class _CollegeDetailState extends State<CollegeDetail> {
   void initState() {
     super.initState();
     fetchPlacementData();
+    _loadPrefs();
   }
 
   Future<void> fetchPlacementData() async {
@@ -206,15 +228,28 @@ class _CollegeDetailState extends State<CollegeDetail> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: OutlinedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) =>
-                                              CompareWith(clg: widget.college),
-                                    ),
-                                  );
+                                onPressed: () async {
+                                  if (controller.isGuestIn.value) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Please Login First"),
+                                        duration: Duration(seconds: 3),
+                                        backgroundColor: Colors.black,
+                                        behavior: SnackBarBehavior.floating,
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => CompareWith(
+                                              clg: widget.college,
+                                              collegeId: widget.college.id,
+                                            ),
+                                      ),
+                                    );
+                                  }
                                 },
                                 style: OutlinedButton.styleFrom(
                                   backgroundColor: Colors.green,

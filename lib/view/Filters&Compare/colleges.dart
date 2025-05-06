@@ -74,7 +74,7 @@ class _CollegesState extends State<Colleges> {
               _buildBox(
                 title: "Which colleges match your preferences?",
                 buttonText: "Predict My College",
-                pageNo: 3
+                pageNo: 3,
               ),
 
               rankings.isNotEmpty
@@ -96,7 +96,7 @@ class _CollegesState extends State<Colleges> {
               _buildBox(
                 title: "Want the latest insights on colleges?",
                 buttonText: "Read Insights",
-                pageNo: 2
+                pageNo: 2,
               ),
             ],
           ),
@@ -178,11 +178,10 @@ class _CollegesState extends State<Colleges> {
                         (context, index) => GestureDetector(
                           onTap: () async {
                             setState(() {
-                              isLoading = true; // Show loader on click
+                              isLoading = true;
                             });
 
-                            // Simulate loading delay (e.g., 1 second)
-                            await Future.delayed(Duration(seconds: 5));
+                            await Future.delayed(Duration(seconds: 2));
 
                             // Navigate to CollegeDetail
                             Navigator.push(
@@ -195,7 +194,9 @@ class _CollegesState extends State<Colleges> {
                                       lat: data[index].lat,
                                       long: data[index].long,
                                       state: data[index].state,
-                                      collegeImage:data[index].image,
+                                      collegeImage: data[index].image,
+                                      ranking: data[index].ranking.toString(),
+                                      feeRange: data[index].feeRange,
                                     ),
                               ),
                             );
@@ -269,7 +270,11 @@ class _CollegesState extends State<Colleges> {
     });
   }
 
-  Widget _buildBox({required String title, required String buttonText, required int pageNo}) {
+  Widget _buildBox({
+    required String title,
+    required String buttonText,
+    required int pageNo,
+  }) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
 

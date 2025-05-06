@@ -2,6 +2,7 @@ import 'package:college_app/constants/customTheme.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/DetailPage/collegeDetail.dart';
+import 'package:college_app/view/Filters&Compare/compareCollege.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/ui_helper.dart';
@@ -12,6 +13,9 @@ import 'package:get/get.dart';
 import '../view_model/controller.dart';
 
 class CardStructure extends StatelessWidget {
+  final bool showTwoButtons;
+  final bool disableCardTap;
+  final VoidCallback? onDetailTap;
   final theme = ThemeController.to;
   final String collegeID;
   final String collegeName;
@@ -37,6 +41,9 @@ class CardStructure extends StatelessWidget {
     required this.ranking,
     required this.studId,
     required this.clgId,
+    this.showTwoButtons = false,
+    this.disableCardTap = false,
+    this.onDetailTap,
   });
 
   @override
@@ -47,16 +54,27 @@ class CardStructure extends StatelessWidget {
       final CustomTheme themes = theme.currentTheme;
 
       return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) =>
-                      CollegeDetail(college: clg,collegeImage:clg.image,collegeName: clg.name, state: clg.state, lat: clg.lat, long: clg.long,),
-            ),
-          );
-        },
+        onTap:
+            disableCardTap
+                ? null
+                : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => CollegeDetail(
+                            college: clg,
+                            collegeImage: clg.image,
+                            collegeName: clg.name,
+                            state: clg.state,
+                            lat: clg.lat,
+                            long: clg.long,
+                            ranking: '',
+                            feeRange: '',
+                          ),
+                    ),
+                  );
+                },
         child: Container(
           width: width ?? 285,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -73,7 +91,7 @@ class CardStructure extends StatelessWidget {
                     height: 150,
                     width: double.infinity,
                     decoration: BoxDecoration(color: Colors.grey.shade300),
-                    child: Image.network(clg.image, fit: BoxFit.cover,),
+                    child: Image.network(clg.image, fit: BoxFit.cover),
                   ),
                   Positioned(
                     top: 8,
@@ -81,42 +99,49 @@ class CardStructure extends StatelessWidget {
                     child: Obx(
                       () => InkWell(
                         onTap: () async {
-                          if(pfpController.isGuestIn.value){
-
+                          if (pfpController.isGuestIn.value) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Login First", style: TextStyle(color: Colors.white),),
+                                content: Text(
+                                  "Login First",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                                 duration: Duration(seconds: 3),
                                 backgroundColor: Colors.black,
                                 behavior: SnackBarBehavior.floating,
-                              )
+                              ),
                             );
-
-                          }else{
+                          } else {
                             if (controller.isSaved(collegeID)) {
                               bool success = await remove(studId, clgId);
-                              if (success){
+                              if (success) {
                                 controller.toggleSave(collegeID);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Removed from Shortlist", style: TextStyle(color: Colors.white),),
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: Colors.black,
-                                      behavior: SnackBarBehavior.floating,
-                                    )
+                                  SnackBar(
+                                    content: Text(
+                                      "Removed from Shortlist",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Colors.black,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
                                 );
                               }
                             } else {
                               bool success = await save(studId, clgId);
-                              if (success){
+                              if (success) {
                                 controller.toggleSave(collegeID);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Added To Shortlist", style: TextStyle(color: Colors.white),),
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: Colors.black,
-                                      behavior: SnackBarBehavior.floating,
-                                    )
+                                  SnackBar(
+                                    content: Text(
+                                      "Added To Shortlist",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Colors.black,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
                                 );
                               }
                             }
@@ -175,7 +200,7 @@ class CardStructure extends StatelessWidget {
                         _buildInfoColumn(
                           "Courses Offered",
                           "$coursesCount courses",
-                          themes
+                          themes,
                         ),
                         _buildInfoColumn("Total Fees Range", feeRange, themes),
                       ],
@@ -204,20 +229,76 @@ class CardStructure extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.download, size: 18),
-                      label: const Text(
-                        "Brochure",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: themes.brochureBtnColor,
-                        foregroundColor: Colors.white,
+                    showTwoButtons
+                        ? Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => CompareColleges(
+                                            college: clg,
+                                            clg: clg,
+                                            collegeId: clg.id,
+                                            collegeName: clg.name,
+                                            ranking: ranking,
+                                            feeRange: feeRange,
+                                            state: state,
+                                          ),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                  backgroundColor: Colors.white,
+                                  side: BorderSide(
+                                    color: themes.filterSelectedColor,
+                                  ),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero,
+                                  ),
+                                ),
+                                child: Text("Select to Compare"),
+                              ),
+                            ),
 
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                      ),
-                      onPressed: () {},
-                    ),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: onDetailTap,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: themes.filterSelectedColor,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.zero,
+                                  ),
+                                ),
+                                child: Text("View Details"),
+                              ),
+                            ),
+                          ],
+                        )
+                        : ElevatedButton.icon(
+                          icon: const Icon(Icons.download, size: 18),
+                          label: const Text(
+                            "Brochure",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: themes.brochureBtnColor,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                          onPressed: () {
+                            // brochure action
+                          },
+                        ),
                   ],
                 ),
               ),
@@ -242,11 +323,9 @@ class CardStructure extends StatelessWidget {
             color: themes.courseCountColor,
           ),
         ),
-
       ],
     );
   }
-
 
   static Future<bool> save(studId, clgId) async {
     Map<String, dynamic>? msg = await StudentService.addToFavorites(
