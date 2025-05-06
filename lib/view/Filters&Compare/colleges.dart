@@ -149,19 +149,16 @@ class _CollegesState extends State<Colleges> {
                 // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: const [
-                        Filter(title: "View All"),
-                        SizedBox(width: 8),
-                        Filter(title: "Engineering"),
-                        SizedBox(width: 8),
-                        Filter(title: "Medical"),
-                        SizedBox(width: 8),
-                        Filter(title: "Dont Know"),
-                      ],
-                    ),
+                  child: ListView.builder(
+                      itemBuilder: (context, index){
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Filter(title: profile.interestedStreams[0]),
+                            SizedBox(width: 8,)
+                          ],
+                        );
+                      }, itemCount: profile.interestedStreams.length, shrinkWrap: true, scrollDirection: Axis.horizontal,
                   ),
                 ),
 

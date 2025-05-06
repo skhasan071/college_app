@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        "TalentConnect",
+                        "Talent",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,

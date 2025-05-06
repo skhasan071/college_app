@@ -104,7 +104,7 @@ class SupportPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ReportIssuePage(),
+                    builder: (context) => ReportIssuePage(),
                   ),
                 );
               },
@@ -355,7 +355,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   }
 
   Future<void> submitIssue() async {
-    const url = 'http://localhost:8080/api/report';
+    const url = 'https://tc-ca-server.onrender.com/api/report';
 
     try {
       final response = await http.post(
@@ -618,7 +618,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   Future<void> submitFeedback() async {
-    const url = 'http://localhost:8080/api/feedback';
+    const url = 'https://tc-ca-server.onrender.com/api/feedback';
 
     try {
       final response = await http.post(
