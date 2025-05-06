@@ -120,7 +120,6 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
