@@ -61,50 +61,6 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
               ),
               const SizedBox(height: 16),
 
-              // Filter and Compare Buttons
-              Row(
-                children: [
-                  SizedBox(
-                    width: 130,
-                    child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.filter_alt_outlined,
-                        color: Colors.black,
-                      ),
-                      label: const Text(
-                        "Filter",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: const BorderSide(color: Colors.black),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 43),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Compare Colleges",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
               const SizedBox(height: 16),
 
               Container(

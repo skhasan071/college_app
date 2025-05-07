@@ -12,12 +12,11 @@ import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../data/filter.dart';
 import '../../services/user_services.dart';
 import '../DetailPage/collegeDetail.dart';
 
 class Colleges extends StatefulWidget {
-  const Colleges({super.key});
+  Colleges({super.key});
 
   @override
   State<Colleges> createState() => _CollegesState();
@@ -27,8 +26,6 @@ class _CollegesState extends State<Colleges> {
   var controller = Get.put(Controller());
   var saveCtrl = Get.put(saveController());
   var profile = Get.put(ProfileController());
-
-  FilterData db = FilterData();
 
   List<College> colleges = [];
   List<College> countries = [];
@@ -67,17 +64,17 @@ class _CollegesState extends State<Colleges> {
 
               !controller.isGuestIn.value
                   ? rankings.isNotEmpty
-                  ? _buildSection(
-                "Colleges Based on NIRF Ranking",
-                rankings,
-              )
-                  : Container()
+                      ? _buildSection(
+                        "Colleges Based on NIRF Ranking",
+                        rankings,
+                      )
+                      : Container()
                   : Container(),
 
               _buildBox(
-                  title: "Which colleges match your preferences?",
-                  buttonText: "Predict My College",
-                  pageNo: 3
+                title: "Which colleges match your preferences?",
+                buttonText: "Predict My College",
+                pageNo: 3
               ),
 
               rankings.isNotEmpty
@@ -97,9 +94,9 @@ class _CollegesState extends State<Colleges> {
                   : Container(),
 
               _buildBox(
-                  title: "Want the latest insights on colleges?",
-                  buttonText: "Read Insights",
-                  pageNo: 2
+                title: "Want the latest insights on colleges?",
+                buttonText: "Read Insights",
+                pageNo: 2
               ),
             ],
           ),
@@ -150,27 +147,18 @@ class _CollegesState extends State<Colleges> {
                 ),
 
                 // Filters
-                SizedBox(
-                  height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: ListView.builder(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: ListView.builder(
                       itemBuilder: (context, index){
                         return Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            GestureDetector(
-                                onTap: (){
-                                  data = getFiltered(filter: profile.interestedStreams[index], colleges: data);
-                                  setState(() {});
-                                },
-                                child: Filter(title: profile.interestedStreams[index])
-                            ),
+                            Filter(title: profile.interestedStreams[0]),
                             SizedBox(width: 8,)
                           ],
                         );
                       }, itemCount: profile.interestedStreams.length, shrinkWrap: true, scrollDirection: Axis.horizontal,
-                    ),
                   ),
                 ),
 
@@ -185,49 +173,49 @@ class _CollegesState extends State<Colleges> {
                     itemCount: data.length,
                     itemBuilder:
                         (context, index) => GestureDetector(
-                      onTap: () async {
-                        setState(() {
-                          isLoading = true; // Show loader on click
-                        });
+                          onTap: () async {
+                            setState(() {
+                              isLoading = true; // Show loader on click
+                            });
 
-                        // Simulate loading delay (e.g., 1 second)
-                        await Future.delayed(Duration(seconds: 5));
+                            // Simulate loading delay (e.g., 1 second)
+                            await Future.delayed(Duration(seconds: 5));
 
-                        // Navigate to CollegeDetail
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => CollegeDetail(
-                              college: data[index],
-                              collegeName: data[index].name,
-                              lat: data[index].lat,
-                              long: data[index].long,
-                              state: data[index].state,
-                              collegeImage:data[index].image,
-                            ),
+                            // Navigate to CollegeDetail
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => CollegeDetail(
+                                      college: data[index],
+                                      collegeName: data[index].name,
+                                      lat: data[index].lat,
+                                      long: data[index].long,
+                                      state: data[index].state,
+                                      collegeImage:data[index].image,
+                                    ),
+                              ),
+                            );
+
+                            setState(() {
+                              isLoading = false; // Hide loader after navigation
+                            });
+                          },
+                          child: CardStructure(
+                            collegeID: data[index].id,
+                            collegeName: data[index].name,
+                            coursesCount: data[index].courseCount,
+                            feeRange: data[index].feeRange,
+                            state: data[index].state,
+                            ranking: data[index].ranking.toString(),
+                            studId:
+                                !controller.isGuestIn.value
+                                    ? profile.profile.value!.id
+                                    : "Nothing",
+                            clgId: data[index].id,
+                            clg: data[index],
                           ),
-                        );
-
-                        setState(() {
-                          isLoading = false; // Hide loader after navigation
-                        });
-                      },
-                      child: CardStructure(
-                        collegeID: data[index].id,
-                        collegeName: data[index].name,
-                        coursesCount: data[index].courseCount,
-                        feeRange: data[index].feeRange,
-                        state: data[index].state,
-                        ranking: data[index].ranking.toString(),
-                        studId:
-                        !controller.isGuestIn.value
-                            ? profile.profile.value!.id
-                            : "Nothing",
-                        clgId: data[index].id,
-                        clg: data[index],
-                      ),
-                    ),
+                        ),
                   ),
                 ),
               ],
@@ -356,14 +344,7 @@ class _CollegesState extends State<Colleges> {
         streams: profile.profile.value!.interestedStreams!,
         city: "Mumbai",
       );
-      db.rankings = rankings;
-      db.privates = privates;
-      db.countries = countries;
-      db.states = states;
-      db.cities = cities;
-
     } else {
-
       countries = await CollegeServices.fetchFilteredColleges(
         streams: profile.interestedStreams,
         country: "India",
@@ -376,28 +357,8 @@ class _CollegesState extends State<Colleges> {
         streams: profile.interestedStreams,
         city: "Mumbai",
       );
-
-      db.countries = countries;
-      db.states = states;
-      db.cities = cities;
-
     }
 
     setState(() {});
   }
-
-  List<College> getFiltered({required String filter, required List<College> colleges}){
-
-    List<College> temp = [];
-
-    for(College college in colleges){
-      if(college.stream.toString().toLowerCase() == filter.toString().toLowerCase()){
-        temp.add(college);
-      }
-    }
-
-    return temp;
-
-  }
-
 }
