@@ -8,6 +8,7 @@ import 'package:college_app/model/college.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class CompareColleges extends StatelessWidget {
+  final String collegeImage;
   final College clg;
   final College college;
   final String collegeId;
@@ -15,6 +16,8 @@ class CompareColleges extends StatelessWidget {
   final String ranking;
   final String feeRange;
   final String state;
+  final College firstCollege;
+  final College secondCollege;
 
   const CompareColleges({
     super.key,
@@ -25,6 +28,9 @@ class CompareColleges extends StatelessWidget {
     required this.ranking,
     required this.feeRange,
     required this.state,
+    required this.collegeImage,
+    required this.firstCollege,
+    required this.secondCollege,
   });
   @override
   Widget build(BuildContext context) {
@@ -72,22 +78,28 @@ class CompareColleges extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _collegeLogoWithName(
-                      'IIT Delhi - Indian Institute of Technology',
-                    ),
+                    child: _collegeLogoWithName(firstCollege.name, clg.image),
                   ),
                   const SizedBox(width: 8),
-                  Expanded(child: _collegeLogoWithName(collegeName)),
+                  Expanded(
+                    child: _collegeLogoWithName(secondCollege.name, clg.image),
+                  ),
                 ],
               ),
+
               const SizedBox(height: 12),
 
-              _infoRow('Location', [clg.state, college.state]),
-              _infoRow('Cutoff', ['650 – 720', ' - ']),
-              _infoRow('Fees', ['₹2.5 LPA', feeRange]),
+              _infoRow('Location', [firstCollege.state, secondCollege.state]),
+
+              _infoRow('Cutoff', [' - ', ' - ']),
+              _infoRow('Fees', [firstCollege.feeRange, secondCollege.feeRange]),
               _infoRow('Courses Offered', [' - ', ' - ']),
               _infoRow('Rating', [' - ', ' - ']),
-              _infoRow('NIRF Ranking', [ranking, "#$ranking"]),
+              _infoRow('NIRF Ranking', [
+                '₹${firstCollege.ranking.toString()}',
+                '₹${secondCollege.ranking.toString()}',
+              ]),
+
               _infoRow('Admission Probability', [' - ', ' - ']),
               const Divider(color: Colors.black, thickness: 1),
             ],
@@ -97,13 +109,25 @@ class CompareColleges extends StatelessWidget {
     });
   }
 
-  Widget _collegeLogoWithName(String name) {
+  Widget _collegeLogoWithName(String name, String imageUrl) {
     return Column(
       children: [
         Container(
           height: 170,
           decoration: BoxDecoration(color: Colors.grey[300]),
-          child: const Center(child: Icon(Icons.image, size: 40)),
+          child:
+              imageUrl.isNotEmpty
+                  ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(
+                        child: Icon(Icons.broken_image, size: 40),
+                      );
+                    },
+                  )
+                  : const Center(child: Icon(Icons.image, size: 40)),
         ),
         const SizedBox(height: 6),
         SizedBox(

@@ -41,6 +41,7 @@ class CollegeDetail extends StatefulWidget {
 
     required this.lat,
     required this.long,
+
     super.key,
   });
 
