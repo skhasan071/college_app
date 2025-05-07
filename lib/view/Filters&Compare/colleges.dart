@@ -149,16 +149,22 @@ class _CollegesState extends State<Colleges> {
                 // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: ListView.builder(
-                      itemBuilder: (context, index){
+                  child: Container(
+                    height: 50,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
                         return Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Filter(title: profile.interestedStreams[0]),
-                            SizedBox(width: 8,)
+                            Filter(title: profile.interestedStreams[index]),
+                            SizedBox(width: 8),
                           ],
                         );
-                      }, itemCount: profile.interestedStreams.length, shrinkWrap: true, scrollDirection: Axis.horizontal,
+                      },
+                      itemCount: profile.interestedStreams.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                    ),
                   ),
                 ),
 
@@ -175,10 +181,11 @@ class _CollegesState extends State<Colleges> {
                         (context, index) => GestureDetector(
                           onTap: () async {
                             setState(() {
-                              isLoading = true;
+                              isLoading = true; // Show loader on click
                             });
 
-                            await Future.delayed(Duration(seconds: 2));
+                            // Simulate loading delay (e.g., 1 second)
+                            await Future.delayed(Duration(seconds: 5));
 
                             // Navigate to CollegeDetail
                             Navigator.push(
