@@ -29,8 +29,6 @@ class CollegeDetail extends StatefulWidget {
   final String collegeName;
   final String collegeImage;
   final String state;
-  final String ranking;
-  final String feeRange;
 
   final double lat; // Make these properly typed
   final double long;
@@ -40,8 +38,6 @@ class CollegeDetail extends StatefulWidget {
     required this.collegeName,
     required this.collegeImage,
     required this.state,
-    required this.ranking,
-    required this.feeRange,
 
     required this.lat,
     required this.long,

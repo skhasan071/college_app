@@ -69,8 +69,6 @@ class CardStructure extends StatelessWidget {
                             state: clg.state,
                             lat: clg.lat,
                             long: clg.long,
-                            ranking: '',
-                            feeRange: '',
                           ),
                     ),
                   );
