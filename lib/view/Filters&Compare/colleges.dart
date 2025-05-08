@@ -11,7 +11,6 @@ import 'package:college_app/view_model/saveController.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../services/user_services.dart';
 import '../DetailPage/collegeDetail.dart';
 
@@ -26,6 +25,7 @@ class _CollegesState extends State<Colleges> {
   var controller = Get.put(Controller());
   var saveCtrl = Get.put(saveController());
   var profile = Get.put(ProfileController());
+
 
   List<College> colleges = [];
   List<College> countries = [];
@@ -313,6 +313,7 @@ class _CollegesState extends State<Colleges> {
     if (profile.profile.value != null) {
       List<College> colleges = await StudentService.getFavoriteColleges(
         profile.profile.value!.id,
+
       );
       for (College college in colleges) {
         saveCtrl.savedColleges.add(college.id);

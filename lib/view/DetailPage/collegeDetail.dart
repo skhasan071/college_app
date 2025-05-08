@@ -19,6 +19,7 @@ import 'package:college_app/view/DetailPage/Q&A.dart';
 import 'package:college_app/view/DetailPage/hostel.dart';
 import 'package:college_app/view/DetailPage/cutoff.dart';
 import 'package:http/http.dart' as http;
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/Placement.dart';
@@ -133,7 +134,11 @@ class _CollegeDetailState extends State<CollegeDetail> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              // Text to be shared
+              String textToShare = "This is a basic text that I want to share.";
+              Share.share(textToShare);
+            },
           ),
         ],
       ),
@@ -355,14 +360,14 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                 () => Admission(collegeId: widget.college.id),
                               );
                               break;
-                            case "Cost & Location":
-                              Get.to(
-                                () => Cost(
-                                  collegeId: widget.college.id,
-                                  collegeName: widget.college.name,
-                                ),
-                              );
-                              break;
+                            // case "Cost & Location":
+                            //   Get.to(
+                            //     () => Cost(
+                            //       collegeId: widget.college.id,
+                            //       collegeName: widget.college.name,
+                            //     ),
+                            //   );
+                            //   break;
 
                             case "Distance from Hometown":
                               if (widget.lat != null && widget.long != null) {
@@ -396,14 +401,14 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                 () => Hostel(collegeId: widget.college.id),
                               );
                               break;
-                            case "Cut-offs & Ranking":
-                              Get.to(
-                                () => Cutoff(
-                                  collegeId: widget.college.id,
-                                  collegeName: widget.college.name,
-                                ),
-                              );
-                              break;
+                            // case "Cut-offs & Ranking":
+                            //   Get.to(
+                            //     () => Cutoff(
+                            //       collegeId: widget.college.id,
+                            //       collegeName: widget.college.name,
+                            //     ),
+                            //   );
+                            //   break;
                           }
 
                           Future.delayed(const Duration(milliseconds: 100), () {

@@ -11,6 +11,10 @@ import 'package:college_app/constants/filter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../services/shortListCollegeController.dart';
+
+
+
 class ShortlistedCollegesPage extends StatefulWidget {
   ShortlistedCollegesPage({super.key});
 
@@ -21,6 +25,9 @@ class ShortlistedCollegesPage extends StatefulWidget {
 
 class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   List<College> colleges = [];
+  int shortlistedCollegesCount = 0; // Variable to hold the count
+  final shortlistedCollegesController = Get.put(ShortlistedCollegesController()); // Get the controller
+
 
   var profile = Get.find<ProfileController>();
 
@@ -47,7 +54,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
               ),
               const SizedBox(height: 4),
               Text(
-                "Shortlisted Colleges",
+                  "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})", // Display count here
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Clr.primaryBtnClr,
@@ -123,9 +130,8 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   }
 
   Future<void> getColleges() async {
-    colleges = await StudentService.getFavoriteColleges(
-      profile.profile.value!.id,
-    );
-    setState(() {});
+    colleges = await StudentService.getFavoriteColleges(profile.profile.value!.id);
+    shortlistedCollegesController.shortlistedCollegesCount.value = colleges.length; // Update the count in controller
+    setState(() {}); // Trigger a rebuild to update the UI
   }
 }

@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../services/user_services.dart';
 import '../../view_model/controller.dart';
 
 class Reviews extends StatefulWidget {
@@ -149,28 +150,28 @@ class _ReviewsState extends State<Reviews> {
                   10,
                 );
               }).toList(),
-              ElevatedButton.icon(
-                onPressed: () {
-                  _showFilterPopup(context);
-                },
-                icon: const Icon(Icons.filter_list, size: 30),
-                label: const Text(
-                  "Filter Reviews",
-                  style: TextStyle(fontSize: 19),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 8,
-                  ),
-                  backgroundColor: theme.filterSelectedColor,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size.fromHeight(48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
-                  ),
-                ),
-              ),
+              // ElevatedButton.icon(
+              //   onPressed: () {
+              //     _showFilterPopup(context);
+              //   },
+              //   icon: const Icon(Icons.filter_list, size: 30),
+              //   label: const Text(
+              //     "Filter Reviews",
+              //     style: TextStyle(fontSize: 19),
+              //   ),
+              //   style: ElevatedButton.styleFrom(
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 9,
+              //       vertical: 8,
+              //     ),
+              //     backgroundColor: theme.filterSelectedColor,
+              //     foregroundColor: Colors.white,
+              //     minimumSize: const Size.fromHeight(48),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.zero,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         );
@@ -256,36 +257,36 @@ class _ReviewsState extends State<Reviews> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Container(
-            color: Colors.white,
-            width: MediaQuery.of(context).size.width * 0.8,
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Filter Reviews",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                _buildFilterOption("Positive Reviews", Colors.green, () {
-                  Navigator.pop(context);
-                  // Apply filter: 4-5 stars
-                }),
-                const SizedBox(height: 16),
-                _buildFilterOption("Neutral Reviews", Colors.amber, () {
-                  Navigator.pop(context);
-                  // Apply filter: 3 stars
-                }),
-                const SizedBox(height: 16),
-                _buildFilterOption("Negative Reviews", Colors.red, () {
-                  Navigator.pop(context);
-                  // Apply filter: 1-2 stars
-                }),
-              ],
-            ),
-          ),
+          // child: Container(
+          //   color: Colors.white,
+          //   width: MediaQuery.of(context).size.width * 0.8,
+          //   padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          //   child: Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       const Text(
+          //         "Filter Reviews",
+          //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          //       ),
+          //       const SizedBox(height: 20),
+          //       _buildFilterOption("Positive Reviews", Colors.green, () {
+          //         Navigator.pop(context);
+          //         // Apply filter: 4-5 stars
+          //       }),
+          //       const SizedBox(height: 16),
+          //       _buildFilterOption("Neutral Reviews", Colors.amber, () {
+          //         Navigator.pop(context);
+          //         // Apply filter: 3 stars
+          //       }),
+          //       const SizedBox(height: 16),
+          //       _buildFilterOption("Negative Reviews", Colors.red, () {
+          //         Navigator.pop(context);
+          //         // Apply filter: 1-2 stars
+          //       }),
+          //     ],
+          //   ),
+          // ),
         );
       },
     );

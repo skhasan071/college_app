@@ -4,14 +4,15 @@ import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
+import '../services/shortListCollegeController.dart';
 import '../view_model/controller.dart';
 
 class DrawerWidget extends StatelessWidget {
   var controller = Get.put(Controller());
   GlobalKey<ScaffoldState> scaffoldKey;
-
-  DrawerWidget(this.scaffoldKey, {super.key});
+  final int shortlistedCollegesCount;
+  final ShortlistedCollegesController shortlistedCollegesController = Get.find();
+  DrawerWidget(this.scaffoldKey,  this.shortlistedCollegesCount, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class DrawerWidget extends StatelessWidget {
                       _buildTile(
                         Icons.favorite_border,
                         'Shortlist/Favorites',
-                        trailing: _badge(controller.isGuestIn.value ? "Login First" : "*"),
+                        trailing: _badge(controller.isGuestIn.value ? "Login First" : shortlistedCollegesController.shortlistedCollegesCount.value.toString()),
                         callback: () {
                           if (controller.isGuestIn.value) {
                             scaffoldKey.currentState?.closeDrawer();

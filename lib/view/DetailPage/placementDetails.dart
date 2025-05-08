@@ -60,6 +60,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 3,
         title: const Text(
@@ -76,7 +77,6 @@ class _PlacementDetailsState extends State<PlacementDetails> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 12),
-            child: Icon(Icons.share),
           ),
         ],
         backgroundColor: Colors.white,

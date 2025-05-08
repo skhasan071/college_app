@@ -13,6 +13,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:college_app/services/college_services.dart';
 
+
 class CompareWith extends StatefulWidget {
   final College clg;
   final String collegeId;
@@ -29,6 +30,7 @@ class _CompareWithState extends State<CompareWith> {
   List<College> colleges = [];
   List<College> allColleges = [];
   List<College> filteredColleges = [];
+
 
   var profile = Get.find<ProfileController>();
 
@@ -271,6 +273,8 @@ class _CompareWithState extends State<CompareWith> {
   Future<void> getColleges() async {
     colleges = await StudentService.getFavoriteColleges(
       profile.profile.value!.id,
+
+
     );
 
     if (showShortlistedOnly) {
