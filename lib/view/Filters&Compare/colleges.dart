@@ -12,7 +12,6 @@ import 'package:college_app/view_model/saveController.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../services/user_services.dart';
 import '../DetailPage/collegeDetail.dart';
 

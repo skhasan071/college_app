@@ -11,6 +11,8 @@ import 'package:college_app/constants/filter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../services/shortListCollegeController.dart';
+
 class ShortlistedCollegesPage extends StatefulWidget {
   ShortlistedCollegesPage({super.key});
 
@@ -21,6 +23,10 @@ class ShortlistedCollegesPage extends StatefulWidget {
 
 class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   List<College> colleges = [];
+  int shortlistedCollegesCount = 0; // Variable to hold the count
+  final shortlistedCollegesController = Get.put(
+    ShortlistedCollegesController(),
+  ); // Get the controller
 
   var profile = Get.find<ProfileController>();
 
@@ -47,7 +53,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
               ),
               const SizedBox(height: 4),
               Text(
-                "Shortlisted Colleges",
+                "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})", // Display count here
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Clr.primaryBtnClr,
@@ -59,10 +65,9 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                 "Explore the colleges you’ve saved for future reference.",
                 style: TextStyle(fontSize: 15, color: Colors.black),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
 
-              const SizedBox(height: 16),
-
+              //const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -126,6 +131,8 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
     colleges = await StudentService.getFavoriteColleges(
       profile.profile.value!.id,
     );
-    setState(() {});
+    shortlistedCollegesController.shortlistedCollegesCount.value =
+        colleges.length; // Update the count in controller
+    setState(() {}); // Trigger a rebuild to update the UI
   }
 }

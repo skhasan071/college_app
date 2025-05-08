@@ -11,6 +11,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../view_model/controller.dart';
+import '../Setting&Support/contact_details.dart';
+import 'complete_profile_page.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -47,6 +49,17 @@ class ProfilePage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        // Add the Edit button beside the name
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              // Navigate to the CompleteProfilePage for editing
+                              Get.to(() => CompleteProfilePage(isEditing: true));
+                            },
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -96,21 +109,21 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Obx(
-                () =>
-                    profileController.isFullProfileEnable.value
-                        ? EducationPreferenceCards()
-                        : ElevatedButton(
-                          onPressed: () {
-                            profileController.isFullProfileEnable.value = true;
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                          ),
-                          child: const Text(
-                            "View Profile",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
+                    () =>
+                profileController.isFullProfileEnable.value
+                    ? EducationPreferenceCards()
+                    : ElevatedButton(
+                  onPressed: () {
+                    profileController.isFullProfileEnable.value = true;
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                  ),
+                  child: const Text(
+                    "View Profile",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
               const Divider(height: 40),
               SettingsTile(
@@ -121,9 +134,12 @@ class ProfilePage extends StatelessWidget {
                 },
               ),
 
-              const SettingsTile(
+              SettingsTile(
                 icon: Icons.contact_mail,
                 title: "Contact Details",
+                onTap: () {
+                  Get.to(() => ContactDetailsPage());
+                },
               ),
               SettingsTile(
                 icon: Icons.privacy_tip,
