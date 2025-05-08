@@ -77,13 +77,13 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: const [
-                          Filter(title: "View All"),
+                          /*  Filter(title: "View All", section: ''),
                           SizedBox(width: 8),
-                          Filter(title: "Engineering"),
+                          Filter(title: "Engineering", section: ''),
                           SizedBox(width: 8),
-                          Filter(title: "Medical"),
+                          Filter(title: "Medical", section: ''),
                           SizedBox(width: 8),
-                          Filter(title: "Dont Know"),
+                          Filter(title: "Dont Know", section: ''),*/
                         ],
                       ),
                     ),
