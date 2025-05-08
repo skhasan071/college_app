@@ -6,6 +6,7 @@ import 'package:college_app/main.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view_model/controller.dart';
+import 'package:college_app/view_model/filterController.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/saveController.dart';
 import 'package:college_app/view_model/themeController.dart';
@@ -25,8 +26,7 @@ class _CollegesState extends State<Colleges> {
   var controller = Get.put(Controller());
   var saveCtrl = Get.put(saveController());
   var profile = Get.put(ProfileController());
-
-
+  var filter = Get.put(FilterController());
   List<College> colleges = [];
   List<College> countries = [];
   List<College> states = [];
@@ -34,6 +34,7 @@ class _CollegesState extends State<Colleges> {
   List<College> rankings = [];
   List<College> privates = [];
   bool isLoading = false; // To track loading state
+  Map<String, String?> selectedStreamsBySection = {};
 
   @override
   void initState() {
@@ -73,7 +74,7 @@ class _CollegesState extends State<Colleges> {
               _buildBox(
                 title: "Which colleges match your preferences?",
                 buttonText: "Predict My College",
-                pageNo: 3
+                pageNo: 3,
               ),
 
               states.isNotEmpty
@@ -92,7 +93,7 @@ class _CollegesState extends State<Colleges> {
               _buildBox(
                 title: "Want the latest insights on colleges?",
                 buttonText: "Read Insights",
-                pageNo: 2
+                pageNo: 2,
               ),
             ],
           ),
@@ -102,6 +103,18 @@ class _CollegesState extends State<Colleges> {
   }
 
   Widget _buildSection(String title, List<College> data) {
+    List<College> getFilteredColleges() {
+      final sectionSelectedStream = selectedStreamsBySection[title];
+
+      if (sectionSelectedStream == null || sectionSelectedStream.isEmpty) {
+        return data;
+      }
+
+      return data.where((college) {
+        return college.stream == sectionSelectedStream;
+      }).toList();
+    }
+
     final ScrollController scrollController = ScrollController();
 
     return Obx(() {
@@ -148,15 +161,27 @@ class _CollegesState extends State<Colleges> {
                   child: Container(
                     height: 50,
                     child: ListView.builder(
-                        itemBuilder: (context, index){
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Filter(title: profile.interestedStreams[index]),
-                              SizedBox(width: 8,)
-                            ],
-                          );
-                        }, itemCount: profile.interestedStreams.length, shrinkWrap: true, scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Filter(
+                              title: profile.interestedStreams[index],
+                              section: title,
+                              onStreamSelected: (stream) {
+                                setState(() {
+                                  selectedStreamsBySection[title] = stream;
+                                });
+                              },
+                            ),
+                            SizedBox(width: 8),
+                          ],
+                        );
+                      },
+
+                      itemCount: profile.interestedStreams.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
                     ),
                   ),
                 ),
@@ -169,15 +194,15 @@ class _CollegesState extends State<Colleges> {
                   child: ListView.builder(
                     controller: scrollController,
                     scrollDirection: Axis.horizontal,
-                    itemCount: data.length,
+                    itemCount: getFilteredColleges().length,
+
                     itemBuilder:
                         (context, index) => GestureDetector(
                           onTap: () async {
                             setState(() {
-                              isLoading = true; // Show loader on click
+                              isLoading = true;
                             });
 
-                            // Simulate loading delay (e.g., 1 second)
                             await Future.delayed(Duration(seconds: 5));
 
                             // Navigate to CollegeDetail
@@ -186,33 +211,38 @@ class _CollegesState extends State<Colleges> {
                               MaterialPageRoute(
                                 builder:
                                     (context) => CollegeDetail(
-                                      college: data[index],
-                                      collegeName: data[index].name,
-                                      lat: data[index].lat,
-                                      long: data[index].long,
-                                      state: data[index].state,
-                                      collegeImage:data[index].image,
+                                      college:
+                                          getFilteredColleges()[index], // Pass filtered college
+                                      collegeName:
+                                          getFilteredColleges()[index].name,
+                                      lat: getFilteredColleges()[index].lat,
+                                      long: getFilteredColleges()[index].long,
+                                      state: getFilteredColleges()[index].state,
+                                      collegeImage:
+                                          getFilteredColleges()[index].image,
                                     ),
                               ),
                             );
 
                             setState(() {
-                              isLoading = false; // Hide loader after navigation
+                              isLoading = false;
                             });
                           },
                           child: CardStructure(
-                            collegeID: data[index].id,
-                            collegeName: data[index].name,
-                            coursesCount: data[index].courseCount,
-                            feeRange: data[index].feeRange,
-                            state: data[index].state,
-                            ranking: data[index].ranking.toString(),
+                            collegeID: getFilteredColleges()[index].id,
+                            collegeName: getFilteredColleges()[index].name,
+                            coursesCount:
+                                getFilteredColleges()[index].courseCount,
+                            feeRange: getFilteredColleges()[index].feeRange,
+                            state: getFilteredColleges()[index].state,
+                            ranking:
+                                getFilteredColleges()[index].ranking.toString(),
                             studId:
                                 !controller.isGuestIn.value
                                     ? profile.profile.value!.id
                                     : "Nothing",
-                            clgId: data[index].id,
-                            clg: data[index],
+                            clgId: getFilteredColleges()[index].id,
+                            clg: getFilteredColleges()[index],
                           ),
                         ),
                   ),
@@ -265,7 +295,11 @@ class _CollegesState extends State<Colleges> {
     });
   }
 
-  Widget _buildBox({required String title, required String buttonText, required int pageNo}) {
+  Widget _buildBox({
+    required String title,
+    required String buttonText,
+    required int pageNo,
+  }) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
 
@@ -313,7 +347,6 @@ class _CollegesState extends State<Colleges> {
     if (profile.profile.value != null) {
       List<College> colleges = await StudentService.getFavoriteColleges(
         profile.profile.value!.id,
-
       );
       for (College college in colleges) {
         saveCtrl.savedColleges.add(college.id);

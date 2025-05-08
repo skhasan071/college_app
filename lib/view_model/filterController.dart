@@ -1,11 +1,19 @@
+import 'package:college_app/model/college.dart';
 import 'package:get/get.dart';
 
 class FilterController extends GetxController {
-  var selectedFilter = ''.obs;
+  var allColleges = <College>[].obs;
+  var filteredColleges = <String, List<College>>{}.obs;
+  var selectedFilters = <String, String>{}.obs;
 
-  void selectFilter(String title) {
-    selectedFilter.value = title;
+  void selectFilterForSection(String section, String stream) {
+    selectedFilters[section] = stream;
+    filteredColleges[section] =
+        allColleges.where((college) {
+          return college.stream == stream;
+        }).toList();
   }
 
-  bool isSelected(String title) => selectedFilter.value == title;
+  bool isSelected(String section, String stream) =>
+      selectedFilters[section] == stream;
 }

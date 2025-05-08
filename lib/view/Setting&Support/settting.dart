@@ -9,91 +9,94 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isNotificationOn = false;
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Scaffold(
         backgroundColor: Colors.white,
-        title: const Text(
-          'Settings',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          backgroundColor: theme.filterSelectedColor,
+          foregroundColor: theme.filterTextColor,
+          title: const Text(
+            'Settings',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Get.back(),
+          ),
         ),
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Get.back(),
+        body: ListView(
+          children: [
+            const SizedBox(height: 10),
+
+            _buildTile(
+              title: "Update Profile",
+              subtitle:
+                  "Update your Name, Mobile Number, Study In, Passed In, City.",
+              icon: Icons.account_circle_outlined,
+              onTap: () => Get.to(() => CompleteProfilePage(isEditing: true)),
+              iconColor: const Color(0xFF1E88E5), // Blue 600
+            ),
+
+            const Divider(),
+
+            _buildTile(
+              title: "Choose theme",
+              subtitle: "System default",
+              icon: Icons.brightness_6_outlined,
+              iconColor: Color(0xFF8E24AA), // Purple 600
+              onTap: () => Get.to(() => ThemePage()),
+            ),
+            const Divider(),
+
+            StatefulBuilder(
+              builder: (context, setState) {
+                return SwitchListTile(
+                  value: isNotificationOn,
+                  onChanged: (val) {
+                    setState(() => isNotificationOn = val);
+                  },
+                  secondary: const Icon(
+                    Icons.notifications_none,
+                    size: 35,
+                    color: Color(0xFFF4511E),
+                  ), // Deep Orange 600
+
+                  title: const Text(
+                    "Notifications",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  subtitle: const Text(
+                    "Choose when to get notified about colleges that match your filters.",
+                  ),
+                );
+              },
+            ),
+            const Divider(),
+
+            _buildTile(
+              title: "Language",
+              subtitle: "English",
+              icon: Icons.language,
+              iconColor: Color(0xFF43A047), // Green 600
+              onTap: () => Get.to(() => const LanguagePage()),
+            ),
+            const Divider(),
+
+            _buildTile(
+              title: "Version",
+              subtitle: "1.0.0",
+              icon: Icons.info_outline,
+              iconColor: Color(0xFF757575), // Grey 600
+              onTap: () {},
+            ),
+
+            const Divider(),
+          ],
         ),
-      ),
-      body: ListView(
-        children: [
-          const SizedBox(height: 10),
-
-          _buildTile(
-            title: "Update Profile",
-            subtitle:
-                "Update your Name, Mobile Number, Study In, Passed In, City.",
-            icon: Icons.account_circle_outlined,
-            onTap: () => Get.to(() => CompleteProfilePage(isEditing: true)),
-            iconColor: const Color(0xFF1E88E5), // Blue 600
-          ),
-
-          const Divider(),
-
-          _buildTile(
-            title: "Choose theme",
-            subtitle: "System default",
-            icon: Icons.brightness_6_outlined,
-            iconColor: Color(0xFF8E24AA), // Purple 600
-            onTap: () => Get.to(() => ThemePage()),
-          ),
-          const Divider(),
-
-          StatefulBuilder(
-            builder: (context, setState) {
-              return SwitchListTile(
-                value: isNotificationOn,
-                onChanged: (val) {
-                  setState(() => isNotificationOn = val);
-                },
-                secondary: const Icon(
-                  Icons.notifications_none,
-                  size: 35,
-                  color: Color(0xFFF4511E),
-                ), // Deep Orange 600
-
-                title: const Text(
-                  "Notifications",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                subtitle: const Text(
-                  "Choose when to get notified about colleges that match your filters.",
-                ),
-              );
-            },
-          ),
-          const Divider(),
-
-          _buildTile(
-            title: "Language",
-            subtitle: "English",
-            icon: Icons.language,
-            iconColor: Color(0xFF43A047), // Green 600
-            onTap: () => Get.to(() => const LanguagePage()),
-          ),
-          const Divider(),
-
-          _buildTile(
-            title: "Version",
-            subtitle: "1.0.0",
-            icon: Icons.info_outline,
-            iconColor: Color(0xFF757575), // Grey 600
-            onTap: () {},
-          ),
-
-          const Divider(),
-        ],
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildTile({
@@ -139,57 +142,62 @@ class ThemePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Scaffold(
         backgroundColor: Colors.white,
-        title: const Text(
-          'Choose Theme',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          backgroundColor: theme.filterSelectedColor,
+          foregroundColor: theme.filterTextColor,
+          title: const Text(
+            'Choose Theme',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          elevation: 1,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Obx(() {
-        final selectedIndex = ThemeController.to.selectedThemeIndex.value;
+        body: Obx(() {
+          final selectedIndex = ThemeController.to.selectedThemeIndex.value;
 
-        return ListView.separated(
-          itemCount: themeTitles.length,
-          separatorBuilder:
-              (context, index) => Divider(
-                color: Colors.grey.shade400,
-                thickness: 1,
-                indent: 16,
-                endIndent: 16,
-              ),
-          itemBuilder: (context, index) {
-            final isSelected = selectedIndex == index;
-            final color = themeColors[index];
-
-            return ListTile(
-              onTap: () => ThemeController.to.changeTheme(index),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-              title: Text(
-                themeTitles[index],
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: 'Cursive',
-                  color: color,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          return ListView.separated(
+            itemCount: themeTitles.length,
+            separatorBuilder:
+                (context, index) => Divider(
+                  color: Colors.grey.shade400,
+                  thickness: 1,
+                  indent: 16,
+                  endIndent: 16,
                 ),
-              ),
-              trailing:
-                  isSelected ? Icon(Icons.check_circle, color: color) : null,
-            );
-          },
-        );
-      }),
-    );
+            itemBuilder: (context, index) {
+              final isSelected = selectedIndex == index;
+              final color = themeColors[index];
+
+              return ListTile(
+                onTap: () => ThemeController.to.changeTheme(index),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                title: Text(
+                  themeTitles[index],
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontFamily: 'Cursive',
+                    color: color,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+                trailing:
+                    isSelected ? Icon(Icons.check_circle, color: color) : null,
+              );
+            },
+          );
+        }),
+      );
+    });
   }
 }
 

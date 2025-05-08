@@ -13,8 +13,6 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../../services/shortListCollegeController.dart';
 
-
-
 class ShortlistedCollegesPage extends StatefulWidget {
   ShortlistedCollegesPage({super.key});
 
@@ -26,8 +24,9 @@ class ShortlistedCollegesPage extends StatefulWidget {
 class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   List<College> colleges = [];
   int shortlistedCollegesCount = 0; // Variable to hold the count
-  final shortlistedCollegesController = Get.put(ShortlistedCollegesController()); // Get the controller
-
+  final shortlistedCollegesController = Get.put(
+    ShortlistedCollegesController(),
+  ); // Get the controller
 
   var profile = Get.find<ProfileController>();
 
@@ -54,7 +53,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
               ),
               const SizedBox(height: 4),
               Text(
-                  "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})", // Display count here
+                "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})", // Display count here
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Clr.primaryBtnClr,
@@ -66,10 +65,9 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                 "Explore the colleges you’ve saved for future reference.",
                 style: TextStyle(fontSize: 15, color: Colors.black),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
 
-              const SizedBox(height: 16),
-
+              //const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -84,13 +82,13 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: const [
-                          Filter(title: "View All"),
+                          /*  Filter(title: "View All", section: ''),
                           SizedBox(width: 8),
-                          Filter(title: "Engineering"),
+                          Filter(title: "Engineering", section: ''),
                           SizedBox(width: 8),
-                          Filter(title: "Medical"),
+                          Filter(title: "Medical", section: ''),
                           SizedBox(width: 8),
-                          Filter(title: "Dont Know"),
+                          Filter(title: "Dont Know", section: ''),*/
                         ],
                       ),
                     ),
@@ -130,8 +128,11 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   }
 
   Future<void> getColleges() async {
-    colleges = await StudentService.getFavoriteColleges(profile.profile.value!.id);
-    shortlistedCollegesController.shortlistedCollegesCount.value = colleges.length; // Update the count in controller
+    colleges = await StudentService.getFavoriteColleges(
+      profile.profile.value!.id,
+    );
+    shortlistedCollegesController.shortlistedCollegesCount.value =
+        colleges.length; // Update the count in controller
     setState(() {}); // Trigger a rebuild to update the UI
   }
 }
