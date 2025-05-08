@@ -217,14 +217,37 @@ class _CompareWithState extends State<CompareWith> {
                             context,
                             MaterialPageRoute(
                               builder:
-                                  (context) => CompareColleges(
-                                    clg: clg,
-                                    college: widget.clg,
-                                    collegeId: widget.collegeId,
+                                  (context) => CollegeDetail(
+                                    college: clg,
+                                    collegeImage: clg.image,
                                     collegeName: clg.name,
+                                    state: clg.state,
+                                    lat: clg.lat,
+                                    long: clg.long,
+                                  ),
+                            ),
+                          );
+                        },
+                        onCompareTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => CompareColleges(
+                                    college: clg,
+                                    clg: clg,
+                                    collegeId: clg.id,
+                                    collegeName: clg.name,
+                                    collegeImage: clg.image,
                                     ranking: clg.ranking.toString(),
                                     feeRange: clg.feeRange,
                                     state: clg.state,
+
+                                    firstCollege:
+                                        widget
+                                            .clg, // original college from previous page
+                                    secondCollege:
+                                        clg, // the new college selected for comparison
                                   ),
                             ),
                           );

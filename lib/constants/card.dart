@@ -25,6 +25,7 @@ class CardStructure extends StatelessWidget {
   final String ranking;
   final String studId;
   final String clgId;
+  final VoidCallback? onCompareTap;
   College clg;
   var pfpController = Get.put(Controller());
 
@@ -32,6 +33,7 @@ class CardStructure extends StatelessWidget {
   CardStructure({
     Key? key,
     this.width,
+    this.onCompareTap,
     required this.clg,
     required this.collegeID,
     required this.collegeName,
@@ -69,8 +71,6 @@ class CardStructure extends StatelessWidget {
                             state: clg.state,
                             lat: clg.lat,
                             long: clg.long,
-                            ranking: '',
-                            feeRange: '',
                           ),
                     ),
                   );
@@ -235,23 +235,7 @@ class CardStructure extends StatelessWidget {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => CompareColleges(
-                                            college: clg,
-                                            clg: clg,
-                                            collegeId: clg.id,
-                                            collegeName: clg.name,
-                                            ranking: ranking,
-                                            feeRange: feeRange,
-                                            state: state,
-                                          ),
-                                    ),
-                                  );
-                                },
+                                onPressed: onCompareTap,
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.black,
                                   backgroundColor: Colors.white,
