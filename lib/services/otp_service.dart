@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class OtpService {
-  final String baseUrl = 'https://tc-ca-server.onrender.com'; // <-- Using localhost:4000 directly
+  final String baseUrl = 'http://localhost:8080';
 
   /// Send OTP to the given phone number
   Future<bool> sendOtp(String phone) async {

@@ -1,3 +1,4 @@
+import 'package:college_app/view/SignUpLogin/mobilenoauth.dart';
 import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:college_app/view_model/data_loader.dart';
 import 'package:college_app/view_model/profile_controller.dart';
@@ -214,7 +215,7 @@ class _SignupPageState extends State<SignupPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MobileSignup()),
+                    MaterialPageRoute(builder: (context) => Mobilenoauth()),
                   );
                 },
                 child: const Text(

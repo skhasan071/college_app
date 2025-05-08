@@ -1,12 +1,11 @@
-import 'package:college_app/model/user.dart';
-import 'package:college_app/services/user_services.dart';
+import 'package:college_app/services/user_services.dart'; // Ensure this import
 import 'package:college_app/view/profiles/choice_preferences.dart';
-import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import '../../constants/ui_helper.dart'; // adjust the path as needed
+import 'package:college_app/view_model/profile_controller.dart';
+import '../../constants/ui_helper.dart';
+import '../../model/user.dart'; // adjust the path as needed
 
 class CompleteProfilePage extends StatelessWidget {
   final bool isEditing;
@@ -43,7 +42,7 @@ class CompleteProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getFields();
+    getFields();  // Fetch the current user profile
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,7 +55,6 @@ class CompleteProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Close button
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
@@ -64,7 +62,6 @@ class CompleteProfilePage extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-
                 const SizedBox(height: 16),
                 Text(
                   isEditing ? "Update your Profile" : "Complete your Profile",
@@ -113,21 +110,21 @@ class CompleteProfilePage extends StatelessWidget {
 
                 buildDropdown(
                   "Studying in",
-                  (val) => studyingIn = val,
+                      (val) => studyingIn = val,
                   studyingItems,
                   profile.profile.value!.studyingIn,
                 ),
                 const SizedBox(height: 16),
                 buildDropdown(
                   "Passed In",
-                  (val) => passedIn = val,
+                      (val) => passedIn = val,
                   passingYearItems,
                   profile.profile.value!.passedIn,
                 ),
                 const SizedBox(height: 16),
                 buildDropdown(
                   "City You Live In",
-                  (val) => city = val,
+                      (val) => city = val,
                   cities,
                   profile.profile.value!.city,
                 ),
@@ -150,9 +147,7 @@ class CompleteProfilePage extends StatelessWidget {
                         String phNo = mobileController.text.trim();
 
                         studyingIn ??= studyingItems[0];
-
                         passedIn ??= passingYearItems[0];
-
                         city ??= cities[0];
 
                         if (phNo.length != 10) {
@@ -180,6 +175,8 @@ class CompleteProfilePage extends StatelessWidget {
                           );
                           return;
                         }
+
+                        // Proceed with updating profile
                         if (name.isNotEmpty &&
                             email.isNotEmpty &&
                             phNo.isNotEmpty &&
@@ -188,14 +185,15 @@ class CompleteProfilePage extends StatelessWidget {
                             city != null) {
                           print(profile.userToken.value);
 
-                          Map<String, dynamic>? data =
-                              await StudentService.addOrUpdateStudent(
-                                token: profile.userToken.value,
-                                mobileNumber: phNo,
-                                studyingIn: studyingIn!,
-                                city: city!,
-                                passedIn: passedIn!,
-                              );
+                          // Make the API call to update profile using StudentService
+                          Map<String, dynamic>? data = await StudentService.addOrUpdateStudent(
+                            token: profile.userToken.value,
+                            mobileNumber: phNo,
+                            studyingIn: studyingIn!,
+                            city: city!,
+                            passedIn: passedIn!,
+                          );
+
                           if (data != null) {
                             profile.profile.value = Student.fromMap(data);
                             if (isEditing) {
@@ -248,11 +246,11 @@ class CompleteProfilePage extends StatelessWidget {
   }
 
   Widget buildDropdown(
-    String label,
-    Function(String?) onChanged,
-    List<String> dropdownItems,
-    val,
-  ) {
+      String label,
+      Function(String?) onChanged,
+      List<String> dropdownItems,
+      val,
+      ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -261,9 +259,9 @@ class CompleteProfilePage extends StatelessWidget {
         DropdownButtonFormField<String>(
           value: dropdownItems.first,
           items:
-              dropdownItems
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+          dropdownItems
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
           onChanged: onChanged,
           decoration: const InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.zero),

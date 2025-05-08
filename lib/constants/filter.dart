@@ -6,21 +6,30 @@ import 'package:get/get.dart';
 
 class Filter extends StatelessWidget {
   final String title;
+  final String section; // For section
   final VoidCallback? onTap;
+  final Function(String) onStreamSelected; // New callback for stream selection
 
-  const Filter({super.key, required this.title, this.onTap});
+  const Filter({
+    super.key,
+    required this.title,
+    required this.section,
+    this.onTap,
+    required this.onStreamSelected, // Pass the callback
+  });
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(FilterController());
+    final controller = Get.find<FilterController>();
 
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
-      final bool selected = controller.isSelected(title);
+      final bool selected = controller.isSelected(section, title);
 
       return GestureDetector(
         onTap: () {
-          controller.selectFilter(title);
+          controller.selectFilterForSection(section, title);
+          onStreamSelected(title); // Pass selected stream here
           if (onTap != null) onTap!();
         },
         child: Container(

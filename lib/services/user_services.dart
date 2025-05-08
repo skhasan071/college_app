@@ -59,37 +59,31 @@ class StudentService {
   }
 
   /// Add or update student profile
-  static Future<Map<String, dynamic>?> addOrUpdateStudent({
+   static Future<Map<String, dynamic>?> addOrUpdateStudent({
     required String token,
     required String mobileNumber,
     required String studyingIn,
     required String city,
-    String? gender,
-    String? dob,
     required String passedIn,
     File? imageFile,
   }) async {
-    final uri = Uri.parse('$_baseUrl/add');
+    final uri = Uri.parse('http://localhost:8080/api/students/add'); // Replace with actual URL
 
     var request = http.MultipartRequest('POST', uri);
 
-    // Headers
+    // Set headers
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Content-Type'] = 'multipart/form-data';
 
-    // Fields
+    // Add fields
     request.fields['mobileNumber'] = mobileNumber;
     request.fields['studyingIn'] = studyingIn;
     request.fields['city'] = city;
-    if (gender != null) request.fields['gender'] = gender;
-    if (dob != null) request.fields['dob'] = dob;
     request.fields['passedIn'] = passedIn;
 
-    // Image file (optional)
+    // Add image file (if provided)
     if (imageFile != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath('file', imageFile.path),
-      );
+      request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
     }
 
     try {
@@ -107,6 +101,7 @@ class StudentService {
       return null;
     }
   }
+
 
   static Future<Map<String, dynamic>?> saveCoursePreferences({
     required String token,
@@ -171,7 +166,7 @@ class StudentService {
     }
   }
 
-  static Future<List<College>> getFavoriteColleges(String studentId) async {
+  static Future<List<College>> getFavoriteColleges(String studentId, [void setState]) async {
     try {
       final uri = Uri.parse(
         'https://tc-ca-server.onrender.com/api/students/favorites/$studentId',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../../services/otp_service.dart'; // Make sure it's named like this
+import '../../services/otp_service.dart';
 import 'otpscreen.dart';
 
 class Mobilenoauth extends StatefulWidget {
@@ -10,8 +9,7 @@ class Mobilenoauth extends StatefulWidget {
 
 class _MobilenoauthState extends State<Mobilenoauth> {
   final TextEditingController phoneController = TextEditingController();
-  final OtpService otpService =
-      OtpService(); // baseUrl is set in the service file
+  final OtpService otpService = OtpService(); // baseUrl is set in the service file
 
   bool isLoading = false;
 
@@ -35,8 +33,7 @@ class _MobilenoauthState extends State<Mobilenoauth> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder:
-              (context) => OtpScreen(phone: phone, sessionId: '', fullName: ''),
+          builder: (context) => OtpScreen(phone: phone),
         ),
       );
     } else {
@@ -55,7 +52,10 @@ class _MobilenoauthState extends State<Mobilenoauth> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/otp_image.png', height: 150),
+              Image.asset(
+                'assets/otp_image.png',
+                height: 150,
+              ),
               SizedBox(height: 20),
               Text(
                 "Login with a Mobile Number",
@@ -77,22 +77,14 @@ class _MobilenoauthState extends State<Mobilenoauth> {
                   children: [
                     Text(
                       "+91",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 10),
                     Expanded(
                       child: TextField(
                         controller: phoneController,
-
                         keyboardType: TextInputType.number,
                         maxLength: 10,
-                        inputFormatters: [
-                          FilteringTextInputFormatter
-                              .digitsOnly, // Only allows digits
-                        ],
                         decoration: InputDecoration(
                           counterText: "",
                           border: InputBorder.none,
@@ -115,13 +107,12 @@ class _MobilenoauthState extends State<Mobilenoauth> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child:
-                      isLoading
-                          ? CircularProgressIndicator(color: Colors.white)
-                          : Text(
-                            "Continue",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
+                  child: isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                    "Continue",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
               ),
             ],

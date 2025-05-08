@@ -70,11 +70,16 @@ class _HomePageState extends State<HomePage> {
       child: CollegeResultsPage(),
     ),
   ];
-
+  int shortlistedCollegesCount = 0; // Variable to hold the count
   @override
   void initState() {
     super.initState();
     widget.token != "" ? getUser() : controller.isGuestIn(true);
+  }
+  void updateShortlistedCount(int count) {
+    setState(() {
+      shortlistedCollegesCount = count;
+    });
   }
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -90,7 +95,7 @@ class _HomePageState extends State<HomePage> {
 
       body: Obx(() => controller.isLoggedIn.value || controller.isGuestIn.value? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
 
-      drawer: DrawerWidget(scaffoldKey),
+      drawer: DrawerWidget(scaffoldKey,shortlistedCollegesCount),
 
       bottomNavigationBar: getBottomNavBar(),
     );

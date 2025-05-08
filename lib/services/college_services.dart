@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../model/Faculty.dart';
 import '../model/Hostel.dart';
-import '../model/Placement.dart';
 import '../model/admission_process.dart';
 import '../model/campus.dart';
 import '../model/college.dart';

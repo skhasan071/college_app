@@ -5,18 +5,21 @@ class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black, // Modern black app bar
-        title: const Text('Notifications',style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black, // Modern black app bar
+        title: const Text(
+          'Notifications',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Center(
         child: Text(
           'No Notifications Available',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 18, color: Colors.black),
         ),
       ),
     );
-  }}
+  }
+}
