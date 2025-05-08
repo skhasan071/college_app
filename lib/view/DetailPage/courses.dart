@@ -1,3 +1,4 @@
+import 'package:college_app/main.dart';
 import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,12 @@ class Courses extends StatefulWidget {
 }
 
 class _CoursesState extends State<Courses> {
-  List<Course> courses = [];
+  List<Course> main_courses = [];
+  List<Course> filter_courses = [];
+  List<Course> eng_courses = [];
+  List<Course> med_courses = [];
+  List<Course> arts_courses = [];
+  List<Course> business_courses = [];
 
 
   @override
@@ -81,7 +87,7 @@ class _CoursesState extends State<Courses> {
                             'All Courses',
                             'Engineering',
                             'Medical',
-                            'Business',
+                            'Management',
                             'Arts',
                           ]
                           .map(
@@ -97,20 +103,91 @@ class _CoursesState extends State<Courses> {
                 ),
               ),
 
-              courses.isNotEmpty
+              filter_courses.isNotEmpty
                   ? Expanded(
                     child: TabBarView(
-                      children: List.generate(
-                        5,
-                        (index) => Container(
-                          decoration: BoxDecoration(
-                            gradient: theme.backgroundGradient,
-                            boxShadow: theme.boxShadow,
-                            borderRadius: BorderRadius.zero,
-                          ),
-                          child: _buildCourseList(courses),
-                        ),
-                      ),
+                      children: [
+                        ListView.builder(itemBuilder: (context, index){
+
+                          Course course = filter_courses[index];
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _buildCourseCard(
+                              courseName: course.courseName,
+                              duration: course.duration,
+                              fees: '\$${course.fees}',
+                              eligibility: course.examType,
+                              intake: 'Sep 2025',
+                            ),
+                          );
+
+                        }, itemCount: filter_courses.length, shrinkWrap: true,),
+                        ListView.builder(itemBuilder: (context, index){
+
+                          Course course = eng_courses[index];
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _buildCourseCard(
+                              courseName: course.courseName,
+                              duration: course.duration,
+                              fees: '\$${course.fees}',
+                              eligibility: course.examType,
+                              intake: 'Sep 2025',
+                            ),
+                          );
+
+                        }, itemCount: eng_courses.length, shrinkWrap: true,),
+                        ListView.builder(itemBuilder: (context, index){
+
+                          Course course = med_courses[index];
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _buildCourseCard(
+                              courseName: course.courseName,
+                              duration: course.duration,
+                              fees: '\$${course.fees}',
+                              eligibility: course.examType,
+                              intake: 'Sep 2025',
+                            ),
+                          );
+
+                        }, itemCount: med_courses.length, shrinkWrap: true,),
+                        ListView.builder(itemBuilder: (context, index){
+
+                          Course course = business_courses[index];
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _buildCourseCard(
+                              courseName: course.courseName,
+                              duration: course.duration,
+                              fees: '\$${course.fees}',
+                              eligibility: course.examType,
+                              intake: 'Sep 2025',
+                            ),
+                          );
+
+                        }, itemCount: business_courses.length, shrinkWrap: true,),
+                        ListView.builder(itemBuilder: (context, index){
+
+                          Course course = arts_courses[index];
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _buildCourseCard(
+                              courseName: course.courseName,
+                              duration: course.duration,
+                              fees: '\$${course.fees}',
+                              eligibility: course.examType,
+                              intake: 'Sep 2025',
+                            ),
+                          );
+
+                        }, itemCount: arts_courses.length, shrinkWrap: true,),
+                      ]
                     ),
                   )
                   : Column(
@@ -161,29 +238,6 @@ class _CoursesState extends State<Courses> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCourseList(List<Course> courses) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        children:
-            courses
-                .map(
-                  (course) => Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: _buildCourseCard(
-                      courseName: course.courseName,
-                      duration: course.duration,
-                      fees: '\$${course.fees}',
-                      eligibility: course.examType,
-                      intake: 'Sep 2025',
-                    ),
-                  ),
-                )
-                .toList(),
       ),
     );
   }
@@ -291,7 +345,27 @@ class _CoursesState extends State<Courses> {
   }
 
   getCourse() async {
-    courses = await CollegeServices.getCoursesByCollege(widget.uid);
+    main_courses = await CollegeServices.getCoursesByCollege(widget.uid);
+    filter_courses = main_courses;
+    eng_courses = getFiltered(filter: "Engineering");
+    med_courses = getFiltered(filter: "Medical");
+    arts_courses = getFiltered(filter: "Arts");
+    business_courses = getFiltered(filter: "management");
     setState(() {});
   }
+
+  List<Course> getFiltered({required String filter}){
+
+    List<Course> temp = [];
+
+    for(Course course in main_courses){
+      if(course.category.toLowerCase() == filter.toLowerCase()){
+        temp.add(course);
+      }
+    }
+
+    return temp;
+
+  }
+
 }

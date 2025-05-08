@@ -68,7 +68,7 @@ class DrawerWidget extends StatelessWidget {
                       _buildTile(
                         Icons.favorite_border,
                         'Shortlist/Favorites',
-                        trailing: _badge('24'),
+                        trailing: _badge(controller.isGuestIn.value ? "Login First" : "*"),
                         callback: () {
                           if (controller.isGuestIn.value) {
                             scaffoldKey.currentState?.closeDrawer();

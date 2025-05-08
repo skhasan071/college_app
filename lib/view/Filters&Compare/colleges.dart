@@ -33,7 +33,6 @@ class _CollegesState extends State<Colleges> {
   List<College> cities = [];
   List<College> rankings = [];
   List<College> privates = [];
-  List<College> public = [];
   bool isLoading = false; // To track loading state
 
   @override
@@ -77,7 +76,7 @@ class _CollegesState extends State<Colleges> {
                 pageNo: 3
               ),
 
-              rankings.isNotEmpty
+              states.isNotEmpty
                   ? _buildSection("Colleges Based on State", states)
                   : Container(),
               countries.isNotEmpty
@@ -85,9 +84,6 @@ class _CollegesState extends State<Colleges> {
                   : Container(),
               cities.isNotEmpty
                   ? _buildSection("Colleges Based on City", cities)
-                  : Container(),
-              controller.isLoggedIn.value && public.isNotEmpty
-                  ? _buildSection("Popular Government Colleges", public)
                   : Container(),
               controller.isLoggedIn.value && privates.isNotEmpty
                   ? _buildSection("Popular Private Colleges", privates)
@@ -149,16 +145,19 @@ class _CollegesState extends State<Colleges> {
                 // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: ListView.builder(
-                      itemBuilder: (context, index){
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Filter(title: profile.interestedStreams[0]),
-                            SizedBox(width: 8,)
-                          ],
-                        );
-                      }, itemCount: profile.interestedStreams.length, shrinkWrap: true, scrollDirection: Axis.horizontal,
+                  child: Container(
+                    height: 50,
+                    child: ListView.builder(
+                        itemBuilder: (context, index){
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Filter(title: profile.interestedStreams[index]),
+                              SizedBox(width: 8,)
+                            ],
+                          );
+                        }, itemCount: profile.interestedStreams.length, shrinkWrap: true, scrollDirection: Axis.horizontal,
+                    ),
                   ),
                 ),
 
@@ -192,7 +191,7 @@ class _CollegesState extends State<Colleges> {
                                       lat: data[index].lat,
                                       long: data[index].long,
                                       state: data[index].state,
-                                      collegeImage:data[index].image,
+                                      collegeImage:data[index].image, ranking: data[index].ranking.toString(), feeRange: data[index].feeRange,
                                     ),
                               ),
                             );

@@ -267,6 +267,8 @@ class _HomePageState extends State<HomePage> {
     print(widget.token);
     Student? student = await StudentService().getStudent(widget.token);
     profileController.profile.value = student;
+    profileController.interestedStreams.value = student!.interestedStreams!;
+    profileController.coursesInterested.value = student.coursesInterested!;
     controller.isLoggedIn.value = true;
   }
 

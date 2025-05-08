@@ -1,5 +1,6 @@
 import 'package:college_app/services/auth_services.dart';
 import 'package:college_app/view/SignUpLogin/signuppage.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final ProfileController profileController = Get.put(ProfileController());
 
   var loader = Get.put(Loader());
 
