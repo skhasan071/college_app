@@ -195,7 +195,6 @@ class _CollegesState extends State<Colleges> {
                                     ),
                               ),
                             );
-
                             setState(() {
                               isLoading = false; // Hide loader after navigation
                             });
