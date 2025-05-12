@@ -6,7 +6,14 @@ class Cutoff extends StatelessWidget {
   final String collegeId;
   final String collegeName;
 
-  const Cutoff({super.key, required this.collegeId, required this.collegeName});
+  final String collegeImage;
+
+  const Cutoff({
+    super.key,
+    required this.collegeId,
+    required this.collegeName,
+    required this.collegeImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +69,17 @@ class Cutoff extends StatelessWidget {
     return Row(
       children: [
         Container(
-          height: 75,
           width: 75,
-          decoration: BoxDecoration(color: Colors.grey[300]),
-          child: const Icon(Icons.account_balance, size: 28),
+          height: 75,
+          decoration: BoxDecoration(color: Colors.grey.shade300),
+          child: Center(
+            child: Image.network(
+              collegeImage,
+              height: 180,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(

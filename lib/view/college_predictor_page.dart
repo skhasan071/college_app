@@ -17,7 +17,6 @@ class CollegePredictorPage extends StatefulWidget {
 class _CollegePredictorScreenState extends State<CollegePredictorPage> {
   String? selectedState;
   String? selectedCategory;
-  String? selectedGender;
   String? selectedExam;
   String? selectedRankType;
   String rank = '';
@@ -91,7 +90,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     'Other',
   ];
 
-  final List<String> genders = ['Male', 'Female', 'Other'];
+  final List<String> genders = ['Male', 'Female', 'Both'];
 
   @override
   void initState() {
@@ -156,10 +155,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                 setState(() => selectedRankType = value);
               }, rankTypes),
 
-              _buildLabel("Select your Gender"),
-              _buildDropdown(selectedGender, (value) {
-                setState(() => selectedGender = value);
-              }, genders),
 
               const SizedBox(height: 14),
 
@@ -181,7 +176,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Check for invalid exam-state combo
                       if (selectedExam == "MHT-CET" && selectedState != "Maharashtra") {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -194,7 +188,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                             duration: Duration(seconds: 4),
                           ),
                         );
-                        return; // ⛔ don’t proceed
+                        return;
                       }
 
                       List<College> colleges = await CollegeServices.predictColleges(

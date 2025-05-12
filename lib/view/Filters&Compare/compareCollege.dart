@@ -97,8 +97,8 @@ class CompareColleges extends StatelessWidget {
               _infoRow('Courses Offered', [' - ', ' - ']),
               _infoRow('Rating', [' - ', ' - ']),
               _infoRow('NIRF Ranking', [
-                '₹${firstCollege.ranking.toString()}',
-                '₹${secondCollege.ranking.toString()}',
+                firstCollege.ranking.toString(),
+                secondCollege.ranking.toString(),
               ]),
 
               _infoRow('Admission Probability', [' - ', ' - ']),

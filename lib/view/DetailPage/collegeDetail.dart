@@ -360,14 +360,15 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                 () => Admission(collegeId: widget.college.id),
                               );
                               break;
-                            // case "Cost & Location":
-                            //   Get.to(
-                            //     () => Cost(
-                            //       collegeId: widget.college.id,
-                            //       collegeName: widget.college.name,
-                            //     ),
-                            //   );
-                            //   break;
+                            case "Cost & Location":
+                              Get.to(
+                                () => Cost(
+                                  collegeId: widget.college.id,
+                                  collegeName: widget.college.name,
+                                  collegeImage: widget.college.image,
+                                ),
+                              );
+                              break;
 
                             case "Distance from Hometown":
                               if (widget.lat != null && widget.long != null) {
@@ -401,14 +402,15 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                 () => Hostel(collegeId: widget.college.id),
                               );
                               break;
-                            // case "Cut-offs & Ranking":
-                            //   Get.to(
-                            //     () => Cutoff(
-                            //       collegeId: widget.college.id,
-                            //       collegeName: widget.college.name,
-                            //     ),
-                            //   );
-                            //   break;
+                            case "Cut-offs & Ranking":
+                              Get.to(
+                                () => Cutoff(
+                                  collegeId: widget.college.id,
+                                  collegeName: widget.college.name,
+                                  collegeImage: widget.college.image,
+                                ),
+                              );
+                              break;
                           }
 
                           Future.delayed(const Duration(milliseconds: 100), () {
