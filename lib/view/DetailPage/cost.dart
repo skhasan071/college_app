@@ -1,17 +1,54 @@
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/model/cost.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Cost extends StatelessWidget {
   final String collegeId;
   final String collegeName;
-  const Cost({super.key, required this.collegeId, required this.collegeName});
+  final String collegeImage;
+
+  const Cost({
+    super.key,
+    required this.collegeId,
+    required this.collegeName,
+    required this.collegeImage,
+  });
+
+  Future<CostModel?> fetchCostData(String collegeId) async {
+    try {
+      final response = await http.get(
+        Uri.parse("http://192.168.1.117:8080/api/$collegeId"),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        final costDetails = jsonData['costDetails'];
+        if (costDetails != null) {
+          return CostModel.fromJson(costDetails);
+        } else {
+          return null;
+        }
+      } else {
+        print("API call failed: ${response.statusCode}");
+        print("Response body: ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
+
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -29,142 +66,171 @@ class Cost extends StatelessWidget {
           ),
           backgroundColor: Colors.white,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 150,
-                color: Colors.grey.shade200,
-                child: const Center(
-                  child: Icon(Icons.image, size: 60, color: Colors.grey),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      collegeName,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+        body: FutureBuilder<CostModel?>(
+          future: fetchCostData(collegeId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError || snapshot.data == null) {
+              return const Center(child: Text("Failed to load data"));
+            }
+
+            final cost = snapshot.data!;
+
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: 150,
+                    color: Colors.grey.shade200,
+                    child: Center(
+                      child: Image.network(
+                        collegeImage,
+                        height: 180,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      "450 Serra Mall, Stanford, CA 94305",
-                      style: TextStyle(color: Colors.blue, fontSize: 15),
-                    ),
-                    const SizedBox(height: 10),
-
-                    Row(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: Icon(Icons.directions),
-                          label: Text("Directions"),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
+                        Text(
+                          collegeName,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 15),
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: Icon(Icons.share),
-                          label: Text("Share"),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            backgroundColor: Colors.blueAccent,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
+                        const SizedBox(height: 4),
+                        Text(
+                          cost.address,
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            fontSize: 15,
                           ),
+                        ),
+                        const SizedBox(height: 10),
+                        /*   Row(
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: const Icon(Icons.directions),
+                              label: const Text("Directions"),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            ElevatedButton.icon(
+                              onPressed: () {},
+                              icon: const Icon(Icons.share),
+                              label: const Text("Share"),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                backgroundColor: Colors.blueAccent,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),*/
+                        const SizedBox(height: 16),
+                        const Divider(color: Colors.grey, thickness: 0.5),
+                        const SizedBox(height: 22),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.only(bottom: 24),
+                          decoration: BoxDecoration(
+                            gradient: theme.backgroundGradient,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Cost of Living",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              _buildCostItem(
+                                "Monthly Rent (1 BHK)",
+                                "\$${cost.costOfLiving.monthlyRent}",
+                              ),
+                              _buildCostItem(
+                                "Monthly Utilities",
+                                "\$${cost.costOfLiving.monthlyUtilities}",
+                              ),
+                              _buildCostItem(
+                                "Monthly Transport",
+                                "\$${cost.costOfLiving.monthlyTransport}",
+                              ),
+                              _buildCostItem(
+                                "Monthly Groceries",
+                                "\$${cost.costOfLiving.monthlyGroceries}",
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Divider(color: Colors.grey, thickness: 0.5),
+                        const SizedBox(height: 22),
+                        const Text(
+                          "Nearby Places",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        _buildNearbyItem(
+                          Icons.restaurant,
+                          "Restaurants",
+                          "${cost.nearbyPlaces.restaurants.count}+ within ${cost.nearbyPlaces.restaurants.withinMiles} miles",
+                        ),
+                        const SizedBox(height: 8),
+                        _buildNearbyItem(
+                          Icons.local_cafe,
+                          "Cafes",
+                          "${cost.nearbyPlaces.cafes.count}+ within ${cost.nearbyPlaces.cafes.withinMiles} miles",
+                        ),
+                        const SizedBox(height: 8),
+                        _buildNearbyItem(
+                          Icons.shopping_bag,
+                          "Shopping",
+                          "${cost.nearbyPlaces.shopping.count}+ within ${cost.nearbyPlaces.shopping.withinMiles} miles",
+                        ),
+                        const SizedBox(height: 8),
+                        _buildNearbyItem(
+                          Icons.directions_transit,
+                          "Public Transport",
+                          "${cost.nearbyPlaces.publicTransport.stations} stations nearby",
                         ),
                       ],
                     ),
-
-                    const SizedBox(height: 16),
-                    Divider(color: Colors.grey, thickness: 0.5),
-                    const SizedBox(height: 22),
-
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      margin: const EdgeInsets.only(bottom: 24),
-                      decoration: BoxDecoration(
-                        gradient: theme.backgroundGradient,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Cost of Living",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          _buildCostItem("Monthly Rent (1 BHK)", "\$2,800"),
-                          _buildCostItem("Monthly Utilities", "\$150"),
-                          _buildCostItem("Monthly Transport", "\$100"),
-                          _buildCostItem("Monthly Groceries", "\$400"),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Divider(color: Colors.grey, thickness: 0.5),
-                    const SizedBox(height: 22),
-
-                    const Text(
-                      "Nearby Places",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildNearbyItem(
-                      Icons.restaurant,
-                      "Restaurants",
-                      "25+ within 1 mile",
-                    ),
-                    const SizedBox(height: 16),
-                    _buildNearbyItem(
-                      Icons.local_cafe,
-                      "Cafes",
-                      "15+ within 1 mile",
-                    ),
-                    const SizedBox(height: 16),
-                    _buildNearbyItem(
-                      Icons.shopping_bag,
-                      "Shopping",
-                      "10+ within 2 miles",
-                    ),
-                    const SizedBox(height: 16),
-                    _buildNearbyItem(
-                      Icons.directions_transit,
-                      "Public Transport",
-                      "5 stations nearby",
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       );
     });
@@ -233,7 +299,7 @@ class Cost extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ],
             ),
