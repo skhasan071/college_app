@@ -162,7 +162,7 @@ class CollegeServices {
     required dynamic rankOrPercentile,
     required String state, // ✅ new field
   }) async {
-    final uri = Uri.parse('http://localhost:8080/api/colleges/predict');
+    final uri = Uri.parse('https://tc-ca-server.onrender.com/api/colleges/predict');
 
     try {
       final response = await http.post(

@@ -86,18 +86,52 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
+    return WillPopScope(
+      onWillPop: () async {
 
-      backgroundColor: Colors.white,
+        bool pop = false;
 
-      appBar: getAppBar(),
+        if(controller.navSelectedIndex.value == 0){
 
-      body: Obx(() => controller.isLoggedIn.value || controller.isGuestIn.value? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
+          showDialog(context: context, builder: (context)=> AlertDialog(
 
-      drawer: DrawerWidget(scaffoldKey,shortlistedCollegesCount),
+            title: Text("Exit", style: TextStyle(color: Colors.black),),
 
-      bottomNavigationBar: getBottomNavBar(),
+            content: Text("Are you sure you want to exit?"),
+
+            actions: [
+
+              OutlinedButton(onPressed: (){
+                pop = false;
+              }, child: Text("No")),
+
+              ElevatedButton(onPressed: () async {
+                pop = true;
+              }, child: Text("Yes"))
+
+            ],
+
+          ));
+
+        }else{
+          controller.navSelectedIndex.value = 0;
+        }
+
+        return pop;
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+
+        backgroundColor: Colors.white,
+
+        appBar: getAppBar(),
+
+        body: Obx(() => controller.isLoggedIn.value || controller.isGuestIn.value? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
+
+        drawer: DrawerWidget(scaffoldKey,shortlistedCollegesCount),
+
+        bottomNavigationBar: getBottomNavBar(),
+      ),
     );
   }
 

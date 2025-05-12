@@ -302,7 +302,7 @@ class CardStructure extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 12,
             fontWeight: FontWeight.w600,
             color: themes.courseCountColor,
           ),

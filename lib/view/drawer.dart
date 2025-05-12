@@ -65,7 +65,10 @@ class DrawerWidget extends StatelessWidget {
                 Expanded(
                   child: ListView(
                     children: [
-                      _buildTile(Icons.home, 'Home'),
+                      _buildTile(Icons.home, 'Home', callback: (){
+                        controller.navSelectedIndex.value = 0;
+                        scaffoldKey.currentState?.closeDrawer();
+                      }),
                       _buildTile(
                         Icons.favorite_border,
                         'Shortlist/Favorites',

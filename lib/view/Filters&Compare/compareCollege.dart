@@ -38,7 +38,8 @@ class CompareColleges extends StatelessWidget {
       final theme = ThemeController.to.currentTheme;
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: theme.filterSelectedColor,
+          foregroundColor: theme.filterTextColor,
           elevation: 5,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -46,7 +47,7 @@ class CompareColleges extends StatelessWidget {
           ),
           title: Text(
             'Find the Best Fit',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
           centerTitle: true,
         ),
