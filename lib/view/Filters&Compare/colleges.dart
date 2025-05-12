@@ -223,7 +223,6 @@ class _CollegesState extends State<Colleges> {
                                     ),
                               ),
                             );
-
                             setState(() {
                               isLoading = false;
                             });
