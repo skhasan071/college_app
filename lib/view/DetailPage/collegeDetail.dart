@@ -407,6 +407,7 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                 () => Cutoff(
                                   collegeId: widget.college.id,
                                   collegeName: widget.college.name,
+                                  collegeImage: widget.college.image,
                                 ),
                               );
                               break;
