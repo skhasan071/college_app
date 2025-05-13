@@ -162,7 +162,7 @@ class CollegeServices {
     required dynamic rankOrPercentile,
     required String state,
   }) async {
-    final uri = Uri.parse('http://localhost:8080/api/colleges/predict');
+    final uri = Uri.parse('${_baseUrl}predict');
 
     try {
       final response = await http.post(
