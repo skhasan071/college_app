@@ -3,8 +3,11 @@ import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../view_model/controller.dart';
+
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  var controller = Get.put(Controller());
+  SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,20 @@ class SettingsPage extends StatelessWidget {
               subtitle:
                   "Update your Name, Mobile Number, Study In, Passed In, City.",
               icon: Icons.account_circle_outlined,
-              onTap: () => Get.to(() => CompleteProfilePage(isEditing: true)),
+              onTap: () {
+                if(controller.isGuestIn.value){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please Login First"),
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.black,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }else{
+                  controller.navSelectedIndex.value = 5;
+                }
+              },
               iconColor: const Color(0xFF1E88E5), // Blue 600
             ),
 

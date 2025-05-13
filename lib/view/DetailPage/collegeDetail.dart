@@ -19,7 +19,7 @@ import 'package:college_app/view/DetailPage/Q&A.dart';
 import 'package:college_app/view/DetailPage/hostel.dart';
 import 'package:college_app/view/DetailPage/cutoff.dart';
 import 'package:http/http.dart' as http;
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/Placement.dart';

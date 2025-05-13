@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:college_app/model/user.dart';
-import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/college.dart';
@@ -67,7 +66,7 @@ class StudentService {
     required String passedIn,
     File? imageFile,
   }) async {
-    final uri = Uri.parse('http://localhost:8080/api/students/add'); // Replace with actual URL
+    final uri = Uri.parse('$_baseUrl/add'); // Replace with actual URL
 
     var request = http.MultipartRequest('POST', uri);
 
