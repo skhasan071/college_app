@@ -63,21 +63,13 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
   ];
 
   final List<String> exams = [
-    'JEE',
-    'MHT-CET',
-    'WBJEE',
-    'KCET',
-    'AP EAMCET',
-    'TS EAMCET',
-    'GUJCET',
-    'COMEDK',
-    'BITSAT',
-    'VITEEE',
-    'SRMJEEE',
-    'IPU CET',
-    'AMUEEE',
-    'CUET',
-    'Other',
+    "JEE",
+    "MHT-CET",
+    "CET",
+    "NEET",
+    "BITSAT",
+    "VITEEE",
+    "Other"
   ];
 
   final List<String> categories = [
@@ -90,7 +82,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     'Other',
   ];
 
-  final List<String> genders = ['Male', 'Female', 'Both'];
 
   @override
   void initState() {
@@ -237,16 +228,16 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
   }
 
   Widget _buildDropdown(
-    String? selectedValue,
-    ValueChanged<String?> onChanged,
-    List<String> list,
-  ) {
+      String? selectedValue,
+      ValueChanged<String?> onChanged,
+      List<String> list,
+      ) {
     return DropdownButtonFormField<String>(
       value: selectedValue ?? list.first,
       items:
-          list.map((opt) {
-            return DropdownMenuItem(value: opt, child: Text(opt));
-          }).toList(),
+      list.map((opt) {
+        return DropdownMenuItem(value: opt, child: Text(opt));
+      }).toList(),
       onChanged: onChanged,
       decoration: const InputDecoration(
         border: OutlineInputBorder(

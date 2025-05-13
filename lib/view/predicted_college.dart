@@ -136,7 +136,7 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
                               feeRange: clg.feeRange,
                               state: clg.state,
                               ranking: clg.ranking.toString(),
-                              studId: profile.profile.value!.id,
+                              studId: profile.profile.value?.id ?? '',
                               clgId: clg.id,
                             ),
                           );
