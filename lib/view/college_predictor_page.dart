@@ -1,11 +1,9 @@
-import 'package:college_app/services/college_services.dart';
-import 'package:college_app/view/predicted_college.dart';
-import 'package:college_app/view_model/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:college_app/view_model/controller.dart';
 
 import '../model/college.dart';
+import '../services/college_services.dart';
 
 class CollegePredictorPage extends StatefulWidget {
   const CollegePredictorPage({super.key});
@@ -15,10 +13,10 @@ class CollegePredictorPage extends StatefulWidget {
 }
 
 class _CollegePredictorScreenState extends State<CollegePredictorPage> {
-  String? selectedState;
-  String? selectedCategory;
-  String? selectedExam;
-  String? selectedRankType;
+  String? selectedState = "Select";
+  String? selectedCategory = "Select";
+  String? selectedExam = "Select";
+  String? selectedRankType = "Select";
   String rank = '';
 
   var controller = Get.find<Controller>();
@@ -82,13 +80,12 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     'Other',
   ];
 
-
   @override
   void initState() {
     super.initState();
-    selectedExam = "JEE";
-    selectedCategory = "General";
-    selectedRankType = "Percentile";
+    selectedExam = "Select";
+    selectedCategory = "Select";
+    selectedRankType = "Select";
     rank = '0';
   }
 
@@ -146,7 +143,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                 setState(() => selectedRankType = value);
               }, rankTypes),
 
-
               const SizedBox(height: 14),
 
               TextField(
@@ -154,7 +150,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                  hintText: "# Enter your rank",
+                  hintText: "# Enter your rank / percentile",
                 ),
                 onChanged: (val) => rank = val,
                 textAlign: TextAlign.center,
@@ -167,6 +163,27 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () async {
+                      // Check if all fields are filled and not set to "Select"
+                      if (selectedExam == "Select" ||
+                          selectedState == "Select" ||
+                          selectedCategory == "Select" ||
+                          selectedRankType == "Select" ||
+                          rank.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Please fill all fields before proceeding.",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor: Colors.black,
+                            behavior: SnackBarBehavior.floating,
+                            duration: Duration(seconds: 4),
+                          ),
+                        );
+                        return;
+                      }
+
+                      // Check if the selected exam and state match
                       if (selectedExam == "MHT-CET" && selectedState != "Maharashtra") {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -179,7 +196,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                             duration: Duration(seconds: 4),
                           ),
                         );
-                        return;
+                        return; // Don't proceed
                       }
 
                       List<College> colleges = await CollegeServices.predictColleges(
@@ -233,11 +250,14 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
       List<String> list,
       ) {
     return DropdownButtonFormField<String>(
-      value: selectedValue ?? list.first,
-      items:
-      list.map((opt) {
-        return DropdownMenuItem(value: opt, child: Text(opt));
-      }).toList(),
+      value: selectedValue, // Default value is set to the selectedValue
+      items: [
+        // Add a "Select" option as the first item in the list
+        DropdownMenuItem(value: "Select", child: Text("Select")),
+        ...list.map((opt) {
+          return DropdownMenuItem(value: opt, child: Text(opt));
+        }).toList(),
+      ],
       onChanged: onChanged,
       decoration: const InputDecoration(
         border: OutlineInputBorder(
