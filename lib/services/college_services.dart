@@ -155,40 +155,40 @@ class CollegeServices {
     }
   }
 
-  static Future<List<College>> predictColleges({
-    required String examType,
-    required String category,
-    required String rankType,
-    required dynamic rankOrPercentile,
-    required String state,
-  }) async {
-    final uri = Uri.parse('http://localhost:8080/api/colleges/predict');
+    static Future<List<College>> predictColleges({
+      required String examType,
+      required String category,
+      required String rankType,
+      required dynamic rankOrPercentile,
+      required String state,
+    }) async {
+      final uri = Uri.parse('http://localhost:8080/api/colleges/predict');
 
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'examType': examType,
-          'category': category,
-          'rankType': rankType,
-          'rankOrPercentile': rankOrPercentile,
-          'state': state,
-        }),
-      );
+      try {
+        final response = await http.post(
+          uri,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'examType': examType,
+            'category': category,
+            'rankType': rankType,
+            'rankOrPercentile': rankOrPercentile,
+            'state': state,
+          }),
+        );
 
-      if (response.statusCode == 200) {
-        final List data = json.decode(response.body);
-        return data.map((item) => College.fromMap(item)).toList();
-      } else {
-        print('Error: ${response.body}');
+        if (response.statusCode == 200) {
+          final List data = json.decode(response.body);
+          return data.map((item) => College.fromMap(item)).toList();
+        } else {
+          print('Error: ${response.body}');
+          return [];
+        }
+      } catch (e) {
+        print('Exception during college prediction: $e');
         return [];
       }
-    } catch (e) {
-      print('Exception during college prediction: $e');
-      return [];
     }
-  }
 
   /// Get College Details Page
   static Future<AdmissionProcess?> getAdmissionProcess(String collegeId) async {

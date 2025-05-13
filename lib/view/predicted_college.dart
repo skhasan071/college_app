@@ -16,7 +16,7 @@ class CollegeResultsPage extends StatefulWidget {
 
 class _CollegeResultPageState extends State<CollegeResultsPage> {
   int selectedFilterIndex = 0;
-  List<String> filters = ['View all', 'Filter 1', 'Filter 2', 'Filter 3', 'Filter 4'];
+  // List<String> filters = ['View all', 'Filter 1', 'Filter 2', 'Filter 3', 'Filter 4'];
   final controller = Get.find<Controller>();
   final profile = Get.find<ProfileController>();
 
@@ -49,33 +49,35 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
 
                 Row(
                   children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.filter_list, color: Colors.black),
-                        label: const Text("Filter", style: TextStyle(color: Colors.black)),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          side: const BorderSide(color: Colors.black),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 60),
+                    // Expanded(
+                    //   child: OutlinedButton.icon(
+                    //     onPressed: () {},
+                    //     icon: const Icon(Icons.filter_list, color: Colors.black),
+                    //     label: const Text("Filter", style: TextStyle(color: Colors.black)),
+                    //     style: OutlinedButton.styleFrom(
+                    //       foregroundColor: Colors.black,
+                    //       side: const BorderSide(color: Colors.black),
+                    //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                    //       padding: const EdgeInsets.symmetric(vertical: 12),
+                    //     ),
+                    //   ),
+                    // ),
+
                     SizedBox(
-                      height: 35,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          controller.navSelectedIndex.value = 3; // back to predictor form
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text("Edit Rank", style: TextStyle(color: Colors.white)),
+                      height: 40,
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.navSelectedIndex.value = 3; // back to predictor form
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Text("Edit Preferences", style: TextStyle(color: Colors.white)),
+                          ),
                         ),
                       ),
                     )
@@ -91,34 +93,34 @@ class _CollegeResultPageState extends State<CollegeResultsPage> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 36,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: filters.length,
-                          itemBuilder: (context, index) {
-                            final isSelected = index == selectedFilterIndex;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: TextButton(
-                                onPressed: () {
-                                  setState(() => selectedFilterIndex = index);
-                                },
-                                style: TextButton.styleFrom(
-                                  backgroundColor: isSelected ? Colors.black : Colors.grey[200],
-                                  foregroundColor: isSelected ? Colors.white : Colors.black,
-                                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    side: const BorderSide(color: Colors.black),
-                                  ),
-                                ),
-                                child: Text(filters[index]),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      // SizedBox(
+                      //   height: 36,
+                      //   child: ListView.builder(
+                      //     scrollDirection: Axis.horizontal,
+                      //     itemCount: filters.length,
+                      //     itemBuilder: (context, index) {
+                      //       final isSelected = index == selectedFilterIndex;
+                      //       return Padding(
+                      //         padding: const EdgeInsets.only(right: 10),
+                      //         child: TextButton(
+                      //           onPressed: () {
+                      //             setState(() => selectedFilterIndex = index);
+                      //           },
+                      //           style: TextButton.styleFrom(
+                      //             backgroundColor: isSelected ? Colors.black : Colors.grey[200],
+                      //             foregroundColor: isSelected ? Colors.white : Colors.black,
+                      //             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                      //             shape: RoundedRectangleBorder(
+                      //               borderRadius: BorderRadius.circular(20),
+                      //               side: const BorderSide(color: Colors.black),
+                      //             ),
+                      //           ),
+                      //           child: Text(filters[index]),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                       const SizedBox(height: 24),
                       ListView.builder(
                         shrinkWrap: true,
