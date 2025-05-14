@@ -22,11 +22,9 @@ class CollegeServices {
         final List<dynamic> jsonData = json.decode(response.body);
         return jsonData.map((e) => College.fromMap(e)).toList();
       } else {
-        print('Error fetching colleges: ${response.statusCode} == ${response.body}');
         return [];
       }
     } catch (e) {
-      print('Exception: $e');
       return [];
     }
   }
@@ -109,7 +107,7 @@ class CollegeServices {
   }
 
   static Future<List<College>> fetchFilteredColleges({required List<String> streams, String? country, String? state, String? city,}) async {
-    final baseUrl = Uri.parse('https://tc-ca-server.onrender.com/api/colleges/filter-by-stream');
+    final baseUrl = Uri.parse('${_baseUrl}filter-by-stream');
 
     // Create query parameters
     final queryParams = {

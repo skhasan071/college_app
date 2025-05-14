@@ -19,9 +19,9 @@ import 'Setting&Support/notification_page.dart';
 
 class HomePage extends StatefulWidget {
 
-  String token;
+  final String token;
 
-  HomePage(this.token,{super.key});
+  const HomePage(this.token,{super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
