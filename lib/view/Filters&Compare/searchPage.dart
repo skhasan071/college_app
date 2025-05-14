@@ -4,12 +4,11 @@ import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:college_app/view_model/searchController.dart';
-
 import '../../model/college.dart';
 
 class SelectionPage extends StatelessWidget {
   final controller = Get.put(SelectionController());
-  var searchCtrl = TextEditingController();
+   var searchCtrl = TextEditingController();
 
   // Countries
   final List<String> countries = [
@@ -43,6 +42,8 @@ class SelectionPage extends StatelessWidget {
 
   // Initially display all states (this will update based on selected country)
   RxList<String> displayedStates = RxList<String>([]);
+
+   SelectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {

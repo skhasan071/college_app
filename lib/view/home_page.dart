@@ -11,7 +11,6 @@ import 'package:college_app/view/Filters&Compare/searchPage.dart';
 import 'package:college_app/view/Filters&Compare/shortlistCollegePage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../view_model/controller.dart';
 import '../view_model/profile_controller.dart';
@@ -303,7 +302,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getUser() async {
-    print(widget.token);
     Student? student = await StudentService().getStudent(widget.token);
     profileController.profile.value = student;
     profileController.interestedStreams.value = student!.interestedStreams!;

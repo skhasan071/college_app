@@ -1,9 +1,5 @@
-import 'package:college_app/view/DetailPage/collegeDetail.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
-import 'package:college_app/constants/ui_helper.dart';
-import 'package:college_app/constants/colors.dart';
-import 'package:college_app/services/user_services.dart';
 import 'package:college_app/model/college.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 

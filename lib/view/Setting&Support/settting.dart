@@ -1,4 +1,3 @@
-import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

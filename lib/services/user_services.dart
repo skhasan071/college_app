@@ -21,11 +21,9 @@ class StudentService {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return Student.fromMap(data);
       } else {
-        print('Failed to load student: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Error occurred: $e');
       return null;
     }
   }
@@ -41,18 +39,15 @@ class StudentService {
       );
 
       if (res.statusCode == 200 || res.statusCode == 201) {
-        print(jsonDecode(res.body));
 
         Map<String, dynamic> data =
             jsonDecode(res.body) as Map<String, dynamic>;
 
         return Student.fromMap(data);
       } else {
-        print(jsonDecode(res.body));
         return null;
       }
     } catch (err) {
-      print(err);
       return null;
     }
   }
@@ -92,11 +87,9 @@ class StudentService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return json.decode(responseBody);
       } else {
-        print('Failed: ${response.statusCode} - $responseBody');
         return null;
       }
     } catch (e) {
-      print('Exception: $e');
       return null;
     }
   }
@@ -111,7 +104,7 @@ class StudentService {
     String? modeOfStudy,
   }) async {
     try {
-      final uri = Uri.parse('https://tc-ca-server.onrender.com/api/students/preferences');
+      final uri = Uri.parse('$_baseUrl/preferences');
       final response = await http.put(
         uri,
         headers: {
@@ -132,11 +125,9 @@ class StudentService {
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        print("❌ Failed to save preferences: ${response.body}");
         return null;
       }
     } catch (e) {
-      print("❌ Exception in saveCoursePreferences: $e");
       return null;
     }
   }
@@ -146,7 +137,7 @@ class StudentService {
     required String collegeId,
   }) async {
     try {
-      final uri = Uri.parse('https://tc-ca-server.onrender.com/api/students/favorites/add');
+      final uri = Uri.parse('$_baseUrl/favorites/add');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
@@ -156,11 +147,9 @@ class StudentService {
       if (response.statusCode == 200) {
         return jsonDecode(response.body); // { message, favorites }
       } else {
-        print("❌ Failed to add to favorites: ${response.body}");
         return null;
       }
     } catch (e) {
-      print("❌ Exception in addToFavorites: $e");
       return null;
     }
   }
@@ -168,7 +157,7 @@ class StudentService {
   static Future<List<College>> getFavoriteColleges(String studentId, [void setState]) async {
     try {
       final uri = Uri.parse(
-        'https://tc-ca-server.onrender.com/api/students/favorites/$studentId',
+        '$_baseUrl/favorites/$studentId',
       );
       final response = await http.get(uri);
 
@@ -182,11 +171,9 @@ class StudentService {
 
         return students; // This should be a list of college objects
       } else {
-        print("❌ Failed to retrieve favorites: ${response.body}");
         return [];
       }
     } catch (e) {
-      print("❌ Exception in getFavoriteColleges: $e");
       return [];
     }
   }
@@ -197,7 +184,7 @@ class StudentService {
   ) async {
     try {
       final uri = Uri.parse(
-        'https://tc-ca-server.onrender.com/api/students/favorites/remove',
+        '$_baseUrl/favorites/remove',
       );
       final response = await http.post(
         uri,
@@ -206,14 +193,11 @@ class StudentService {
       );
 
       if (response.statusCode == 200) {
-        print("✅ College removed from favorites");
         return true;
       } else {
-        print("❌ Failed to remove favorite: ${response.body}");
         return false;
       }
     } catch (e) {
-      print("❌ Exception in removeFromFavorites: $e");
       return false;
     }
   }
@@ -229,14 +213,11 @@ class StudentService {
       );
 
       if (response.statusCode == 201) {
-        print("Review added: ${response.body}");
         return Review.fromJson(jsonDecode(response.body)['review']);
       } else {
-        print("Failed to post review: ${response.statusCode} ${response.body}");
         return null;
       }
     } catch (err) {
-      print(err);
       return null;
     }
   }
@@ -252,7 +233,6 @@ class StudentService {
       final List decoded = jsonDecode(response.body);
       return decoded.map((json) => Review.fromJson(json)).toList();
     } else {
-      print("Failed to fetch reviews: ${response.statusCode} ${response.body}");
       return [];
     }
   }
@@ -261,7 +241,7 @@ class StudentService {
   static Future<List<College>> getCollegesByRanking(String studentId) async {
     try {
       final uri = Uri.parse(
-        'https://tc-ca-server.onrender.com/api/students/rankings?studentId=$studentId',
+        '$_baseUrl/rankings?studentId=$studentId',
       );
 
       final response = await http.get(uri);
@@ -270,15 +250,12 @@ class StudentService {
         final data = jsonDecode(response.body);
         List<dynamic> list = data['colleges'];
         return list.map((item) {
-          print(item);
           return College.fromMap(item);
         }).toList();
       } else {
-        print("❌ Failed to retrieve colleges: ${response.body}");
         return [];
       }
     } catch (e) {
-      print("❌ Exception in getCollegesByRanking: $e");
       return [];
     }
   }
@@ -288,7 +265,7 @@ class StudentService {
   ) async {
     try {
       final uri = Uri.parse(
-        'https://tc-ca-server.onrender.com/api/students/private-colleges',
+        '$_baseUrl/private-colleges',
       );
 
       final response = await http.post(
@@ -299,7 +276,6 @@ class StudentService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("✅ Private colleges retrieved successfully");
         final favoritesList = data['colleges'] as List<dynamic>;
 
         // Convert each favorite map to a Student object
@@ -308,11 +284,9 @@ class StudentService {
 
         return students; // This should be a list of college objects
       } else {
-        print("❌ Failed to fetch private colleges: ${response.body}");
         return [];
       }
     } catch (e) {
-      print("❌ Exception in getPrivateCollegesByInterest: $e");
       return [];
     }
   }

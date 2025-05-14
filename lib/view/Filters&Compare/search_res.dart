@@ -2,19 +2,16 @@ import 'package:college_app/constants/card.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/view_model/controller.dart';
 import 'package:college_app/view_model/profile_controller.dart';
-import 'package:college_app/view_model/themeController.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class SearchRes extends StatelessWidget {
-  List<College> colleges = [];
+      List<College> colleges = [];
 
-  SearchRes(this.colleges, {super.key});
+ SearchRes(this.colleges, {super.key});
 
-  ProfileController controller = Get.find<ProfileController>();
-  Controller ctrl = Get.find<Controller>();
+ProfileController controller = Get.find<ProfileController>();
+ Controller ctrl = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

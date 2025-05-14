@@ -3,6 +3,8 @@ import '../../services/otp_service.dart';
 import 'otpscreen.dart';
 
 class Mobilenoauth extends StatefulWidget {
+  const Mobilenoauth({super.key});
+
   @override
   _MobilenoauthState createState() => _MobilenoauthState();
 }
@@ -10,6 +12,13 @@ class Mobilenoauth extends StatefulWidget {
 class _MobilenoauthState extends State<Mobilenoauth> {
   final TextEditingController phoneController = TextEditingController();
   final OtpService otpService = OtpService(); // baseUrl is set in the service file
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
+  }
+
 
   bool isLoading = false;
 

@@ -6,11 +6,8 @@ import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/colors.dart';
-import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/model/college.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:college_app/services/college_services.dart';
 
 

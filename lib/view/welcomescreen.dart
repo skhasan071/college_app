@@ -238,12 +238,10 @@
 //   }
 // }
 
-import 'package:college_app/view/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-
 import 'dart:html' as html;
 
 import 'StateCity.dart'; // For web location access
@@ -402,7 +400,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         // Check if placemarks are returned
         if (placemarks.isNotEmpty) {
           Placemark place = placemarks[0];
-          print("//////////"+placemarks[0].toString());
+          print("//////////${placemarks[0]}");
 
           setState(() {
             selectedState = place.administrativeArea;

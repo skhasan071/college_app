@@ -66,6 +66,6 @@ class TestingPage extends StatefulWidget {
 class _TestingPageState extends State<TestingPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("All The Best Guyz")));
+    return Scaffold(body: Center(child: Text("All The Best Guys")));
   }
 }

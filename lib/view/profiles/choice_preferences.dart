@@ -4,8 +4,6 @@ import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 import '../../constants/ui_helper.dart';
 
 class CoursePreferencesPage extends StatefulWidget {
@@ -107,7 +105,6 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                         pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-Time";
                         pfpCtrl.profile.value!.preferredYearOfAdmission = selectedYear ?? "2025";
                         Map<String, dynamic>? data = await StudentService.saveCoursePreferences(token: pfpCtrl.userToken.value, coursesInterested: selectedCourses.toList(), interestedStreams: selectedStreams.toList(), modeOfStudy: selectedMode, preferredCourseLevel: selectedLevel, preferredYearOfAdmission: selectedYear);
-                        print(data.toString());
 
                       }else{
                         pfpCtrl.interestedStreams.value = selectedStreams.toList();

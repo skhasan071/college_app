@@ -1,4 +1,3 @@
-import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view_model/filterController.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';

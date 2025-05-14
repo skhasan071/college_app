@@ -2,10 +2,8 @@ import 'package:college_app/constants/customTheme.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/DetailPage/collegeDetail.dart';
-import 'package:college_app/view/Filters&Compare/compareCollege.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
-import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view_model/saveController.dart';
 import 'package:get/get.dart';
@@ -26,7 +24,7 @@ class CardStructure extends StatelessWidget {
   final String studId;
   final String clgId;
   final VoidCallback? onCompareTap;
-  College clg;
+  final College clg;
   var pfpController = Get.put(Controller());
 
   final double? width;

@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'blog_detail_page.dart'; // Import the detail page
 
 class BlogPage extends StatefulWidget {
+  const BlogPage({super.key});
+
   @override
   _BlogPageState createState() => _BlogPageState();
 }
@@ -25,7 +27,7 @@ class _BlogPageState extends State<BlogPage> {
         blogs = List<Map<String, dynamic>>.from(responseData['blogs']);
       });
     } else {
-      print('Failed to load blogs');
+      return;
     }
   }
 
@@ -124,7 +126,7 @@ class BlogCard extends StatelessWidget {
   final String image;
   final Map<String, dynamic> blog;
 
-  BlogCard({
+  const BlogCard({super.key,
     required this.title,
     required this.category,
     required this.readingTime,

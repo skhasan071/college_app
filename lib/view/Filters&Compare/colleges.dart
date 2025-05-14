@@ -2,7 +2,6 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/filter.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
-import 'package:college_app/main.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view_model/controller.dart';
@@ -16,7 +15,7 @@ import '../../services/user_services.dart';
 import '../DetailPage/collegeDetail.dart';
 
 class Colleges extends StatefulWidget {
-  Colleges({super.key});
+  const Colleges({super.key});
 
   @override
   State<Colleges> createState() => _CollegesState();
@@ -352,8 +351,7 @@ class _CollegesState extends State<Colleges> {
       }
     } else {
       // Handle case when profile is null (e.g., show a message or return early)
-      print('Profile is null, cannot fetch favorite colleges.');
-    }
+return;    }
   }
 
   Future<void> getColleges() async {

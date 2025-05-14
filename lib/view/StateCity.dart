@@ -1,15 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
-
 
 class Statecity extends StatefulWidget{
   String state;
 
   String city;
 
-  Statecity({required this.state,required this.city});
+  Statecity({super.key, required this.state,required this.city});
   @override
   State<Statecity> createState() => _StatecityState();
 }

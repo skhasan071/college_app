@@ -4,12 +4,9 @@ import 'package:college_app/view/Setting&Support/settting.dart';
 import 'package:college_app/view/Setting&Support/support.dart';
 import 'package:college_app/view/profiles/profile_extension.dart';
 import 'package:college_app/view_model/profile_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../view_model/controller.dart';
 import '../Setting&Support/contact_details.dart';
 import 'complete_profile_page.dart';
@@ -17,8 +14,8 @@ import 'complete_profile_page.dart';
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
-  var profileController = Get.put(ProfileController());
-  var controller = Get.put(Controller());
+ var profileController = Get.put(ProfileController());
+ var controller = Get.put(Controller());
 
   @override
   Widget build(BuildContext context) {

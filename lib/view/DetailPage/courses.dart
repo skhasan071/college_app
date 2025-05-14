@@ -1,4 +1,3 @@
-import 'package:college_app/main.dart';
 import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:college_app/model/course.dart';
 import 'package:get/get.dart';
 
 class Courses extends StatefulWidget {
-  String uid;
+  final String uid;
   Courses(this.uid, {super.key, required this.collegeImage, required this.collegeName});
   final String collegeImage;
   final String collegeName;

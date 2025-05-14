@@ -18,11 +18,9 @@ class OtpService {
       if (response.statusCode == 200 && data['success'] == true) {
         return true;
       } else {
-        print('Send OTP failed: ${data['message']}');
         return false;
       }
     } catch (e) {
-      print('Error sending OTP: $e');
       return false;
     }
   }
@@ -41,11 +39,9 @@ class OtpService {
       if (response.statusCode == 200 && data['success'] == true) {
         return true;
       } else {
-        print('OTP verification failed: ${data['message']}');
         return false;
       }
     } catch (e) {
-      print('Error verifying OTP: $e');
       return false;
     }
   }

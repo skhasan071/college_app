@@ -7,14 +7,12 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
-
-import '../../services/user_services.dart';
 import '../../view_model/controller.dart';
 
 class Reviews extends StatefulWidget {
-  String uid;
+ final String uid;
 
-  Reviews(this.uid, {super.key});
+  const Reviews(this.uid, {super.key});
 
   @override
   State<Reviews> createState() => _ReviewsState();
@@ -249,69 +247,7 @@ class _ReviewsState extends State<Reviews> {
     );
   }
 
-  void _showFilterPopup(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          // child: Container(
-          //   color: Colors.white,
-          //   width: MediaQuery.of(context).size.width * 0.8,
-          //   padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-          //   child: Column(
-          //     mainAxisSize: MainAxisSize.min,
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       const Text(
-          //         "Filter Reviews",
-          //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          //       ),
-          //       const SizedBox(height: 20),
-          //       _buildFilterOption("Positive Reviews", Colors.green, () {
-          //         Navigator.pop(context);
-          //         // Apply filter: 4-5 stars
-          //       }),
-          //       const SizedBox(height: 16),
-          //       _buildFilterOption("Neutral Reviews", Colors.amber, () {
-          //         Navigator.pop(context);
-          //         // Apply filter: 3 stars
-          //       }),
-          //       const SizedBox(height: 16),
-          //       _buildFilterOption("Negative Reviews", Colors.red, () {
-          //         Navigator.pop(context);
-          //         // Apply filter: 1-2 stars
-          //       }),
-          //     ],
-          //   ),
-          // ),
-        );
-      },
-    );
-  }
 
-  Widget _buildFilterOption(String label, Color color, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Container(
-              width: 14,
-              height: 14,
-              margin: const EdgeInsets.only(right: 12),
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-            ),
-            Text(label, style: const TextStyle(fontSize: 16)),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildStarRating(double rating, {double iconSize = 20}) {
     return Obx(() {
@@ -392,7 +328,6 @@ class _ReviewsState extends State<Reviews> {
     int comments,
   ) {
     return Obx(() {
-      final theme = ThemeController.to.currentTheme;
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
@@ -610,7 +545,6 @@ class _ReviewsState extends State<Reviews> {
     List<int> per = [0, 0, 0, 0, 0];
 
     for (int i = 0; i < _reviews.length; i++) {
-      print(_reviews[i].rating);
       switch (_reviews[i].rating) {
         case 5:
           per[0] += 1;

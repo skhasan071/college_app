@@ -289,9 +289,9 @@ class _CollegeDetailState extends State<CollegeDetail> {
                       children: [
                         _buildinfo("${widget.college.ranking}", "NIRF Rank"),
 
-                        _buildinfo("${widget.college.naacGrade}", "NAAC Grade"),
+                        _buildinfo(widget.college.naacGrade, "NAAC Grade"),
 
-                        _buildinfo("${widget.college.estYear}", "Established"),
+                        _buildinfo(widget.college.estYear, "Established"),
                       ],
                     ),
                   ),
@@ -375,8 +375,8 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                 Get.to(
                                   () => DistanceFromHometown(
                                     collegeId: widget.college.id,
-                                    lat: widget.lat!,
-                                    long: widget.long!,
+                                    lat: widget.lat,
+                                    long: widget.long,
                                   ),
                                 );
                               } else {
@@ -478,7 +478,7 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                               QuickHighlights(
                                                 title: "Acceptance Rate",
                                                 value:
-                                                    "${widget.college.acceptanceRate}",
+                                                    widget.college.acceptanceRate,
                                               ),
                                               QuickHighlights(
                                                 title: "Placement Rate",
@@ -691,7 +691,7 @@ class CourseTile extends StatelessWidget {
   final String fee;
   final String duration;
 
-  const CourseTile({
+  const CourseTile({super.key,
     required this.course,
     required this.fee,
     required this.duration,
@@ -732,7 +732,7 @@ class CourseTile extends StatelessWidget {
 class CampusLifeCard extends StatelessWidget {
   final String title;
 
-  const CampusLifeCard({required this.title});
+  const CampusLifeCard({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

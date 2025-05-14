@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BlogPageDetail extends StatelessWidget {
   final Map<String, dynamic> blog;  // Blog data passed from the list page
 
-  BlogPageDetail({required this.blog});
+ const BlogPageDetail({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {

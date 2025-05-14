@@ -42,15 +42,12 @@ class CollegeServices {
 
       if (response.statusCode == 200) {
         final List colleges = json.decode(response.body);
-        print("Colleges found: $colleges");
         return colleges.map((item) => College.fromMap(item)).toList();
       } else {
         final error = json.decode(response.body);
-        print("Error: ${error['message']}");
-        return [];
+        return [error];
       }
     } catch (e) {
-      print("Exception: $e");
       return [];
     }
   }
@@ -74,11 +71,10 @@ class CollegeServices {
         final List<dynamic> jsonData = json.decode(response.body)['colleges'];
         return jsonData.map((e) => College.fromMap(e)).toList();
       } else {
-        print('Filter failed: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Exception: $e');
+
       return [];
     }
   }
@@ -97,11 +93,9 @@ class CollegeServices {
         final data = json.decode(response.body) as List;
         return data.map((college) => College.fromMap(college)).toList();
       } else {
-        print('Error: ${response.body}');
         return [];
       }
     } catch (e) {
-      print('Exception while filtering colleges by ranking: $e');
       return [];
     }
   }
@@ -140,15 +134,12 @@ class CollegeServices {
       if (json is List) {
         return json.map((d) => College.fromMap(d)).toList();
       } else if (json is Map && json['message'] != null) {
-        print(json['message']);
-        return [];
+        return [json['message']];
       } else {
-        print('Unexpected response format');
         return [];
       }
 
     } else {
-      print('Failed to fetch colleges: ${response.body}');
       return [];
     }
   }
@@ -179,11 +170,9 @@ class CollegeServices {
         final List data = json.decode(response.body);
         return data.map((item) => College.fromMap(item)).toList();
       } else {
-        print('Error: ${response.body}');
         return [];
       }
     } catch (e) {
-      print('Exception during college prediction: $e');
       return [];
     }
   }
@@ -199,14 +188,11 @@ class CollegeServices {
         final data = json.decode(response.body);
         return AdmissionProcess.fromMap(data);
       } else if (response.statusCode == 404) {
-        print('Admission process not found');
         return null;
       } else {
-        print('Error: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Exception: $e');
       return null;
     }
   }
@@ -221,11 +207,9 @@ class CollegeServices {
         final List<dynamic> jsonData = json.decode(response.body);
         return jsonData.map((e) => Course.fromMap(e)).toList();
       } else {
-        print('No courses found or college not found: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Exception: $e');
       return [];
     }
   }
@@ -240,11 +224,9 @@ class CollegeServices {
         final List<dynamic> jsonData = json.decode(response.body);
         return jsonData.map((e) => Faculty.fromMap(e)).toList();
       } else {
-        print('Failed to load faculty: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Exception: $e');
       return [];
     }
   }
@@ -258,11 +240,9 @@ class CollegeServices {
       if (response.statusCode == 200) {
         return Hostel.fromMap(json.decode(response.body));
       } else {
-        print('Hostel not found: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Exception while fetching hostel: $e');
       return null;
     }
   }
@@ -276,11 +256,9 @@ class CollegeServices {
       if (response.statusCode == 200) {
         return Campus.fromMap(json.decode(response.body));
       } else {
-        print('Campus not found: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Exception while fetching campus: $e');
       return null;
     }
   }
