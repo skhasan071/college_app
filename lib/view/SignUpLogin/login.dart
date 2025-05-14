@@ -27,6 +27,13 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   final ProfileController profileController = Get.put(ProfileController());
 
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
   var loader = Get.put(Loader());
 
   bool isPasswordVisible = false;

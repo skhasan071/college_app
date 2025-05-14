@@ -3,7 +3,6 @@ import 'package:college_app/view/Setting&Support/support.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../services/shortListCollegeController.dart';
 import '../view_model/controller.dart';
 

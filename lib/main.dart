@@ -1,4 +1,3 @@
-
 import 'package:college_app/services/shortListCollegeController.dart';
 import 'package:college_app/view/SignUpLogin/FirstPage.dart';
 import 'package:college_app/view/home_page.dart';

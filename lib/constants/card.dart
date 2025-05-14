@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 import '../view_model/controller.dart';
 
-class CardStructure extends StatelessWidget {
+class CardStructure extends StatelessWidget { 
   final bool showTwoButtons;
   final bool disableCardTap;
   final VoidCallback? onDetailTap;
