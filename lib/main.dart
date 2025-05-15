@@ -33,7 +33,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        iconTheme: IconThemeData(color: Colors.black),
+        fontFamily: 'Poppins',
+        textTheme: TextTheme(
+          bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
+        ),
+      ),
        home: token == null || token == "" ? Firstpage() : HomePage(token!),
     );
   }
