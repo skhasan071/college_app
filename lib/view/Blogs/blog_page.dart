@@ -53,12 +53,12 @@ class _BlogPageState extends State<BlogPage> {
                 children: [
                   // "Describe what your blog is about" Heading
                   Text(
-                    'Blogs To enhance you knowledge',
+                    'Blogs',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'all latest topics',
+                    'Explore Latest Blogs',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   SizedBox(height: 16),

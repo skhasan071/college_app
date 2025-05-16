@@ -64,7 +64,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
               const SizedBox(height: 10),
 
               //const SizedBox(height: 16),
-              Container(
+              colleges.isNotEmpty ? Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: theme.backgroundGradient,
@@ -110,11 +110,15 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                       },
                       itemCount: colleges.length,
                       shrinkWrap: true,
-                      physics:
-                          const NeverScrollableScrollPhysics(), // important!
+                      physics: const NeverScrollableScrollPhysics(), // important!
                     ),
                   ],
                 ),
+              ) : Center(
+                child: Text("No Colleges Shortlisted", style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),),
               ),
             ],
           ),

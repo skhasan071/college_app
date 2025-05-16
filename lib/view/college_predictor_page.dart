@@ -66,7 +66,6 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     "NEET",
     "BITSAT",
     "VITEEE",
-    "Other"
   ];
 
   final List<String> categories = [

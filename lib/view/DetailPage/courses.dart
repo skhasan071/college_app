@@ -56,6 +56,9 @@ class _CoursesState extends State<Courses> {
             ),
             backgroundColor: Colors.white,
           ),
+
+          backgroundColor: Colors.white,
+
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -64,6 +67,7 @@ class _CoursesState extends State<Courses> {
 
               Container(
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border(
                     top: BorderSide(color: Colors.grey, width: 0.4),
                     bottom: BorderSide(color: Colors.grey, width: 0.4),

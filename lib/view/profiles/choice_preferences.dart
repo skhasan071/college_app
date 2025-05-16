@@ -65,7 +65,7 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                 const SizedBox(height: 12),
                 const Text("Course Preferences", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                const Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros.",
+                const Text("Choose preferences to explore colleges you prefer.",
                     style: TextStyle(color: Colors.black54)),
                 const SizedBox(height: 24),
 

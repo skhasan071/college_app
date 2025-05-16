@@ -312,11 +312,6 @@ class _AdmissionState extends State<Admission> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 10),
             ...items.map(
               (e) => Padding(
                 padding: const EdgeInsets.only(bottom: 6),

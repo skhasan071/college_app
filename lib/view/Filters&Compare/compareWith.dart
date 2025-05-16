@@ -52,7 +52,7 @@ class _CompareWithState extends State<CompareWith> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            'Choose with Confidence',
+            'Choose College',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
           ),
           centerTitle: true,
@@ -75,11 +75,6 @@ class _CompareWithState extends State<CompareWith> {
                     color: theme.filterSelectedColor,
                     fontSize: 33,
                   ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  "Side-by-side comparison to find your best fit.",
-                  style: TextStyle(fontSize: 15, color: Colors.black87),
                 ),
                 const SizedBox(height: 22),
                 Text(
