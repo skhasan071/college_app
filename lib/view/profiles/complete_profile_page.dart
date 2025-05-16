@@ -38,6 +38,12 @@ class CompleteProfilePage extends StatelessWidget {
   String? passedIn;
   String? city;
 
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    mobileController.dispose();
+  }
+
   CompleteProfilePage({super.key, this.isEditing = false});
 
   @override
@@ -183,7 +189,6 @@ class CompleteProfilePage extends StatelessWidget {
                             studyingIn != null &&
                             passedIn != null &&
                             city != null) {
-                          print(profile.userToken.value);
 
                           // Make the API call to update profile using StudentService
                           Map<String, dynamic>? data = await StudentService.addOrUpdateStudent(

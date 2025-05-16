@@ -1,13 +1,8 @@
-import 'package:college_app/services/user_services.dart';
-import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view/SignUpLogin/login.dart';
 import 'package:college_app/view/profiles/choice_preferences.dart';
-import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:college_app/view/SignUpLogin/signuppage.dart';
-import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 
 class Firstpage extends StatefulWidget {
   const Firstpage({super.key});

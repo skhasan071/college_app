@@ -1,14 +1,11 @@
 import 'package:college_app/constants/card.dart';
-import 'package:college_app/model/college.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 import '../view_model/controller.dart';
 
 class CollegeResultsPage extends StatefulWidget {
-  CollegeResultsPage({super.key});
+  const CollegeResultsPage({super.key});
 
   @override
   State<CollegeResultsPage> createState() => _CollegeResultPageState();

@@ -23,7 +23,6 @@ class AuthService {
 
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        print("✅ Registration successful");
         return {
           "success": true,
           "message": data['message'],
@@ -32,11 +31,11 @@ class AuthService {
         };
       } else {
         final data = jsonDecode(response.body);
-        print("❌ Registration failed: ${data['message']}");
+
         return {"success": false, "message": data['message']};
       }
     } catch (e) {
-      print("❌ Exception in registerStudent: $e");
+
       return {"success": false, "message": e.toString()};
     }
   }
@@ -57,7 +56,7 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("✅ Login successful");
+
         return {
           "success": true,
           "message": data['message'],
@@ -66,11 +65,11 @@ class AuthService {
         };
       } else {
         final data = jsonDecode(response.body);
-        print("❌ Login failed: ${data['message']}");
+
         return {"success": false, "message": data['message']};
       }
     } catch (e) {
-      print("❌ Exception in loginStudent: $e");
+
       return {"success": false, "message": e.toString()};
     }
   }

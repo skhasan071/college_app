@@ -145,7 +145,7 @@ class _AdmissionState extends State<Admission> {
                                 .map(
                                   (exam) => _examTile(exam, "For All Programs"),
                                 )
-                                .toList(),
+
                           ],
                         ),
                       ),
@@ -293,49 +293,6 @@ class _AdmissionState extends State<Admission> {
   }
 
   // Method for Admission Steps
-  Widget _admissionStep(String step, String title, String subtitle) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade300, width: 1),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 14,
-            backgroundColor: Colors.black,
-            child: Text(
-              step,
-              style: const TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: Colors.black54, fontSize: 14),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // Method for Required Documents
   Widget _requiredDocuments({

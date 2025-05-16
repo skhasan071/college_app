@@ -15,7 +15,7 @@ import '../../services/user_services.dart';
 import '../DetailPage/collegeDetail.dart';
 
 class Colleges extends StatefulWidget {
-  Colleges({super.key});
+  const Colleges({super.key});
 
   @override
   State<Colleges> createState() => _CollegesState();
@@ -351,8 +351,7 @@ class _CollegesState extends State<Colleges> {
       }
     } else {
       // Handle case when profile is null (e.g., show a message or return early)
-      print('Profile is null, cannot fetch favorite colleges.');
-    }
+return;    }
   }
 
   Future<void> getColleges() async {

@@ -1,4 +1,3 @@
-import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/model/cost.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
@@ -34,12 +33,10 @@ class Cost extends StatelessWidget {
           return null;
         }
       } else {
-        print("API call failed: ${response.statusCode}");
-        print("Response body: ${response.body}");
+
         return null;
       }
     } catch (e) {
-      print("Exception caught: $e");
       return null;
     }
   }

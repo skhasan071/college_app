@@ -33,7 +33,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        iconTheme: IconThemeData(color: Colors.black),
+        fontFamily: 'Poppins',
+        textTheme: TextTheme(
+          bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
+        ),
+      ),
        home: token == null || token == "" ? Firstpage() : HomePage(token!),
     );
   }
@@ -66,6 +74,6 @@ class TestingPage extends StatefulWidget {
 class _TestingPageState extends State<TestingPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("All The Best Guyz")));
+    return Scaffold(body: Center(child: Text("All The Best Guys")));
   }
 }

@@ -78,10 +78,10 @@ class _QAPageState extends State<QAPage> {
           _filteredQuestions.addAll(_questions); // initially show all
         });
       } else {
-        print('Failed to load questions: ${response.statusCode}');
+        return;
       }
     } catch (e) {
-      print('Error fetching questions: $e');
+      return;
     }
   }
 
@@ -121,11 +121,9 @@ class _QAPageState extends State<QAPage> {
           filterQuestions(); // refresh filtered list after adding
         });
       } else {
-        print('Failed to add question: ${response.statusCode}');
-      }
+        return;      }
     } catch (e) {
-      print('Error adding question: $e');
-    }
+      return;    }
   }
 
   @override
@@ -214,8 +212,8 @@ class _QAPageState extends State<QAPage> {
   }
 
   void _showAddQuestionDialog() {
-    final TextEditingController _questionController = TextEditingController();
-    final TextEditingController _nameController = TextEditingController();
+    final TextEditingController questionController = TextEditingController();
+    final TextEditingController nameController = TextEditingController();
 
     final theme = ThemeController.to.currentTheme;
     showDialog(
@@ -244,8 +242,8 @@ class _QAPageState extends State<QAPage> {
               height: MediaQuery.of(context).size.height * 0.4,
               child: Column(
                 children: [
-                  TextField(
-                    controller: _nameController,
+                   TextField(
+                    controller: nameController,
                     decoration: const InputDecoration(
                       hintText: 'Enter your name',
                       border: OutlineInputBorder(),
@@ -255,7 +253,7 @@ class _QAPageState extends State<QAPage> {
                   ),
                   const SizedBox(height: 12),
                   TextField(
-                    controller: _questionController,
+                    controller: questionController,
                     decoration: const InputDecoration(
                       hintText: 'Enter your question',
                       border: OutlineInputBorder(
@@ -291,12 +289,12 @@ class _QAPageState extends State<QAPage> {
                   ),
                 ),
                 onPressed: () {
-                  if (_questionController.text.isNotEmpty &&
-                      _nameController.text.isNotEmpty) {
+                  if (questionController.text.isNotEmpty &&
+                      nameController.text.isNotEmpty) {
                     _addQuestion(
                       widget.collegeId,
-                      _nameController.text,
-                      _questionController.text,
+                      nameController.text,
+                      questionController.text,
                     );
                     Navigator.pop(context);
                   }

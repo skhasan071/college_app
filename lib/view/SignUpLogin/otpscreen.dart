@@ -5,7 +5,7 @@ import '../../services/otp_service.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phone;
-  OtpScreen({required this.phone});
+  const OtpScreen({super.key, required this.phone});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -14,6 +14,8 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final OtpService otpService = OtpService();
   final TextEditingController otpController = TextEditingController();
+
+
 
   String otpCode = "";
   int countdown = 60;

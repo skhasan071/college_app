@@ -4,15 +4,13 @@ import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../view_model/data_loader.dart';
-import '../emailverification.dart';
 import '../home_page.dart';
+import '../emailverification.dart';
 import 'mobilenoauth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -371,23 +369,19 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (response.statusCode == 200) {
-        print("Signin successful");
         final data = jsonDecode(response.body);
         if (data['redirect']) {
-          print(data['token']);
           await saveToken(data['token']);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => HomePage(data['token'])),
           );
         }
       } else {
-        print(jsonDecode(response.body));
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Error checking user")));
       }
     } catch (e) {
-      print("Error: $e");
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Error during sign-in")));

@@ -1,20 +1,16 @@
 import 'package:college_app/constants/colors.dart';
 import 'package:college_app/model/college.dart';
-import 'package:college_app/services/college_services.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/card.dart';
-import 'package:college_app/view/Filters&Compare/colleges.dart';
-import 'package:college_app/constants/filter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../services/shortListCollegeController.dart';
 
 class ShortlistedCollegesPage extends StatefulWidget {
-  ShortlistedCollegesPage({super.key});
+  const ShortlistedCollegesPage({super.key});
 
   @override
   State<ShortlistedCollegesPage> createState() =>

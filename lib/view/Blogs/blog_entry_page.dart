@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AdminBlogEntryPage extends StatefulWidget {
+  const AdminBlogEntryPage({super.key});
+
   @override
   _AdminBlogEntryPageState createState() => _AdminBlogEntryPageState();
 }
@@ -19,8 +21,19 @@ class _AdminBlogEntryPageState extends State<AdminBlogEntryPage> {
   final TextEditingController contentController = TextEditingController();
   final TextEditingController contributorNameController = TextEditingController();
   final TextEditingController contributorTitleController = TextEditingController();
-  String contentType = 'regular';  // 'regular', 'bold', or 'scrollable'
-
+  String contentType = 'regular';
+  // 'regular', 'bold', or 'scrollable'
+  @override
+  void dispose() {
+    titleController.dispose();
+    categoryController.dispose();
+    readingTimeController.dispose();
+    descriptionController.dispose();
+    contentController.dispose();
+    contributorNameController.dispose();
+    contributorTitleController.dispose();
+    super.dispose();
+  }
   void addContentSection() {
     setState(() {
       contentSections.add({
@@ -61,11 +74,8 @@ class _AdminBlogEntryPageState extends State<AdminBlogEntryPage> {
       );
 
       if (response.statusCode == 201) {
-        final responseData = json.decode(response.body);
-        print('Blog added: ${responseData['blog']}');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Blog added successfully')));
       } else {
-        print('Failed to add blog: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to add blog')));
       }
     }

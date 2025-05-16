@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:college_app/view_model/controller.dart';
-
 import '../model/college.dart';
 import '../services/college_services.dart';
 

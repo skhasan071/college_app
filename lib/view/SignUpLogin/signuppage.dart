@@ -5,14 +5,9 @@ import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import '../../services/auth_services.dart';
-import '../../services/google_signin_api.dart';
-import '../home_page.dart';
 import 'login.dart';
-import 'mobilesignup.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -43,11 +38,9 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       if (msgs['success']) {
-        print(msgs['token']);
         profile.profile.value = msgs['student'];
         profile.userToken.value = msgs['token'];
         saveToken(msgs['token']);
-        print(profile.profile.value!.email + "------------------------");
         loader.isLoading(false);
         return true;
       } else {

@@ -8,7 +8,7 @@ class Scholarships extends StatefulWidget {
   final String collegeId;
   final String collegeName;
 
-  Scholarships({required this.collegeId, required this.collegeName, super.key});
+  const Scholarships({required this.collegeId, required this.collegeName, super.key});
 
   @override
   _ScholarshipsState createState() => _ScholarshipsState();
@@ -59,13 +59,12 @@ class _ScholarshipsState extends State<Scholarships> {
           setState(() {
             scholarships = []; // Empty list when no scholarships
           });
-          print("No scholarships found for this college.");
         }
       } else {
-        print('Failed to load scholarships');
+        return;
       }
     } catch (error) {
-      print('Error fetching scholarships: $error');
+      return;
     }
   }
 
@@ -73,12 +72,12 @@ class _ScholarshipsState extends State<Scholarships> {
     double totalAid = 0.0;
     int validScholarships = 0;
 
-    scholarships.forEach((scholarship) {
+    for (var scholarship in scholarships) {
       if (scholarship['ScholarshipMoney'] != null) {
         totalAid += scholarship['ScholarshipMoney'];
         validScholarships++;
       }
-    });
+    }
 
     return validScholarships > 0 ? totalAid / validScholarships : 0.0;
   }
@@ -91,7 +90,7 @@ class _ScholarshipsState extends State<Scholarships> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            '${widget.collegeName ?? "College Name"} - Scholarships & Aid',
+            '${widget.collegeName} - Scholarships & Aid',
           ),
           centerTitle: true,
           leading: IconButton(
