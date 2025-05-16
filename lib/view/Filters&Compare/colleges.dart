@@ -2,7 +2,6 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/constants/filter.dart';
 import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
-import 'package:college_app/main.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/college_services.dart';
 import 'package:college_app/view_model/controller.dart';
