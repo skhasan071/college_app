@@ -56,7 +56,7 @@ class _CollegesState extends State<Colleges> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Text(
-                  "Hi, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
+                  "Hello, ${profile.profile.value == null ? "Guest" : profile.profile.value!.name}",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),

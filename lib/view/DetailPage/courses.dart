@@ -6,10 +6,14 @@ import 'package:get/get.dart';
 
 class Courses extends StatefulWidget {
   final String uid;
-  Courses(this.uid, {super.key, required this.collegeImage, required this.collegeName});
+  const Courses(
+    this.uid, {
+    super.key,
+    required this.collegeImage,
+    required this.collegeName,
+  });
   final String collegeImage;
   final String collegeName;
-
 
   @override
   State<Courses> createState() => _CoursesState();
@@ -22,7 +26,7 @@ class _CoursesState extends State<Courses> {
   List<Course> med_courses = [];
   List<Course> arts_courses = [];
   List<Course> business_courses = [];
-
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -81,125 +85,134 @@ class _CoursesState extends State<Courses> {
                     color: theme.filterSelectedColor,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  tabs:
-                      [
-                            'All Courses',
-                            'Engineering',
-                            'Medical',
-                            'Management',
-                            'Arts',
-                          ]
-                          .map(
-                            (title) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 2,
-                              ),
-                              child: Tab(child: Text(title)),
-                            ),
-                          )
-                          .toList(),
+                  tabs: [
+                    'All Courses',
+                    'Engineering',
+                    'Medical',
+                    'Management',
+                    'Arts',
+                  ].map(
+                        (title) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 2,
+                          ),
+                          child: Tab(child: Text(title)),
+                        ),
+                  ).toList(),
                 ),
               ),
 
-              filter_courses.isNotEmpty
+              isLoading ? filter_courses.isNotEmpty
                   ? Expanded(
-                    child: TabBarView(
-                      children: [
-                        ListView.builder(itemBuilder: (context, index){
+                child: TabBarView(
+                  children: [
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        Course course = filter_courses[index];
 
-                          Course course = filter_courses[index];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: _buildCourseCard(
-                              courseName: course.courseName,
-                              duration: course.duration,
-                              fees: '\$${course.fees}',
-                              eligibility: course.examType,
-                              intake: 'Sep 2025',
-                            ),
-                          );
-
-                        }, itemCount: filter_courses.length, shrinkWrap: true,),
-                        ListView.builder(itemBuilder: (context, index){
-
-                          Course course = eng_courses[index];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: _buildCourseCard(
-                              courseName: course.courseName,
-                              duration: course.duration,
-                              fees: '\$${course.fees}',
-                              eligibility: course.examType,
-                              intake: 'Sep 2025',
-                            ),
-                          );
-
-                        }, itemCount: eng_courses.length, shrinkWrap: true,),
-                        ListView.builder(itemBuilder: (context, index){
-
-                          Course course = med_courses[index];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: _buildCourseCard(
-                              courseName: course.courseName,
-                              duration: course.duration,
-                              fees: '\$${course.fees}',
-                              eligibility: course.examType,
-                              intake: 'Sep 2025',
-                            ),
-                          );
-
-                        }, itemCount: med_courses.length, shrinkWrap: true,),
-                        ListView.builder(itemBuilder: (context, index){
-
-                          Course course = business_courses[index];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: _buildCourseCard(
-                              courseName: course.courseName,
-                              duration: course.duration,
-                              fees: '\$${course.fees}',
-                              eligibility: course.examType,
-                              intake: 'Sep 2025',
-                            ),
-                          );
-
-                        }, itemCount: business_courses.length, shrinkWrap: true,),
-                        ListView.builder(itemBuilder: (context, index){
-
-                          Course course = arts_courses[index];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: _buildCourseCard(
-                              courseName: course.courseName,
-                              duration: course.duration,
-                              fees: '\$${course.fees}',
-                              eligibility: course.examType,
-                              intake: 'Sep 2025',
-                            ),
-                          );
-
-                        }, itemCount: arts_courses.length, shrinkWrap: true,),
-                      ]
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildCourseCard(
+                            courseName: course.courseName,
+                            duration: course.duration,
+                            fees: '\$${course.fees}',
+                            eligibility: course.examType,
+                            intake: 'Sep 2025',
+                          ),
+                        );
+                      },
+                      itemCount: filter_courses.length,
+                      shrinkWrap: true,
                     ),
-                  )
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        Course course = eng_courses[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildCourseCard(
+                            courseName: course.courseName,
+                            duration: course.duration,
+                            fees: '\$${course.fees}',
+                            eligibility: course.examType,
+                            intake: 'Sep 2025',
+                          ),
+                        );
+                      },
+                      itemCount: eng_courses.length,
+                      shrinkWrap: true,
+                    ),
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        Course course = med_courses[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildCourseCard(
+                            courseName: course.courseName,
+                            duration: course.duration,
+                            fees: '\$${course.fees}',
+                            eligibility: course.examType,
+                            intake: 'Sep 2025',
+                          ),
+                        );
+                      },
+                      itemCount: med_courses.length,
+                      shrinkWrap: true,
+                    ),
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        Course course = business_courses[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildCourseCard(
+                            courseName: course.courseName,
+                            duration: course.duration,
+                            fees: '\$${course.fees}',
+                            eligibility: course.examType,
+                            intake: 'Sep 2025',
+                          ),
+                        );
+                      },
+                      itemCount: business_courses.length,
+                      shrinkWrap: true,
+                    ),
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        Course course = arts_courses[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildCourseCard(
+                            courseName: course.courseName,
+                            duration: course.duration,
+                            fees: '\$${course.fees}',
+                            eligibility: course.examType,
+                            intake: 'Sep 2025',
+                          ),
+                        );
+                      },
+                      itemCount: arts_courses.length,
+                      shrinkWrap: true,
+                    ),
+                  ],
+                ),
+              )
                   : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          "No Course Offered",
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                        ),
-                      ),
-                    ],
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "No Course Offered",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
                   ),
+                ],
+              )
+              : Center(child: CircularProgressIndicator()),
+
             ],
           ),
         ),
@@ -216,13 +229,13 @@ class _CoursesState extends State<Courses> {
             width: 75,
             height: 75,
             decoration: BoxDecoration(color: Colors.grey.shade300),
-            child:  Center(
+            child: Center(
               child: Image.network(
                 widget.collegeImage,
                 height: 180,
                 width: double.infinity,
                 fit: BoxFit.cover,
-              )
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -344,27 +357,27 @@ class _CoursesState extends State<Courses> {
   }
 
   getCourse() async {
+    isLoading = true;
     main_courses = await CollegeServices.getCoursesByCollege(widget.uid);
     filter_courses = main_courses;
     eng_courses = getFiltered(filter: "Engineering");
     med_courses = getFiltered(filter: "Medical");
     arts_courses = getFiltered(filter: "Arts");
     business_courses = getFiltered(filter: "management");
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
-  List<Course> getFiltered({required String filter}){
-
+  List<Course> getFiltered({required String filter}) {
     List<Course> temp = [];
 
-    for(Course course in main_courses){
-      if(course.category.toLowerCase() == filter.toLowerCase()){
+    for (Course course in main_courses) {
+      if (course.category.toLowerCase() == filter.toLowerCase()) {
         temp.add(course);
       }
     }
 
     return temp;
-
   }
-
 }
