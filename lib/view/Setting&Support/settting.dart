@@ -38,7 +38,7 @@ class SettingsPage extends StatelessWidget {
                   "Update your Name, Mobile Number, Study In, Passed In, City.",
               icon: Icons.account_circle_outlined,
               onTap: () {
-                if(controller.isGuestIn.value){
+                if (controller.isGuestIn.value) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Please Login First"),
@@ -47,11 +47,11 @@ class SettingsPage extends StatelessWidget {
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
-                }else{
+                } else {
                   controller.navSelectedIndex.value = 5;
                 }
               },
-              iconColor: const Color(0xFF1E88E5), // Blue 600
+              iconColor: const Color(0xFF1E88E5),
             ),
 
             const Divider(),
@@ -60,7 +60,7 @@ class SettingsPage extends StatelessWidget {
               title: "Choose theme",
               subtitle: "System default",
               icon: Icons.brightness_6_outlined,
-              iconColor: Color(0xFF8E24AA), // Purple 600
+              iconColor: Color(0xFF8E24AA),
               onTap: () => Get.to(() => ThemePage()),
             ),
             const Divider(),
@@ -76,7 +76,7 @@ class SettingsPage extends StatelessWidget {
                     Icons.notifications_none,
                     size: 35,
                     color: Color(0xFFF4511E),
-                  ), // Deep Orange 600
+                  ),
 
                   title: const Text(
                     "Notifications",
@@ -94,7 +94,7 @@ class SettingsPage extends StatelessWidget {
               title: "Language",
               subtitle: "English",
               icon: Icons.language,
-              iconColor: Color(0xFF43A047), // Green 600
+              iconColor: Color(0xFF43A047),
               onTap: () => Get.to(() => const LanguagePage()),
             ),
             const Divider(),
@@ -103,7 +103,7 @@ class SettingsPage extends StatelessWidget {
               title: "Version",
               subtitle: "1.0.0",
               icon: Icons.info_outline,
-              iconColor: Color(0xFF757575), // Grey 600
+              iconColor: Color(0xFF757575),
               onTap: () {},
             ),
 
@@ -119,7 +119,7 @@ class SettingsPage extends StatelessWidget {
     String? subtitle,
     required IconData icon,
     required VoidCallback onTap,
-    Color iconColor = Colors.black, // Default color
+    Color iconColor = Colors.black,
   }) {
     return ListTile(
       leading: Icon(icon, size: 35, color: iconColor),

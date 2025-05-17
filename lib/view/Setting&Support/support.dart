@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SupportPage extends StatelessWidget {
-  const SupportPage({super.key});
+  var controller = Get.put(Controller());
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +98,24 @@ class SupportPage extends StatelessWidget {
               icon: Icons.report_problem,
               subtitle: "Report any issues to ensure a smooth experience.",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReportIssuePage(),
-                  ),
-                );
+                if (controller.isGuestIn.value) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please Login First"),
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.black,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReportIssuePage()),
+                  );
+                }
               },
             ),
+
             _buildDivider(),
             _subSectionTitle("Feedback:"),
             _actionTile(
@@ -114,10 +124,23 @@ class SupportPage extends StatelessWidget {
               subtitle:
                   "Share your thoughts to help us grow - We value your opinion, share your feedback with us.",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FeedbackPage()),
-                );
+                if (controller.isGuestIn.value) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please Login First"),
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.black,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FeedbackPage(),
+                    ),
+                  );
+                }
               },
             ),
             _buildDivider(),
@@ -261,10 +284,7 @@ class SupportPage extends StatelessWidget {
           subtitle != null
               ? Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ), // Customize subtitle style here
+                style: const TextStyle(fontSize: 14, color: Colors.black),
               )
               : null,
       trailing: const Icon(Icons.chevron_right),
@@ -333,24 +353,6 @@ class ReportIssuePage extends StatefulWidget {
 }
 
 class _ReportIssuePageState extends State<ReportIssuePage> {
-  SharedPreferences? prefs;
-  bool isUserLoggedIn = false;
-  var pfp = Get.find<ProfileController>();
-  var controller = Get.put(Controller());
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPrefs();
-  }
-
-  Future<void> _loadPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isUserLoggedIn = prefs?.getString('auth_token') != null;
-    });
-  }
-
   Future<void> submitIssue() async {
     const url = 'https://tc-ca-server.onrender.com/api/report';
 
@@ -543,20 +545,8 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      if (controller.isGuestIn.value) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Please Login First"),
-                            duration: Duration(seconds: 3),
-                            backgroundColor: Colors.black,
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      } else {
-                        if (_formKey.currentState!.validate()) {
-                          // Handle submission
-                          submitIssue();
-                        }
+                      if (_formKey.currentState!.validate()) {
+                        submitIssue();
                       }
                     },
 
@@ -596,24 +586,6 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  SharedPreferences? prefs;
-  bool isUserLoggedIn = false;
-  var pfp = Get.find<ProfileController>();
-  var controller = Get.put(Controller());
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPrefs();
-  }
-
-  Future<void> _loadPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isUserLoggedIn = prefs?.getString('auth_token') != null;
-    });
-  }
-
   Future<void> submitFeedback() async {
     const url = 'https://tc-ca-server.onrender.com/api/feedback';
 
@@ -788,20 +760,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      if (controller.isGuestIn.value) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Please Login First"),
-                            duration: Duration(seconds: 3),
-                            backgroundColor: Colors.black,
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      } else {
-                        if (_formKey.currentState!.validate()) {
-                          // Handle submission
-                          submitFeedback();
-                        }
+                      if (_formKey.currentState!.validate()) {
+                        // Handle submission
+                        submitFeedback();
                       }
                     },
 

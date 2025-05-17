@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SearchRes extends StatelessWidget {
-      List<College> colleges = [];
+  List<College> colleges = [];
 
- SearchRes(this.colleges, {super.key});
+  SearchRes(this.colleges, {super.key});
 
-ProfileController controller = Get.find<ProfileController>();
- Controller ctrl = Get.find<Controller>();
+  ProfileController controller = Get.find<ProfileController>();
+  Controller ctrl = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +21,11 @@ ProfileController controller = Get.find<ProfileController>();
       appBar: AppBar(
         title: Text(
           "Search",
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: TextStyle(color: Colors.black, fontSize: 18),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
 
       body:

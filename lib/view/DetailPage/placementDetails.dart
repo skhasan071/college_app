@@ -61,7 +61,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 3,
+        elevation: 0,
         title: const Text(
           'Placement Details',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -73,11 +73,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 12),
-          ),
-        ],
+        actions: [Padding(padding: EdgeInsets.only(right: 12))],
         backgroundColor: Colors.white,
       ),
       body:

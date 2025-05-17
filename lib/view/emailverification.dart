@@ -1,4 +1,4 @@
-import 'package:college_app/view/passwordreset.dart';
+/*import 'package:college_app/view/passwordreset.dart';
 import 'package:flutter/material.dart';
 
 
@@ -85,4 +85,4 @@ class _EmailVerificationState extends State<EmailVerification> {
       ),
     );
   }
-}
+}*/

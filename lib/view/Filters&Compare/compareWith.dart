@@ -10,7 +10,6 @@ import 'package:college_app/model/college.dart';
 import 'package:get/get.dart';
 import 'package:college_app/services/college_services.dart';
 
-
 class CompareWith extends StatefulWidget {
   final College clg;
   final String collegeId;
@@ -28,7 +27,6 @@ class _CompareWithState extends State<CompareWith> {
   List<College> allColleges = [];
   List<College> filteredColleges = [];
 
-
   var profile = Get.find<ProfileController>();
 
   @override
@@ -44,6 +42,7 @@ class _CompareWithState extends State<CompareWith> {
       final theme = ThemeController.to.currentTheme;
 
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 5,
@@ -265,8 +264,6 @@ class _CompareWithState extends State<CompareWith> {
   Future<void> getColleges() async {
     colleges = await StudentService.getFavoriteColleges(
       profile.profile.value!.id,
-
-
     );
 
     if (showShortlistedOnly) {
