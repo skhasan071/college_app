@@ -260,7 +260,7 @@ class SupportPage extends StatelessWidget {
         text,
         style: const TextStyle(
           fontSize: 16,
-          color: Colors.black,
+          color: Colors.lightBlue,
           fontWeight: FontWeight.bold,
         ),
       ),
