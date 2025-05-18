@@ -64,62 +64,52 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
               const SizedBox(height: 10),
 
               //const SizedBox(height: 16),
-              colleges.isNotEmpty ? Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: theme.backgroundGradient,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: theme.boxShadow,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: const [
-                          /*  Filter(title: "View All", section: ''),
-                          SizedBox(width: 8),
-                          Filter(title: "Engineering", section: ''),
-                          SizedBox(width: 8),
-                          Filter(title: "Medical", section: ''),
-                          SizedBox(width: 8),
-                          Filter(title: "Dont Know", section: ''),*/
-                        ],
-                      ),
+              colleges.isNotEmpty
+                  ? Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: theme.backgroundGradient,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: theme.boxShadow,
                     ),
-                    const SizedBox(height: 16),
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        College clg = colleges[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: CardStructure(
-                            width: double.infinity,
-                            collegeID: clg.id,
-                            collegeName: clg.name,
-                            coursesCount: 10,
-                            feeRange: clg.feeRange,
-                            state: clg.country,
-                            ranking: clg.ranking.toString(),
-                            studId: profile.profile.value!.id,
-                            clgId: clg.id,
-                            clg: clg,
-                          ),
-                        );
-                      },
-                      itemCount: colleges.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(), // important!
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListView.builder(
+                          itemBuilder: (context, index) {
+                            College clg = colleges[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                              ),
+                              child: CardStructure(
+                                width: double.infinity,
+                                collegeID: clg.id,
+                                collegeName: clg.name,
+                                coursesCount: 10,
+                                feeRange: clg.feeRange,
+                                state: clg.country,
+                                ranking: clg.ranking.toString(),
+                                studId: profile.profile.value!.id,
+                                clgId: clg.id,
+                                clg: clg,
+                              ),
+                            );
+                          },
+                          itemCount: colleges.length,
+                          shrinkWrap: true,
+                          physics:
+                              const NeverScrollableScrollPhysics(), // important!
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ) : Center(
-                child: Text("No Colleges Shortlisted", style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),),
-              ),
+                  )
+                  : Center(
+                    child: Text(
+                      "No Colleges Shortlisted",
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ),
             ],
           ),
         ),

@@ -122,7 +122,6 @@ class _CollegesState extends State<Colleges> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Wrap title, filters, cards
           Container(
             margin: const EdgeInsets.symmetric(vertical: 12),
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
@@ -155,30 +154,40 @@ class _CollegesState extends State<Colleges> {
                 ),
 
                 // Filters
+                // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Container(
                     height: 50,
                     child: ListView.builder(
                       itemBuilder: (context, index) {
+                        final isAll = index == 0;
+                        final filterTitle =
+                            isAll
+                                ? 'All'
+                                : profile.interestedStreams[index - 1];
+
                         return Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Filter(
-                              title: profile.interestedStreams[index],
+                              title: filterTitle,
                               section: title,
                               onStreamSelected: (stream) {
                                 setState(() {
-                                  selectedStreamsBySection[title] = stream;
+                                  if (stream == 'All') {
+                                    selectedStreamsBySection.remove(title);
+                                  } else {
+                                    selectedStreamsBySection[title] = stream;
+                                  }
                                 });
                               },
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                           ],
                         );
                       },
-
-                      itemCount: profile.interestedStreams.length,
+                      itemCount: profile.interestedStreams.length + 1,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                     ),
@@ -210,8 +219,7 @@ class _CollegesState extends State<Colleges> {
                               MaterialPageRoute(
                                 builder:
                                     (context) => CollegeDetail(
-                                      college:
-                                          getFilteredColleges()[index], // Pass filtered college
+                                      college: getFilteredColleges()[index],
                                       collegeName:
                                           getFilteredColleges()[index].name,
                                       lat: getFilteredColleges()[index].lat,
@@ -351,7 +359,8 @@ class _CollegesState extends State<Colleges> {
       }
     } else {
       // Handle case when profile is null (e.g., show a message or return early)
-return;    }
+      return;
+    }
   }
 
   Future<void> getColleges() async {

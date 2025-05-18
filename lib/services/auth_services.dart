@@ -73,5 +73,56 @@ class AuthService {
       return {"success": false, "message": e.toString()};
     }
   }
+  static Future<Map<String, dynamic>> sendOtp(String email) async {
+    final url = Uri.parse('$baseUrl/forgot-password/send-otp');
 
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {"success": true, "message": data['message']};
+      } else {
+        return {"success": false, "message": data['message']};
+      }
+    } catch (e) {
+      return {"success": false, "message": e.toString()};
+    }
+  }
+
+  // 🔹 Verify OTP and reset password
+  static Future<Map<String, dynamic>> verifyOtpAndResetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  }) async {
+    final url = Uri.parse('$baseUrl/forgot-password/verify-otp');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": email,
+          "otp": otp,
+          "newPassword": newPassword,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {"success": true, "message": data['message']};
+      } else {
+        return {"success": false, "message": data['message']};
+      }
+    } catch (e) {
+      return {"success": false, "message": e.toString()};
+    }
+  }
 }

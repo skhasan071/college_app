@@ -69,7 +69,7 @@ class _InsightsState extends State<Insights> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          elevation: 0,
           title: const Text(
             'Latest News & Insights',
             style: TextStyle(fontWeight: FontWeight.bold),

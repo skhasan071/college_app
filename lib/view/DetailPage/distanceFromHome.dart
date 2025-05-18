@@ -72,7 +72,7 @@ class _DistanceFromHometownState extends State<DistanceFromHometown> {
       setState(() {
         isLoading = false;
       });
-      return;                                                                                                                                                                   
+      return;
     }
 
     permission = await Geolocator.requestPermission();
@@ -133,7 +133,7 @@ class _DistanceFromHometownState extends State<DistanceFromHometown> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {

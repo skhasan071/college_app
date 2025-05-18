@@ -478,7 +478,9 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                               QuickHighlights(
                                                 title: "Acceptance Rate",
                                                 value:
-                                                    widget.college.acceptanceRate,
+                                                    widget
+                                                        .college
+                                                        .acceptanceRate,
                                               ),
                                               QuickHighlights(
                                                 title: "Placement Rate",
@@ -691,7 +693,8 @@ class CourseTile extends StatelessWidget {
   final String fee;
   final String duration;
 
-  const CourseTile({super.key,
+  const CourseTile({
+    super.key,
     required this.course,
     required this.fee,
     required this.duration,

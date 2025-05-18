@@ -23,7 +23,7 @@ class Cutoff extends StatelessWidget {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          elevation: 0,
           title: Text(
             "Cut-offs & Rankings",
             style: TextStyle(fontWeight: FontWeight.bold),

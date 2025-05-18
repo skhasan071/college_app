@@ -20,7 +20,7 @@ class Cost extends StatelessWidget {
   Future<CostModel?> fetchCostData(String collegeId) async {
     try {
       final response = await http.get(
-        Uri.parse("https://tc-ca-server.onrender.com/api/$collegeId"),
+        Uri.parse("https://tc-ca-server.onrender.com/api/cost/$collegeId"),
       );
 
       if (response.statusCode == 200) {
@@ -33,7 +33,6 @@ class Cost extends StatelessWidget {
           return null;
         }
       } else {
-
         return null;
       }
     } catch (e) {
@@ -49,7 +48,7 @@ class Cost extends StatelessWidget {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          elevation: 0,
           title: const Text(
             'Cost & Location',
             style: TextStyle(fontWeight: FontWeight.bold),

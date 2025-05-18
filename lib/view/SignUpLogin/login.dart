@@ -8,9 +8,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../resetPassword/SendOtpScreen.dart';
 import '../../view_model/data_loader.dart';
 import '../home_page.dart';
-import '../emailverification.dart';
 import 'mobilenoauth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const EmailVerification(),
+                      builder: (context) => SendOtpScreen(),
                     ),
                   );
                 },

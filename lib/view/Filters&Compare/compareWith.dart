@@ -10,7 +10,6 @@ import 'package:college_app/model/college.dart';
 import 'package:get/get.dart';
 import 'package:college_app/services/college_services.dart';
 
-
 class CompareWith extends StatefulWidget {
   final College clg;
   final String collegeId;
@@ -28,7 +27,6 @@ class _CompareWithState extends State<CompareWith> {
   List<College> allColleges = [];
   List<College> filteredColleges = [];
 
-
   var profile = Get.find<ProfileController>();
 
   @override
@@ -38,12 +36,15 @@ class _CompareWithState extends State<CompareWith> {
     fetchAllColleges();
   }
 
+  bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
 
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 5,
@@ -187,73 +188,70 @@ class _CompareWithState extends State<CompareWith> {
                   ],
                 ),
                 const SizedBox(height: 15),
-                ListView.builder(
-                  itemBuilder: (context, index) {
-                    College clg = filteredColleges[index];
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                      itemBuilder: (context, index) {
+                        College clg = filteredColleges[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: CardStructure(
-                        width: double.infinity,
-                        collegeID: clg.id,
-                        collegeName: clg.name,
-                        coursesCount: 10,
-                        feeRange: clg.feeRange,
-                        state: clg.country,
-                        ranking: clg.ranking.toString(),
-                        studId: profile.profile.value!.id,
-                        clgId: clg.id,
-                        clg: clg,
-                        showTwoButtons: true,
-                        disableCardTap: true,
-                        onDetailTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => CollegeDetail(
-                                    college: clg,
-                                    collegeImage: clg.image,
-                                    collegeName: clg.name,
-                                    state: clg.state,
-                                    lat: clg.lat,
-                                    long: clg.long,
-                                  ),
-                            ),
-                          );
-                        },
-                        onCompareTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => CompareColleges(
-                                    college: clg,
-                                    clg: clg,
-                                    collegeId: clg.id,
-                                    collegeName: clg.name,
-                                    collegeImage: clg.image,
-                                    ranking: clg.ranking.toString(),
-                                    feeRange: clg.feeRange,
-                                    state: clg.state,
-
-                                    firstCollege:
-                                        widget
-                                            .clg, // original college from previous page
-                                    secondCollege:
-                                        clg, // the new college selected for comparison
-                                  ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  itemCount: filteredColleges.length,
-
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                ),
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: CardStructure(
+                            width: double.infinity,
+                            collegeID: clg.id,
+                            collegeName: clg.name,
+                            coursesCount: 10,
+                            feeRange: clg.feeRange,
+                            state: clg.country,
+                            ranking: clg.ranking.toString(),
+                            studId: profile.profile.value!.id,
+                            clgId: clg.id,
+                            clg: clg,
+                            showTwoButtons: true,
+                            disableCardTap: true,
+                            onDetailTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => CollegeDetail(
+                                        college: clg,
+                                        collegeImage: clg.image,
+                                        collegeName: clg.name,
+                                        state: clg.state,
+                                        lat: clg.lat,
+                                        long: clg.long,
+                                      ),
+                                ),
+                              );
+                            },
+                            onCompareTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => CompareColleges(
+                                        college: clg,
+                                        clg: clg,
+                                        collegeId: clg.id,
+                                        collegeName: clg.name,
+                                        collegeImage: clg.image,
+                                        ranking: clg.ranking.toString(),
+                                        feeRange: clg.feeRange,
+                                        state: clg.state,
+                                        firstCollege: widget.clg,
+                                        secondCollege: clg,
+                                      ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      itemCount: filteredColleges.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                    ),
               ],
             ),
           ),
@@ -265,8 +263,6 @@ class _CompareWithState extends State<CompareWith> {
   Future<void> getColleges() async {
     colleges = await StudentService.getFavoriteColleges(
       profile.profile.value!.id,
-
-
     );
 
     if (showShortlistedOnly) {
@@ -277,8 +273,11 @@ class _CompareWithState extends State<CompareWith> {
   }
 
   Future<void> fetchAllColleges() async {
+    setState(() => isLoading = true);
+
     allColleges = await CollegeServices.getColleges();
     filteredColleges = List.from(allColleges);
-    setState(() {});
+
+    setState(() => isLoading = false);
   }
 }

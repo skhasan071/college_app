@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'package:college_app/model/placement.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/model/college.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:http/http.dart' as http;
 
-class CompareColleges extends StatelessWidget {
+class CompareColleges extends StatefulWidget {
   final String collegeImage;
   final College clg;
   final College college;
@@ -29,14 +32,64 @@ class CompareColleges extends StatelessWidget {
     required this.secondCollege,
   });
   @override
+  State<CompareColleges> createState() => _CompareCollegesState();
+}
+
+class _CompareCollegesState extends State<CompareColleges> {
+  Placement? placement1;
+  Placement? placement2;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPlacementData();
+  }
+
+  Future<void> fetchPlacementData() async {
+    try {
+      final response1 = await http.get(
+        Uri.parse(
+          'https://tc-ca-server.onrender.com/api/colleges/placement/${widget.firstCollege.id}',
+        ),
+      );
+
+      final response2 = await http.get(
+        Uri.parse(
+          'https://tc-ca-server.onrender.com/api/colleges/placement/${widget.secondCollege.id}',
+        ),
+      );
+
+      if (response1.statusCode == 200 && response2.statusCode == 200) {
+        final data1 = jsonDecode(response1.body);
+        final data2 = jsonDecode(response2.body);
+
+        setState(() {
+          placement1 = data1.isNotEmpty ? Placement.fromJson(data1[0]) : null;
+          placement2 = data2.isNotEmpty ? Placement.fromJson(data2[0]) : null;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: theme.filterSelectedColor,
-          foregroundColor: theme.filterTextColor,
-          elevation: 5,
+          backgroundColor: Colors.white,
+          elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.pop(context),
@@ -75,29 +128,49 @@ class CompareColleges extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _collegeLogoWithName(firstCollege.name, clg.image),
+                    child: _collegeLogoWithName(
+                      widget.firstCollege.name,
+                      widget.clg.image,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: _collegeLogoWithName(secondCollege.name, clg.image),
+                    child: _collegeLogoWithName(
+                      widget.secondCollege.name,
+                      widget.clg.image,
+                    ),
                   ),
                 ],
               ),
 
               const SizedBox(height: 12),
 
-              _infoRow('Location', [firstCollege.state, secondCollege.state]),
-
-              _infoRow('Cutoff', [' - ', ' - ']),
-              _infoRow('Fees', [firstCollege.feeRange, secondCollege.feeRange]),
-              _infoRow('Courses Offered', [' - ', ' - ']),
-              _infoRow('Rating', [' - ', ' - ']),
+              _infoRow('Location', [
+                widget.firstCollege.state,
+                widget.secondCollege.state,
+              ]),
+              _infoRow('Fees', [
+                widget.firstCollege.feeRange,
+                widget.secondCollege.feeRange,
+              ]),
               _infoRow('NIRF Ranking', [
-                firstCollege.ranking.toString(),
-                secondCollege.ranking.toString(),
+                widget.firstCollege.ranking.toString(),
+                widget.secondCollege.ranking.toString(),
+              ]),
+              _infoRow('Placement Rate', [
+                placement1?.placementRate ?? ' - ',
+                placement2?.placementRate ?? ' - ',
               ]),
 
-              _infoRow('Admission Probability', [' - ', ' - ']),
+              _infoRow('No. of Companies Visited', [
+                placement1?.numberOfCompanyVisited ?? ' - ',
+                placement2?.numberOfCompanyVisited ?? ' - ',
+              ]),
+
+              _infoRow('Top Recruiters', [
+                placement1?.companiesVisited.join(', ') ?? ' - ',
+                placement2?.companiesVisited.join(', ') ?? ' - ',
+              ]),
               const Divider(color: Colors.black, thickness: 1),
             ],
           ),
@@ -184,6 +257,7 @@ class CompareColleges extends StatelessWidget {
 
             Expanded(
               child: Container(
+                decoration: BoxDecoration(gradient: theme.backgroundGradient),
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Center(
                   child: Text(

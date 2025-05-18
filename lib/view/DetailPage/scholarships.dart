@@ -8,7 +8,11 @@ class Scholarships extends StatefulWidget {
   final String collegeId;
   final String collegeName;
 
-  const Scholarships({required this.collegeId, required this.collegeName, super.key});
+  const Scholarships({
+    required this.collegeId,
+    required this.collegeName,
+    super.key,
+  });
 
   @override
   _ScholarshipsState createState() => _ScholarshipsState();
@@ -88,17 +92,16 @@ class _ScholarshipsState extends State<Scholarships> {
       final theme = ThemeController.to.currentTheme;
 
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(
-            '${widget.collegeName} - Scholarships & Aid',
-          ),
+          title: Text('${widget.collegeName} - Scholarships & Aid'),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
           backgroundColor: Colors.white,
-          elevation: 3,
+          elevation: 0,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),

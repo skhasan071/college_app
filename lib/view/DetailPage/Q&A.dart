@@ -121,9 +121,11 @@ class _QAPageState extends State<QAPage> {
           filterQuestions(); // refresh filtered list after adding
         });
       } else {
-        return;      }
+        return;
+      }
     } catch (e) {
-      return;    }
+      return;
+    }
   }
 
   @override
@@ -133,7 +135,7 @@ class _QAPageState extends State<QAPage> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          elevation: 0,
           title: Text(
             'Q&A - ${widget.collegeName}',
             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -242,7 +244,7 @@ class _QAPageState extends State<QAPage> {
               height: MediaQuery.of(context).size.height * 0.4,
               child: Column(
                 children: [
-                   TextField(
+                  TextField(
                     controller: nameController,
                     decoration: const InputDecoration(
                       hintText: 'Enter your name',

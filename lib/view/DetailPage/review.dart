@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import '../../view_model/controller.dart';
 
 class Reviews extends StatefulWidget {
- final String uid;
+  final String uid;
 
   const Reviews(this.uid, {super.key});
 
@@ -44,8 +44,9 @@ class _ReviewsState extends State<Reviews> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 3,
+        elevation: 0,
         title: const Text(
           "Reviews & Ratings",
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -107,7 +108,7 @@ class _ReviewsState extends State<Reviews> {
                         vertical: 15,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero, // No rounded border
+                        borderRadius: BorderRadius.zero,
                       ),
                     ),
                     child: const Text(
@@ -247,75 +248,65 @@ class _ReviewsState extends State<Reviews> {
     );
   }
 
-
-
   Widget _buildStarRating(double rating, {double iconSize = 20}) {
-    return Obx(() {
-      final theme = ThemeController.to.currentTheme;
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(5, (index) {
-          if (rating >= index + 1) {
-            return Icon(Icons.star, color: theme.starColor, size: iconSize);
-          } else if (rating > index) {
-            return Icon(
-              Icons.star_half,
-              color: theme.starColor,
-              size: iconSize,
-            );
-          } else {
-            return Icon(
-              Icons.star_border,
-              color: theme.starColor,
-              size: iconSize,
-            );
-          }
-        }),
-      );
-    });
+    final theme = ThemeController.to.currentTheme;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (index) {
+        if (rating >= index + 1) {
+          return Icon(Icons.star, color: theme.starColor, size: iconSize);
+        } else if (rating > index) {
+          return Icon(Icons.star_half, color: theme.starColor, size: iconSize);
+        } else {
+          return Icon(
+            Icons.star_border,
+            color: theme.starColor,
+            size: iconSize,
+          );
+        }
+      }),
+    );
   }
 
   Widget _buildRatingBar(String label, int percent) {
-    return Obx(() {
-      final theme = ThemeController.to.currentTheme;
-      return Row(
-        children: [
-          Text(
-            label,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Stack(
-              children: [
-                Container(
+    final theme = ThemeController.to.currentTheme;
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Stack(
+            children: [
+              Container(
+                height: 8,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: percent / 100,
+                child: Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: theme.filterSelectedColor,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                FractionallySizedBox(
-                  widthFactor: percent / 100,
-                  child: Container(
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: theme.filterSelectedColor,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          Text(
-            "$percent%",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ],
-      );
-    });
+        ),
+        const SizedBox(width: 8),
+        Text(
+          "$percent%",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
   }
 
   Widget _buildReviewItem(
@@ -327,77 +318,72 @@ class _ReviewsState extends State<Reviews> {
     int likes,
     int comments,
   ) {
-    return Obx(() {
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircleAvatar(radius: 30, child: Icon(Icons.person, size: 36)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                        ),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(radius: 30, child: Icon(Icons.person, size: 36)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
                       ),
-                      _buildStarRating(rating, iconSize: 18),
-                    ],
-                  ),
-                  Text(
-                    role,
-                    style: const TextStyle(
-                      color: Color(0xFF42A5F5),
-                      fontSize: 15,
                     ),
+                    _buildStarRating(rating, iconSize: 18),
+                  ],
+                ),
+                Text(
+                  role,
+                  style: const TextStyle(
+                    color: Color(0xFF42A5F5),
+                    fontSize: 15,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    review,
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  review,
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Posted on $date",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Posted on $date",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.thumb_up_alt_outlined,
+                      size: 25,
+                      color: Colors.grey,
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.thumb_up_alt_outlined,
-                        size: 25,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "$likes",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Color(0xFF42A5F5),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$likes",
+                      style: TextStyle(fontSize: 15, color: Color(0xFF42A5F5)),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 
   void _showReviewDialog(BuildContext context) {

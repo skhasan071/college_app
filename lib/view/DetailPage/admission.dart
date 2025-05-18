@@ -61,7 +61,8 @@ class _AdmissionState extends State<Admission> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          backgroundColor: Colors.white,
+          elevation: 0,
           title: const Text(
             'Admissions & Eligibility',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -73,7 +74,6 @@ class _AdmissionState extends State<Admission> {
               Navigator.pop(context);
             },
           ),
-          backgroundColor: Colors.white,
         ),
         body:
             isLoading
@@ -141,11 +141,9 @@ class _AdmissionState extends State<Admission> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            ...admissionProcess.requiredExams
-                                .map(
-                                  (exam) => _examTile(exam, "For All Programs"),
-                                )
-
+                            ...admissionProcess.requiredExams.map(
+                              (exam) => _examTile(exam, "For All Programs"),
+                            ),
                           ],
                         ),
                       ),

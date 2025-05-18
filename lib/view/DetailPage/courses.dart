@@ -41,8 +41,9 @@ class _CoursesState extends State<Courses> {
       return DefaultTabController(
         length: 5,
         child: Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            elevation: 3,
+            elevation: 0,
             title: const Text(
               'Courses & Fees',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -56,8 +57,6 @@ class _CoursesState extends State<Courses> {
             ),
             backgroundColor: Colors.white,
           ),
-
-          backgroundColor: Colors.white,
 
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,134 +88,140 @@ class _CoursesState extends State<Courses> {
                     color: theme.filterSelectedColor,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  tabs: [
-                    'All Courses',
-                    'Engineering',
-                    'Medical',
-                    'Management',
-                    'Arts',
-                  ].map(
-                        (title) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 2,
-                          ),
-                          child: Tab(child: Text(title)),
-                        ),
-                  ).toList(),
+                  tabs:
+                      [
+                            'All Courses',
+                            'Engineering',
+                            'Medical',
+                            'Management',
+                            'Arts',
+                          ]
+                          .map(
+                            (title) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 2,
+                              ),
+                              child: Tab(child: Text(title)),
+                            ),
+                          )
+                          .toList(),
                 ),
               ),
 
-              isLoading ? filter_courses.isNotEmpty
-                  ? Expanded(
-                child: TabBarView(
-                  children: [
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        Course course = filter_courses[index];
+              isLoading
+                  ? filter_courses.isNotEmpty
+                      ? Expanded(
+                        child: TabBarView(
+                          children: [
+                            ListView.builder(
+                              itemBuilder: (context, index) {
+                                Course course = filter_courses[index];
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _buildCourseCard(
-                            courseName: course.courseName,
-                            duration: course.duration,
-                            fees: '\$${course.fees}',
-                            eligibility: course.examType,
-                            intake: 'Sep 2025',
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _buildCourseCard(
+                                    courseName: course.courseName,
+                                    duration: course.duration,
+                                    fees: '\$${course.fees}',
+                                    eligibility: course.examType,
+                                    intake: 'Sep 2025',
+                                  ),
+                                );
+                              },
+                              itemCount: filter_courses.length,
+                              shrinkWrap: true,
+                            ),
+                            ListView.builder(
+                              itemBuilder: (context, index) {
+                                Course course = eng_courses[index];
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _buildCourseCard(
+                                    courseName: course.courseName,
+                                    duration: course.duration,
+                                    fees: '\$${course.fees}',
+                                    eligibility: course.examType,
+                                    intake: 'Sep 2025',
+                                  ),
+                                );
+                              },
+                              itemCount: eng_courses.length,
+                              shrinkWrap: true,
+                            ),
+                            ListView.builder(
+                              itemBuilder: (context, index) {
+                                Course course = med_courses[index];
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _buildCourseCard(
+                                    courseName: course.courseName,
+                                    duration: course.duration,
+                                    fees: '\$${course.fees}',
+                                    eligibility: course.examType,
+                                    intake: 'Sep 2025',
+                                  ),
+                                );
+                              },
+                              itemCount: med_courses.length,
+                              shrinkWrap: true,
+                            ),
+                            ListView.builder(
+                              itemBuilder: (context, index) {
+                                Course course = business_courses[index];
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _buildCourseCard(
+                                    courseName: course.courseName,
+                                    duration: course.duration,
+                                    fees: '\$${course.fees}',
+                                    eligibility: course.examType,
+                                    intake: 'Sep 2025',
+                                  ),
+                                );
+                              },
+                              itemCount: business_courses.length,
+                              shrinkWrap: true,
+                            ),
+                            ListView.builder(
+                              itemBuilder: (context, index) {
+                                Course course = arts_courses[index];
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _buildCourseCard(
+                                    courseName: course.courseName,
+                                    duration: course.duration,
+                                    fees: '\$${course.fees}',
+                                    eligibility: course.examType,
+                                    intake: 'Sep 2025',
+                                  ),
+                                );
+                              },
+                              itemCount: arts_courses.length,
+                              shrinkWrap: true,
+                            ),
+                          ],
+                        ),
+                      )
+                      : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              "No Course Offered",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                            ),
                           ),
-                        );
-                      },
-                      itemCount: filter_courses.length,
-                      shrinkWrap: true,
-                    ),
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        Course course = eng_courses[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _buildCourseCard(
-                            courseName: course.courseName,
-                            duration: course.duration,
-                            fees: '\$${course.fees}',
-                            eligibility: course.examType,
-                            intake: 'Sep 2025',
-                          ),
-                        );
-                      },
-                      itemCount: eng_courses.length,
-                      shrinkWrap: true,
-                    ),
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        Course course = med_courses[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _buildCourseCard(
-                            courseName: course.courseName,
-                            duration: course.duration,
-                            fees: '\$${course.fees}',
-                            eligibility: course.examType,
-                            intake: 'Sep 2025',
-                          ),
-                        );
-                      },
-                      itemCount: med_courses.length,
-                      shrinkWrap: true,
-                    ),
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        Course course = business_courses[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _buildCourseCard(
-                            courseName: course.courseName,
-                            duration: course.duration,
-                            fees: '\$${course.fees}',
-                            eligibility: course.examType,
-                            intake: 'Sep 2025',
-                          ),
-                        );
-                      },
-                      itemCount: business_courses.length,
-                      shrinkWrap: true,
-                    ),
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        Course course = arts_courses[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _buildCourseCard(
-                            courseName: course.courseName,
-                            duration: course.duration,
-                            fees: '\$${course.fees}',
-                            eligibility: course.examType,
-                            intake: 'Sep 2025',
-                          ),
-                        );
-                      },
-                      itemCount: arts_courses.length,
-                      shrinkWrap: true,
-                    ),
-                  ],
-                ),
-              )
-                  : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Text(
-                      "No Course Offered",
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                  ),
-                ],
-              )
-              : Center(child: CircularProgressIndicator()),
-
+                        ],
+                      )
+                  : Center(child: CircularProgressIndicator()),
             ],
           ),
         ),

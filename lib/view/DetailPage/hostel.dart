@@ -80,7 +80,7 @@ class _HostelState extends State<Hostel> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
