@@ -19,6 +19,7 @@ class SelectionPage extends StatelessWidget {
     'France',
     'Japan',
   ];
+
   final List<String> streams = [
     'Engineering',
     'Management',

@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SearchRes extends StatelessWidget {
-      List<College> colleges = [];
 
- SearchRes(this.colleges, {super.key});
+  List<College> colleges = [];
 
-ProfileController controller = Get.find<ProfileController>();
- Controller ctrl = Get.find<Controller>();
+  SearchRes(this.colleges, {super.key});
+
+  ProfileController controller = Get.find<ProfileController>();
+  Controller ctrl = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
