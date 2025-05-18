@@ -11,7 +11,6 @@ import 'dart:convert';
 import '../../resetPassword/SendOtpScreen.dart';
 import '../../view_model/data_loader.dart';
 import '../home_page.dart';
-import '../emailverification.dart';
 import 'mobilenoauth.dart';
 
 class LoginPage extends StatefulWidget {

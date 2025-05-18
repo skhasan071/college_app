@@ -20,7 +20,7 @@ class Cost extends StatelessWidget {
   Future<CostModel?> fetchCostData(String collegeId) async {
     try {
       final response = await http.get(
-        Uri.parse("https://tc-ca-server.onrender.com/api/$collegeId"),
+        Uri.parse("https://tc-ca-server.onrender.com/api/cost/$collegeId"),
       );
 
       if (response.statusCode == 200) {
