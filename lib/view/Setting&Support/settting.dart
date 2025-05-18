@@ -16,8 +16,8 @@ class SettingsPage extends StatelessWidget {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: theme.filterSelectedColor,
-          foregroundColor: theme.filterTextColor,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
           title: const Text(
             'Settings',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -90,15 +90,14 @@ class SettingsPage extends StatelessWidget {
             ),
             const Divider(),
 
-            _buildTile(
+            /*  _buildTile(
               title: "Language",
               subtitle: "English",
               icon: Icons.language,
               iconColor: Color(0xFF43A047),
               onTap: () => Get.to(() => const LanguagePage()),
             ),
-            const Divider(),
-
+            const Divider(),*/
             _buildTile(
               title: "Version",
               subtitle: "1.0.0",
@@ -162,8 +161,8 @@ class ThemePage extends StatelessWidget {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: theme.filterSelectedColor,
-          foregroundColor: theme.filterTextColor,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
           title: const Text(
             'Choose Theme',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -216,7 +215,7 @@ class ThemePage extends StatelessWidget {
   }
 }
 
-class LanguagePage extends StatelessWidget {
+/*class LanguagePage extends StatelessWidget {
   const LanguagePage({super.key});
 
   final List<String> languages = const [
@@ -246,4 +245,4 @@ class LanguagePage extends StatelessWidget {
       ),
     );
   }
-}
+}*/
