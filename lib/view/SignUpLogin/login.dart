@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../resetPassword/SendOtpScreen.dart';
+import '../../view_model/controller.dart';
 import '../../view_model/data_loader.dart';
 import '../home_page.dart';
 import 'mobilenoauth.dart';
@@ -51,7 +52,9 @@ class _LoginPageState extends State<LoginPage> {
         String token = map['token'];
 
         await saveToken(token);
-
+        final controller = Get.find<Controller>();
+        controller.isGuestIn.value = false; // user is logged in now
+        controller.isLoggedIn.value = true;
         Navigator.pushAndRemoveUntil(
           context,
             MaterialPageRoute(builder: (context) => HomePage(token)),
@@ -193,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     onPressed: _handleLogin,
                     child: const Text(
-                      "Login",
+                      "Sign In",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
