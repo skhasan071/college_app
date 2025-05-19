@@ -3,9 +3,11 @@ import 'package:college_app/view/Setting&Support/support.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import '../services/shortListCollegeController.dart';
 import '../view_model/controller.dart';
+import 'SignUpLogin/login.dart';
 
 class DrawerWidget extends StatelessWidget {
   var controller = Get.put(Controller());
@@ -77,15 +79,27 @@ class DrawerWidget extends StatelessWidget {
                         callback: () {
                           if (controller.isGuestIn.value) {
                             scaffoldKey.currentState?.closeDrawer();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Please Login First"),
-                                duration: Duration(seconds: 3),
-                                backgroundColor: Colors.black,
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                          } else {
+
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please Login First"),
+                                  duration: Duration(seconds: 3),
+                                  backgroundColor: Colors.black,
+                                  behavior: SnackBarBehavior.floating,
+                                  action: SnackBarAction(
+                                    label: 'Login',
+                                    textColor: Colors.blueAccent,
+                                    onPressed: () {
+                                      // Use GetX navigation
+                                      Get.back(); // Closes snackbar or drawer if open
+                                      Get.off(() => LoginPage()); // Navigate and remove current screen
+                                    },
+                                  ),
+                                ),
+                              );
+                            });
+                          }else {
                             controller.navSelectedIndex.value = 4;
                             scaffoldKey.currentState?.closeDrawer();
                           }
@@ -158,14 +172,26 @@ class DrawerWidget extends StatelessWidget {
                   onTap: () {
                     if (controller.isGuestIn.value) {
                       scaffoldKey.currentState?.closeDrawer();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Please Login First"),
-                          duration: Duration(seconds: 3),
-                          backgroundColor: Colors.black,
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
+
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please Login First"),
+                            duration: Duration(seconds: 3),
+                            backgroundColor: Colors.black,
+                            behavior: SnackBarBehavior.floating,
+                            action: SnackBarAction(
+                              label: 'Login',
+                              textColor: Colors.blueAccent,
+                              onPressed: () {
+                                // Use GetX navigation
+                                Get.back(); // Closes snackbar or drawer if open
+                                Get.off(() => LoginPage()); // Navigate and remove current screen
+                              },
+                            ),
+                          ),
+                        );
+                      });
                     } else {
                       controller.navSelectedIndex.value = 5;
                       scaffoldKey.currentState?.closeDrawer();

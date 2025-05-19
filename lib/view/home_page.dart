@@ -2,6 +2,7 @@ import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/model/user.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/Blogs/blog_page.dart';
+import 'package:college_app/view/SignUpLogin/login.dart';
 import 'package:college_app/view/college_predictor_page.dart';
 import 'package:college_app/view/Filters&Compare/colleges.dart';
 import 'package:college_app/view/drawer.dart';
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> {
 
   var controller = Get.put(Controller());
   var profileController = Get.put(ProfileController());
+  bool isSnackBarActive = false;
+  bool isSnackBarActionClicked = false;
 
   List<Widget> screens = [
     SizedBox(
@@ -199,14 +202,33 @@ class _HomePageState extends State<HomePage> {
                       GestureDetector(
                         onTap: () {
                           if(controller.isGuestIn.value){
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Please Login First"),
-                                duration: Duration(seconds: 3),
-                                backgroundColor: Colors.black,
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
+                          if (isSnackBarActive) return; // Prevent showing multiple snackbars
+
+                          isSnackBarActive = true;
+                          isSnackBarActionClicked = false;
+
+                          final snackBar = SnackBar(
+                          content: Text("Please Login First"),
+                          duration: Duration(seconds: 3),
+                          backgroundColor: Colors.black,
+                          behavior: SnackBarBehavior.floating,
+                          action: SnackBarAction(
+                          label: 'Login',
+                          textColor: Colors.blueAccent,
+                          onPressed: () {
+                          if (!isSnackBarActionClicked) {
+                          isSnackBarActionClicked = true;
+
+                          Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          );}
+                          },),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                          isSnackBarActive = false;
+                          isSnackBarActionClicked = false;
+                          });
                           }else{
                             controller.navSelectedIndex.value = 5;
                           }
@@ -282,15 +304,38 @@ class _HomePageState extends State<HomePage> {
               icon: Icons.list,
               callback: () {
                 if(controller.isGuestIn.value){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Please Login First"),
-                      duration: Duration(seconds: 3),
-                      backgroundColor: Colors.black,
-                      behavior: SnackBarBehavior.floating,
-                    ),
+                  if (isSnackBarActive) return; // Prevent showing multiple snackbars
+
+                  isSnackBarActive = true;
+                  isSnackBarActionClicked = false;
+
+                  final snackBar = SnackBar(
+                  content: Text("Please Login First"),
+                  duration: Duration(seconds: 3),
+                  backgroundColor: Colors.black,
+                  behavior: SnackBarBehavior.floating,
+                  action: SnackBarAction(
+                  label: 'Login',
+                  textColor: Colors.blueAccent,
+                  onPressed: () {
+                  if (!isSnackBarActionClicked) {
+                  isSnackBarActionClicked = true;
+
+                  Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                   );
-                }else{
+                  }
+                  },
+                  ),
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                  isSnackBarActive = false;
+                  isSnackBarActionClicked = false;
+                  });
+                }
+                else{
                   controller.navSelectedIndex.value = 4;
                 }
               },

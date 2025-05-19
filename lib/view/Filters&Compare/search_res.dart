@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SearchRes extends StatelessWidget {
-
   List<College> colleges = [];
 
   SearchRes(this.colleges, {super.key});
@@ -22,11 +21,11 @@ class SearchRes extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Search",
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: TextStyle(color: Colors.black, fontSize: 18),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
 
       body:
@@ -47,7 +46,6 @@ class SearchRes extends StatelessWidget {
                         clg: clg,
                         collegeID: clg.id,
                         collegeName: clg.name,
-                        coursesCount: 0,
                         feeRange: clg.feeRange,
                         state: clg.state,
                         ranking: clg.ranking.toString(),

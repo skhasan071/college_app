@@ -8,16 +8,17 @@ import 'package:college_app/constants/colors.dart';
 import 'package:college_app/view_model/saveController.dart';
 import 'package:get/get.dart';
 
+import '../model/course.dart';
+import '../services/college_services.dart';
+import '../view/SignUpLogin/login.dart';
 import '../view_model/controller.dart';
 
-class CardStructure extends StatelessWidget { 
+class CardStructure extends StatefulWidget {
   final bool showTwoButtons;
   final bool disableCardTap;
   final VoidCallback? onDetailTap;
-  final theme = ThemeController.to;
   final String collegeID;
   final String collegeName;
-  final int coursesCount;
   final String feeRange;
   final String state;
   final String ranking;
@@ -25,8 +26,6 @@ class CardStructure extends StatelessWidget {
   final String clgId;
   final VoidCallback? onCompareTap;
   final College clg;
-  var pfpController = Get.put(Controller());
-
   final double? width;
   CardStructure({
     Key? key,
@@ -35,7 +34,6 @@ class CardStructure extends StatelessWidget {
     required this.clg,
     required this.collegeID,
     required this.collegeName,
-    required this.coursesCount,
     required this.feeRange,
     required this.state,
     required this.ranking,
@@ -47,6 +45,45 @@ class CardStructure extends StatelessWidget {
   });
 
   @override
+  State<CardStructure> createState() => _CardStructureState();
+
+  static Future<bool> save(studId, clgId) async {
+    Map<String, dynamic>? msg = await StudentService.addToFavorites(
+      studentId: studId,
+      collegeId: clgId,
+    );
+    return msg != null;
+  }
+
+  static Future<bool> remove(studId, clgId) async {
+    bool msg = await StudentService.removeFromFavorites(studId, clgId);
+    return msg;
+  }
+}
+
+class _CardStructureState extends State<CardStructure> {
+  final theme = ThemeController.to;
+  int courseCount = 0;
+  bool isSnackBarActive = false;
+  bool isSnackBarActionClicked = false;
+  @override
+  void initState() {
+    super.initState();
+    fetchCourseCount();
+  }
+
+  void fetchCourseCount() async {
+    List<Course> courses = await CollegeServices.getCoursesByCollege(
+      widget.collegeID,
+    );
+    setState(() {
+      courseCount = courses.length;
+    });
+  }
+
+  var pfpController = Get.put(Controller());
+
+  @override
   Widget build(BuildContext context) {
     var controller = Get.put(saveController());
 
@@ -55,7 +92,7 @@ class CardStructure extends StatelessWidget {
 
       return GestureDetector(
         onTap:
-            disableCardTap
+            widget.disableCardTap
                 ? null
                 : () {
                   Navigator.push(
@@ -63,18 +100,18 @@ class CardStructure extends StatelessWidget {
                     MaterialPageRoute(
                       builder:
                           (context) => CollegeDetail(
-                            college: clg,
-                            collegeImage: clg.image,
-                            collegeName: clg.name,
-                            state: clg.state,
-                            lat: clg.lat,
-                            long: clg.long,
+                            college: widget.clg,
+                            collegeImage: widget.clg.image,
+                            collegeName: widget.clg.name,
+                            state: widget.clg.state,
+                            lat: widget.clg.lat,
+                            long: widget.clg.long,
                           ),
                     ),
                   );
                 },
         child: Container(
-          width: width ?? 285,
+          width: widget.width ?? 350,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: Clr.cardClr,
@@ -89,7 +126,7 @@ class CardStructure extends StatelessWidget {
                     height: 150,
                     width: double.infinity,
                     decoration: BoxDecoration(color: Colors.grey.shade300),
-                    child: Image.network(clg.image, fit: BoxFit.cover),
+                    child: Image.network(widget.clg.image, fit: BoxFit.cover),
                   ),
                   Positioned(
                     top: 8,
@@ -98,22 +135,48 @@ class CardStructure extends StatelessWidget {
                       () => InkWell(
                         onTap: () async {
                           if (pfpController.isGuestIn.value) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Login First",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                duration: Duration(seconds: 3),
-                                backgroundColor: Colors.black,
-                                behavior: SnackBarBehavior.floating,
+                            if (isSnackBarActive)
+                              return; // Prevent showing multiple snackbars
+
+                            isSnackBarActive = true;
+                            isSnackBarActionClicked = false;
+
+                            final snackBar = SnackBar(
+                              content: Text("Please Login First"),
+                              duration: Duration(seconds: 3),
+                              backgroundColor: Colors.black,
+                              behavior: SnackBarBehavior.floating,
+                              action: SnackBarAction(
+                                label: 'Login',
+                                textColor: Colors.blueAccent,
+                                onPressed: () {
+                                  if (!isSnackBarActionClicked) {
+                                    isSnackBarActionClicked = true;
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginPage(),
+                                      ),
+                                    );
+                                  }
+                                },
                               ),
                             );
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(snackBar).closed.then((_) {
+                              isSnackBarActive = false;
+                              isSnackBarActionClicked = false;
+                            });
                           } else {
-                            if (controller.isSaved(collegeID)) {
-                              bool success = await remove(studId, clgId);
+                            if (controller.isSaved(widget.collegeID)) {
+                              bool success = await CardStructure.remove(
+                                widget.studId,
+                                widget.clgId,
+                              );
                               if (success) {
-                                controller.toggleSave(collegeID);
+                                controller.toggleSave(widget.collegeID);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -127,9 +190,12 @@ class CardStructure extends StatelessWidget {
                                 );
                               }
                             } else {
-                              bool success = await save(studId, clgId);
+                              bool success = await CardStructure.save(
+                                widget.studId,
+                                widget.clgId,
+                              );
                               if (success) {
-                                controller.toggleSave(collegeID);
+                                controller.toggleSave(widget.collegeID);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -148,7 +214,7 @@ class CardStructure extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           child: Icon(
-                            controller.isSaved(collegeID)
+                            controller.isSaved(widget.collegeID)
                                 ? Icons.bookmark
                                 : Icons.bookmark_border,
                             size: 27,
@@ -168,7 +234,7 @@ class CardStructure extends StatelessWidget {
                     SizedBox(
                       height: 70,
                       child: Text(
-                        collegeName,
+                        widget.collegeName,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -197,10 +263,14 @@ class CardStructure extends StatelessWidget {
                       children: [
                         _buildInfoColumn(
                           "Courses Offered",
-                          "$coursesCount courses",
+                          "$courseCount  courses",
                           themes,
                         ),
-                        _buildInfoColumn("Total Fees Range", feeRange, themes),
+                        _buildInfoColumn(
+                          "Total Fees Range",
+                          widget.feeRange,
+                          themes,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -209,7 +279,7 @@ class CardStructure extends StatelessWidget {
                         const Icon(Icons.location_on, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          state,
+                          widget.state,
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -217,7 +287,7 @@ class CardStructure extends StatelessWidget {
                         ),
                         const SizedBox(width: 20),
                         Text(
-                          "#$ranking NIRF",
+                          "#${widget.ranking} NIRF",
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -227,13 +297,13 @@ class CardStructure extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    showTwoButtons
+                    widget.showTwoButtons
                         ? Column(
                           children: [
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: onCompareTap,
+                                onPressed: widget.onCompareTap,
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.black,
                                   backgroundColor: Colors.white,
@@ -253,7 +323,7 @@ class CardStructure extends StatelessWidget {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: onDetailTap,
+                                onPressed: widget.onDetailTap,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: themes.filterSelectedColor,
                                   foregroundColor: Colors.white,
@@ -307,18 +377,5 @@ class CardStructure extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  static Future<bool> save(studId, clgId) async {
-    Map<String, dynamic>? msg = await StudentService.addToFavorites(
-      studentId: studId,
-      collegeId: clgId,
-    );
-    return msg != null;
-  }
-
-  static Future<bool> remove(studId, clgId) async {
-    bool msg = await StudentService.removeFromFavorites(studId, clgId);
-    return msg;
   }
 }

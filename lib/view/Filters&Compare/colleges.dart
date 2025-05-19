@@ -56,7 +56,7 @@ class _CollegesState extends State<Colleges> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Text(
-                  "Hello, ${profile.profile.value == null ? "Guest" : profile.profile.value!.name}",
+                  "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -154,7 +154,6 @@ class _CollegesState extends State<Colleges> {
                 ),
 
                 // Filters
-                // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Container(
@@ -237,8 +236,6 @@ class _CollegesState extends State<Colleges> {
                           child: CardStructure(
                             collegeID: getFilteredColleges()[index].id,
                             collegeName: getFilteredColleges()[index].name,
-                            coursesCount:
-                                getFilteredColleges()[index].courseCount,
                             feeRange: getFilteredColleges()[index].feeRange,
                             state: getFilteredColleges()[index].state,
                             ranking:
@@ -306,46 +303,45 @@ class _CollegesState extends State<Colleges> {
     required String buttonText,
     required int pageNo,
   }) {
-    return Obx(() {
-      final theme = ThemeController.to.currentTheme;
+    final theme = ThemeController.to.currentTheme;
 
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        child: Container(
-          height: 200,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: theme.boxGradient,
-            border: Border.all(color: Clr.primaryBtnClr),
-          ),
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: theme.boxGradient,
+              border: Border.all(color: Clr.primaryBtnClr),
+            ),
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 25,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
+                  softWrap: true,
                 ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: UiHelper.getPrimaryBtn(
+                const SizedBox(height: 20),
+                UiHelper.getPrimaryBtn(
                   title: buttonText,
                   callback: () {
                     controller.navSelectedIndex.value = pageNo;
                   },
                 ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Future<void> getFavorites() async {

@@ -164,34 +164,38 @@ class _SignupPageState extends State<SignupPage> {
             ),
             const SizedBox(height: 25),
             Obx(
-              ()=> !loader.isLoading.value ? SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  onPressed: () async {
-                    bool isSigned = await _handleSignUp();
+              () =>
+                  !loader.isLoading.value
+                      ? SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          onPressed: () async {
+                            bool isSigned = await _handleSignUp();
 
-                    if (isSigned) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CompleteProfilePage(),
-                        ), (route) => false,
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ) : Center(child: CircularProgressIndicator(),),
+                            if (isSigned) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CompleteProfilePage(),
+                                ),
+                                (route) => false,
+                              );
+                            }
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                      )
+                      : Center(child: CircularProgressIndicator()),
             ),
             const SizedBox(height: 25),
             SizedBox(
@@ -261,7 +265,7 @@ class _SignupPageState extends State<SignupPage> {
                   style: const TextStyle(fontSize: 16, color: Colors.black),
                   children: [
                     TextSpan(
-                      text: "Login",
+                      text: "Sign in",
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.blue,
@@ -270,7 +274,7 @@ class _SignupPageState extends State<SignupPage> {
                       recognizer:
                           TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const LoginPage(),
