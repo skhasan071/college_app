@@ -1,8 +1,8 @@
 class Student {
   String id;
-  final String name;
-  final String email;
-  final String password;
+  String? name;
+  String? email;
+  String? password;
   final String? mobileNumber;
   final String? dob;
   final String? gender;
@@ -19,9 +19,9 @@ class Student {
 
   Student({
     required this.id,
-    required this.name,
-    required this.email,
-    required this.password,
+    this.name,
+    this.email,
+    this.password,
     this.mobileNumber,
     this.dob,
     this.gender,

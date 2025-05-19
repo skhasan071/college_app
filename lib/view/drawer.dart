@@ -1,13 +1,17 @@
 import 'package:college_app/view/Setting&Support/settting.dart';
 import 'package:college_app/view/Setting&Support/support.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import '../services/shortListCollegeController.dart';
 import '../view_model/controller.dart';
+import 'SignUpLogin/login.dart';
 
 class DrawerWidget extends StatelessWidget {
   var controller = Get.put(Controller());
+  var pfpController = Get.put(ProfileController());
   GlobalKey<ScaffoldState> scaffoldKey;
   final int shortlistedCollegesCount;
   final ShortlistedCollegesController shortlistedCollegesController = Get.find();
@@ -75,15 +79,27 @@ class DrawerWidget extends StatelessWidget {
                         callback: () {
                           if (controller.isGuestIn.value) {
                             scaffoldKey.currentState?.closeDrawer();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Please Login First"),
-                                duration: Duration(seconds: 3),
-                                backgroundColor: Colors.black,
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                          } else {
+
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please Login First"),
+                                  duration: Duration(seconds: 3),
+                                  backgroundColor: Colors.black,
+                                  behavior: SnackBarBehavior.floating,
+                                  action: SnackBarAction(
+                                    label: 'Login',
+                                    textColor: Colors.blueAccent,
+                                    onPressed: () {
+                                      // Use GetX navigation
+                                      Get.back(); // Closes snackbar or drawer if open
+                                      Get.off(() => LoginPage()); // Navigate and remove current screen
+                                    },
+                                  ),
+                                ),
+                              );
+                            });
+                          }else {
                             controller.navSelectedIndex.value = 4;
                             scaffoldKey.currentState?.closeDrawer();
                           }
@@ -150,20 +166,32 @@ class DrawerWidget extends StatelessWidget {
                 // Bottom User Info
                 ListTile(
                   leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: Text('Name Surname'),
-                  subtitle: Text('hello@gmail.com'),
+                  title: Text(controller.isGuestIn.value ? 'Please Login' : pfpController.profile.value!.name!),
+                  subtitle: Text(controller.isGuestIn.value ? 'Login to explore more features' : pfpController.profile.value!.email!),
                   trailing: Icon(Icons.more_vert),
                   onTap: () {
                     if (controller.isGuestIn.value) {
                       scaffoldKey.currentState?.closeDrawer();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Please Login First"),
-                          duration: Duration(seconds: 3),
-                          backgroundColor: Colors.black,
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
+
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please Login First"),
+                            duration: Duration(seconds: 3),
+                            backgroundColor: Colors.black,
+                            behavior: SnackBarBehavior.floating,
+                            action: SnackBarAction(
+                              label: 'Login',
+                              textColor: Colors.blueAccent,
+                              onPressed: () {
+                                // Use GetX navigation
+                                Get.back(); // Closes snackbar or drawer if open
+                                Get.off(() => LoginPage()); // Navigate and remove current screen
+                              },
+                            ),
+                          ),
+                        );
+                      });
                     } else {
                       controller.navSelectedIndex.value = 5;
                       scaffoldKey.currentState?.closeDrawer();
@@ -191,22 +219,6 @@ class DrawerWidget extends StatelessWidget {
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       ),
       trailing: trailing,
-      onTap: callback,
-    );
-  }
-
-  Widget _buildSubTile(IconData icon, String title, callback) {
-    return ListTile(
-      contentPadding: EdgeInsets.only(left: 56, right: 16),
-      leading: Icon(icon, size: 20, color: Colors.black),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
       onTap: callback,
     );
   }

@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'package:college_app/model/user.dart';
+import 'package:college_app/view/profiles/complete_profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../services/otp_service.dart';
+import '../../view_model/profile_controller.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phone;
@@ -44,6 +49,7 @@ class _OtpScreenState extends State<OtpScreen> {
       }
     });
   }
+
   void verifyOtp() async {
     String otp = otpController.text.trim();
 
@@ -56,9 +62,8 @@ class _OtpScreenState extends State<OtpScreen> {
 
     bool success = await otpService.verifyOtp(widget.phone, otp);
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OTP verified successfully")),
-      );
+
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteProfilePage()), (route) => false);
 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

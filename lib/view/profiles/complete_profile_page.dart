@@ -49,12 +49,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   String? passedIn;
   String? city;
 
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    mobileController.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -328,8 +322,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   void getFields() {
     Student pfp = profile.profile.value!;
-    nameController.text = pfp.name;
-    emailController.text = pfp.email;
+    nameController.text = pfp.name ?? '';
+    emailController.text = pfp.email ?? '';
     mobileController.text = pfp.mobileNumber ?? "";
   }
 }

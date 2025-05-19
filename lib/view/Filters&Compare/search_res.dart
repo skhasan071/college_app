@@ -46,7 +46,6 @@ class SearchRes extends StatelessWidget {
                         clg: clg,
                         collegeID: clg.id,
                         collegeName: clg.name,
-                        coursesCount: 0,
                         feeRange: clg.feeRange,
                         state: clg.state,
                         ranking: clg.ranking.toString(),

@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profileController.profile.value!.name,
+                          profileController.profile.value!.name!,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class ProfilePage extends StatelessWidget {
                               children: [
                                 Icon(Icons.email, size: 16),
                                 SizedBox(width: 4),
-                                Text(profileController.profile.value!.email),
+                                Text(profileController.profile.value!.email!),
                               ],
                             ),
                             SizedBox(width: 16),

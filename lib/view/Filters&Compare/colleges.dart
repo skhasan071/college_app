@@ -56,7 +56,7 @@ class _CollegesState extends State<Colleges> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Text(
-                  "Hello, ${profile.profile.value == null ? "Guest" : profile.profile.value!.name}",
+                  "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -236,8 +236,6 @@ class _CollegesState extends State<Colleges> {
                           child: CardStructure(
                             collegeID: getFilteredColleges()[index].id,
                             collegeName: getFilteredColleges()[index].name,
-                            coursesCount:
-                                getFilteredColleges()[index].courseCount,
                             feeRange: getFilteredColleges()[index].feeRange,
                             state: getFilteredColleges()[index].state,
                             ranking:
