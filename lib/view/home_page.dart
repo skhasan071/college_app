@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     widget.token != "" ? getUser() : controller.isGuestIn(true);
   }
+
   void updateShortlistedCount(int count) {
     setState(() {
       shortlistedCollegesCount = count;
