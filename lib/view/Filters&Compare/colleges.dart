@@ -237,8 +237,6 @@ class _CollegesState extends State<Colleges> {
                           child: CardStructure(
                             collegeID: getFilteredColleges()[index].id,
                             collegeName: getFilteredColleges()[index].name,
-                            coursesCount:
-                                getFilteredColleges()[index].courseCount,
                             feeRange: getFilteredColleges()[index].feeRange,
                             state: getFilteredColleges()[index].state,
                             ranking:

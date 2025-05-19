@@ -200,7 +200,6 @@ class _CompareWithState extends State<CompareWith> {
                             width: double.infinity,
                             collegeID: clg.id,
                             collegeName: clg.name,
-                            coursesCount: 10,
                             feeRange: clg.feeRange,
                             state: clg.country,
                             ranking: clg.ranking.toString(),
