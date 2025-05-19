@@ -33,7 +33,7 @@ class SelectionPage extends StatelessWidget {
 
   // Mapping of countries to their states
   final Map<String, List<String>> countryStates = {
-    'India': ['Delhi', 'Maharashtra', 'Gujarat', 'Karnataka', 'Kolkata'],
+    'India': ['Delhi', 'Maharashtra', 'Gujarat', 'Karnataka', 'Kolkata','West Bengal'],
     'USA': ['California', 'Texas', 'Florida', 'New York'],
     'Germany': ['Berlin', 'Hamburg', 'Munich'],
     'UK': ['England', 'Scotland', 'Wales'],
