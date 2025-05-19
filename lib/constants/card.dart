@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 import '../view_model/controller.dart';
 
-class CardStructure extends StatelessWidget { 
+class CardStructure extends StatelessWidget {
   final bool showTwoButtons;
   final bool disableCardTap;
   final VoidCallback? onDetailTap;
@@ -74,7 +74,7 @@ class CardStructure extends StatelessWidget {
                   );
                 },
         child: Container(
-          width: width ?? 285,
+          width: width ?? 350,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: Clr.cardClr,

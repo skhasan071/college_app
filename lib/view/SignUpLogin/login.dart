@@ -54,11 +54,10 @@ class _LoginPageState extends State<LoginPage> {
 
         Navigator.pushAndRemoveUntil(
           context,
-            MaterialPageRoute(builder: (context) => HomePage(token)),
-                (route) => false
+          MaterialPageRoute(builder: (context) => HomePage(token)),
+          (route) => false,
         );
         loader.isLoading(false);
-
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -97,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                 text: TextSpan(
                   text: "Log In",
                   style: const TextStyle(
-                   color: Colors.black,
+                    color: Colors.black,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
@@ -163,9 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => SendOtpScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => SendOtpScreen()),
                   );
                 },
                 child: const Text(
@@ -181,23 +178,28 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 25),
             Obx(
-                ()=> !loader.isLoading.value ? SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2),
+              () =>
+                  !loader.isLoading.value
+                      ? SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          onPressed: _handleLogin,
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                      )
+                      : Center(
+                        child: CircularProgressIndicator(color: Colors.black),
                       ),
-                    ),
-                    onPressed: _handleLogin,
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ),
-                ) : Center(child: CircularProgressIndicator(color: Colors.black,)),
             ),
             const SizedBox(height: 20),
 
@@ -291,7 +293,7 @@ class _LoginPageState extends State<LoginPage> {
                       recognizer:
                           TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const SignupPage(),

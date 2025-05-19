@@ -47,7 +47,7 @@ class _CompareWithState extends State<CompareWith> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 5,
+          elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.pop(context),
@@ -190,10 +190,24 @@ class _CompareWithState extends State<CompareWith> {
                 const SizedBox(height: 15),
                 isLoading
                     ? const Center(child: CircularProgressIndicator())
+                    : filteredColleges.isEmpty
+                    ? Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Center(
+                        child: Text(
+                          showShortlistedOnly
+                              ? "No colleges shortlisted"
+                              : "No colleges found",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    )
                     : ListView.builder(
                       itemBuilder: (context, index) {
                         College clg = filteredColleges[index];
-
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: CardStructure(

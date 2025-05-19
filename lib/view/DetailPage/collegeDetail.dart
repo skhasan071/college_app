@@ -466,39 +466,49 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                             ),
                                           ),
                                           const SizedBox(height: 10),
-                                          GridView.count(
-                                            crossAxisCount: 2,
-                                            shrinkWrap: true,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            crossAxisSpacing: 10,
-                                            mainAxisSpacing: 10,
-                                            childAspectRatio: 2.0,
-                                            children: [
-                                              QuickHighlights(
-                                                title: "Acceptance Rate",
-                                                value:
-                                                    widget
-                                                        .college
-                                                        .acceptanceRate,
-                                              ),
-                                              QuickHighlights(
-                                                title: "Placement Rate",
-                                                value:
-                                                    placementData!
-                                                        .placementRate,
-                                              ),
-                                              QuickHighlights(
-                                                title: "Avg Package",
-                                                value:
-                                                    placementData!
-                                                        .averagePackage,
-                                              ),
-                                              QuickHighlights(
-                                                title: "Student Rating",
-                                                value: "4.8/5.0",
-                                              ),
-                                            ],
+                                          LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              double itemWidth =
+                                                  (constraints.maxWidth - 10) /
+                                                  2;
+                                              double itemHeight = itemWidth / 2;
+
+                                              return GridView.count(
+                                                crossAxisCount: 2,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                crossAxisSpacing: 10,
+                                                mainAxisSpacing: 10,
+                                                childAspectRatio:
+                                                    itemWidth / itemHeight,
+                                                children: [
+                                                  QuickHighlights(
+                                                    title: "Acceptance Rate",
+                                                    value:
+                                                        widget
+                                                            .college
+                                                            .acceptanceRate,
+                                                  ),
+                                                  QuickHighlights(
+                                                    title: "Placement Rate",
+                                                    value:
+                                                        placementData!
+                                                            .placementRate,
+                                                  ),
+                                                  QuickHighlights(
+                                                    title: "Avg Package",
+                                                    value:
+                                                        placementData!
+                                                            .averagePackage,
+                                                  ),
+                                                  const QuickHighlights(
+                                                    title: "Student Rating",
+                                                    value: "4.8/5.0",
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           ),
                                         ],
                                       ),
@@ -659,31 +669,43 @@ class QuickHighlights extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
           ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
