@@ -88,35 +88,35 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () async {
 
-        bool pop = false;
-
         if(controller.navSelectedIndex.value == 0){
 
-          showDialog(context: context, builder: (context)=> AlertDialog(
-
-            title: Text("Exit", style: TextStyle(color: Colors.black),),
-
-            content: Text("Are you sure you want to exit?"),
-
-            actions: [
-
-              OutlinedButton(onPressed: (){
-                pop = false;
-              }, child: Text("No")),
-
-              ElevatedButton(onPressed: () async {
-                pop = true;
-              }, child: Text("Yes"))
-
-            ],
-
-          ));
+          bool? shouldExit = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text("Exit", style: TextStyle(color: Colors.black)),
+              content: Text("Are you sure you want to exit?"),
+              actions: [
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Don't exit
+                  },
+                  child: Text("No"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // Exit
+                  },
+                  child: Text("Yes"),
+                ),
+              ],
+            ),
+          );
+          return shouldExit ?? false;
 
         }else{
           controller.navSelectedIndex.value = 0;
+          return false;
         }
-
-        return pop;
       },
       child: Scaffold(
         key: scaffoldKey,

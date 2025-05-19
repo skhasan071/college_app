@@ -38,12 +38,6 @@ class CompleteProfilePage extends StatelessWidget {
   String? passedIn;
   String? city;
 
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    mobileController.dispose();
-  }
-
   CompleteProfilePage({super.key, this.isEditing = false});
 
   @override
@@ -281,8 +275,8 @@ class CompleteProfilePage extends StatelessWidget {
 
   void getFields() {
     Student pfp = profile.profile.value!;
-    nameController.text = pfp.name;
-    emailController.text = pfp.email;
+    nameController.text = pfp.name ?? '';
+    emailController.text = pfp.email ?? '';
     mobileController.text = pfp.mobileNumber ?? "";
   }
 }

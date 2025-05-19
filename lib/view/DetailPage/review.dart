@@ -465,9 +465,9 @@ class _ReviewsState extends State<Reviews> {
                               selectedRating > 0) {
                             Navigator.pop(context);
                             Review review = Review(
-                              name: pfp.profile.value!.name,
+                              name: pfp.profile.value!.name!,
                               uid: widget.uid,
-                              studentemail: pfp.profile.value!.email,
+                              studentemail: pfp.profile.value!.email!,
                               rating: selectedRating,
                               reviewtext: reviewController.text.trim(),
                               likes: 0,

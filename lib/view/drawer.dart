@@ -1,5 +1,6 @@
 import 'package:college_app/view/Setting&Support/settting.dart';
 import 'package:college_app/view/Setting&Support/support.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import '../view_model/controller.dart';
 
 class DrawerWidget extends StatelessWidget {
   var controller = Get.put(Controller());
+  var pfpController = Get.put(ProfileController());
   GlobalKey<ScaffoldState> scaffoldKey;
   final int shortlistedCollegesCount;
   final ShortlistedCollegesController shortlistedCollegesController = Get.find();
@@ -150,8 +152,8 @@ class DrawerWidget extends StatelessWidget {
                 // Bottom User Info
                 ListTile(
                   leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: Text('Name Surname'),
-                  subtitle: Text('hello@gmail.com'),
+                  title: Text(controller.isGuestIn.value ? 'Please Login' : pfpController.profile.value!.name!),
+                  subtitle: Text(controller.isGuestIn.value ? 'Login to explore more features' : pfpController.profile.value!.email!),
                   trailing: Icon(Icons.more_vert),
                   onTap: () {
                     if (controller.isGuestIn.value) {
@@ -191,22 +193,6 @@ class DrawerWidget extends StatelessWidget {
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       ),
       trailing: trailing,
-      onTap: callback,
-    );
-  }
-
-  Widget _buildSubTile(IconData icon, String title, callback) {
-    return ListTile(
-      contentPadding: EdgeInsets.only(left: 56, right: 16),
-      leading: Icon(icon, size: 20, color: Colors.black),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
       onTap: callback,
     );
   }
