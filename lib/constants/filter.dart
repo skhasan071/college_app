@@ -36,7 +36,7 @@ class Filter extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected ? theme.filterSelectedColor : Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.black),
+            border: Border.all(color: theme.filterSelectedColor),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Text(

@@ -212,13 +212,22 @@ class _CardStructureState extends State<CardStructure> {
                           }
                         },
                         child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
                           padding: const EdgeInsets.all(6),
-                          child: Icon(
-                            controller.isSaved(widget.collegeID)
-                                ? Icons.bookmark
-                                : Icons.bookmark_border,
-                            size: 27,
-                            color: themes.saveIconColor,
+
+                          child: Center(
+                            child: Icon(
+                              controller.isSaved(widget.collegeID)
+                                  ? Icons.bookmark
+                                  : Icons.bookmark_border,
+                              size: 27,
+                              color: themes.saveIconColor,
+                            ),
                           ),
                         ),
                       ),
@@ -337,7 +346,11 @@ class _CardStructureState extends State<CardStructure> {
                           ],
                         )
                         : ElevatedButton.icon(
-                          icon: const Icon(Icons.download, size: 18,color: Colors.white),
+                          icon: const Icon(
+                            Icons.download,
+                            size: 18,
+                            color: Colors.white,
+                          ),
                           label: const Text(
                             "Brochure",
                             style: TextStyle(fontSize: 18),

@@ -149,7 +149,15 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
                 TextField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     hintText: "# Enter your rank / percentile",
                   ),
@@ -256,6 +264,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     ValueChanged<String?> onChanged,
     List<String> list,
   ) {
+    final theme = ThemeController.to.currentTheme;
     return DropdownButtonFormField<String>(
       value: selectedValue, // Default value is set to the selectedValue
       items: [
@@ -266,12 +275,10 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
         }).toList(),
       ],
       onChanged: onChanged,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black,
-            width: 6,
-          ), // Bold black border
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.filterSelectedColor, width: 2),
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 12),
       ),

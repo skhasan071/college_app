@@ -8,7 +8,7 @@ import '../../model/college.dart';
 
 class SelectionPage extends StatelessWidget {
   final controller = Get.put(SelectionController());
-   var searchCtrl = TextEditingController();
+  var searchCtrl = TextEditingController();
 
   // Countries
   final List<String> countries = [
@@ -33,7 +33,14 @@ class SelectionPage extends StatelessWidget {
 
   // Mapping of countries to their states
   final Map<String, List<String>> countryStates = {
-    'India': ['Delhi', 'Maharashtra', 'Gujarat', 'Karnataka', 'Tamil Nadu','West Bengal'],
+    'India': [
+      'Delhi',
+      'Maharashtra',
+      'Gujarat',
+      'Karnataka',
+      'Tamil Nadu',
+      'West Bengal',
+    ],
     'USA': ['California', 'Texas', 'Florida', 'New York'],
     'Germany': ['Berlin', 'Hamburg', 'Munich'],
     'UK': ['England', 'Scotland', 'Wales'],
@@ -44,7 +51,7 @@ class SelectionPage extends StatelessWidget {
   // Initially display all states (this will update based on selected country)
   RxList<String> displayedStates = RxList<String>([]);
 
-   SelectionPage({super.key});
+  SelectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +72,12 @@ class SelectionPage extends StatelessWidget {
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
                     ),
                     filled: true,
                     fillColor: Colors.white,
@@ -206,10 +219,7 @@ class SelectionPage extends StatelessWidget {
                         child: Text(
                           item,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
+                          style: TextStyle(color: Colors.black, fontSize: 15),
                         ),
                       ),
                     ),
