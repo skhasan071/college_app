@@ -12,7 +12,6 @@ import 'package:college_app/view/Filters&Compare/searchPage.dart';
 import 'package:college_app/view/Filters&Compare/shortlistCollegePage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../view_model/controller.dart';
 import '../view_model/profile_controller.dart';
 import 'Setting&Support/notification_page.dart';
