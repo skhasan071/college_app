@@ -1,15 +1,21 @@
 import 'dart:convert';
 import 'package:college_app/view_model/controller.dart';
-import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
-class SupportPage extends StatelessWidget {
+import '../SignUpLogin/login.dart';
+
+class SupportPage extends StatefulWidget {
+  @override
+  State<SupportPage> createState() => _SupportPageState();
+}
+
+class _SupportPageState extends State<SupportPage> {
   var controller = Get.put(Controller());
-
+  bool isSnackBarActive = false;
+  bool isSnackBarActionClicked = false;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -99,14 +105,36 @@ class SupportPage extends StatelessWidget {
               subtitle: "Report any issues to ensure a smooth experience.",
               onTap: () {
                 if (controller.isGuestIn.value) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Please Login First"),
-                      duration: Duration(seconds: 3),
-                      backgroundColor: Colors.black,
-                      behavior: SnackBarBehavior.floating,
+                  if (isSnackBarActive) return; // Prevent showing multiple snackbars
+
+                  isSnackBarActive = true;
+                  isSnackBarActionClicked = false;
+
+                  final snackBar = SnackBar(
+                    content: Text("Please Login First"),
+                    duration: Duration(seconds: 3),
+                    backgroundColor: Colors.black,
+                    behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: 'Login',
+                      textColor: Colors.blueAccent,
+                      onPressed: () {
+                        if (!isSnackBarActionClicked) {
+                          isSnackBarActionClicked = true;
+
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                          );
+                        }
+                      },
                     ),
                   );
+
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                    isSnackBarActive = false;
+                    isSnackBarActionClicked = false;
+                  });
                 } else {
                   Navigator.push(
                     context,
@@ -125,14 +153,36 @@ class SupportPage extends StatelessWidget {
                   "Share your thoughts to help us grow - We value your opinion, share your feedback with us.",
               onTap: () {
                 if (controller.isGuestIn.value) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Please Login First"),
-                      duration: Duration(seconds: 3),
-                      backgroundColor: Colors.black,
-                      behavior: SnackBarBehavior.floating,
+                  if (isSnackBarActive) return; // Prevent showing multiple snackbars
+
+                  isSnackBarActive = true;
+                  isSnackBarActionClicked = false;
+
+                  final snackBar = SnackBar(
+                    content: Text("Please Login First"),
+                    duration: Duration(seconds: 3),
+                    backgroundColor: Colors.black,
+                    behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: 'Login',
+                      textColor: Colors.blueAccent,
+                      onPressed: () {
+                        if (!isSnackBarActionClicked) {
+                          isSnackBarActionClicked = true;
+
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                          );
+                        }
+                      },
                     ),
                   );
+
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                    isSnackBarActive = false;
+                    isSnackBarActionClicked = false;
+                  });
                 } else {
                   Navigator.push(
                     context,

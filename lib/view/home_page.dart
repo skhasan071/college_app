@@ -307,7 +307,6 @@ class _HomePageState extends State<HomePage> {
 
                   isSnackBarActive = true;
                   isSnackBarActionClicked = false;
-
                   final snackBar = SnackBar(
                   content: Text("Please Login First"),
                   duration: Duration(seconds: 3),
