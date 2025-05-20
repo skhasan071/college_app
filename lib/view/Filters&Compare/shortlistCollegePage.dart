@@ -6,7 +6,6 @@ import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:college_app/constants/card.dart';
 import 'package:get/get.dart';
-
 import '../../services/shortListCollegeController.dart';
 
 class ShortlistedCollegesPage extends StatefulWidget {
@@ -25,6 +24,7 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   ); // Get the controller
 
   var profile = Get.find<ProfileController>();
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -48,8 +48,14 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
               const SizedBox(height: 4),
-              Text(
-                "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})", // Display count here
+              isLoading
+                  ? const SizedBox(
+                height: 30,
+                width: 30,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+                  : Text(
+                "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Clr.primaryBtnClr,
@@ -117,11 +123,16 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
   }
 
   Future<void> getColleges() async {
+    isLoading = true;
+    setState(() {}); // Show loader
+
     colleges = await StudentService.getFavoriteColleges(
       profile.profile.value!.id,
     );
+
     shortlistedCollegesController.shortlistedCollegesCount.value =
-        colleges.length; // Update the count in controller
-    setState(() {}); // Trigger a rebuild to update the UI
-  }
-}
+        colleges.length;
+
+    isLoading = false;
+    setState(() {}); // Hide loader and update UI
+  }}

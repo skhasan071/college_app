@@ -201,9 +201,16 @@ class SelectionPage extends StatelessWidget {
                                 )
                                 : null,
                       ),
-                      child: Text(
-                        item,
-                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 8),
+                      child: Center(
+                        child: Text(
+                          item,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
                       ),
                     ),
                   );

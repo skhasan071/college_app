@@ -364,20 +364,6 @@ class _ReviewsState extends State<Reviews> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.thumb_up_alt_outlined,
-                      size: 25,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      "$likes",
-                      style: TextStyle(fontSize: 15, color: Color(0xFF42A5F5)),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
