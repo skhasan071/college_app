@@ -7,13 +7,24 @@ import 'package:college_app/view_model/profile_controller.dart';
 import '../../constants/ui_helper.dart';
 import '../../model/user.dart'; // adjust the path as needed
 
-class CompleteProfilePage extends StatelessWidget {
+class CompleteProfilePage extends StatefulWidget {
   final bool isEditing;
+  const CompleteProfilePage({super.key, this.isEditing = false});
 
+  @override
+  State<CompleteProfilePage> createState() => _CompleteProfilePageState();
+}
+
+class _CompleteProfilePageState extends State<CompleteProfilePage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final mobileController = TextEditingController();
   var profile = Get.find<ProfileController>();
+  @override
+  void initState() {
+    super.initState();
+    getFields();
+  }
 
   final List<String> studyingItems = [
     'SSC',
@@ -38,12 +49,8 @@ class CompleteProfilePage extends StatelessWidget {
   String? passedIn;
   String? city;
 
-  CompleteProfilePage({super.key, this.isEditing = false});
-
   @override
   Widget build(BuildContext context) {
-    getFields();  // Fetch the current user profile
-
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -64,7 +71,9 @@ class CompleteProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isEditing ? "Update your Profile" : "Complete your Profile",
+                  widget.isEditing
+                      ? "Update your Profile"
+                      : "Complete your Profile",
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -73,9 +82,9 @@ class CompleteProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  isEditing
+                  widget.isEditing
                       ? "Update your details below."
-                      : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros.",
+                      : "Complete your details below.",
                   style: const TextStyle(color: Colors.black),
                 ),
                 const SizedBox(height: 24),
@@ -110,21 +119,21 @@ class CompleteProfilePage extends StatelessWidget {
 
                 buildDropdown(
                   "Studying in",
-                      (val) => studyingIn = val,
+                  (val) => studyingIn = val,
                   studyingItems,
                   profile.profile.value!.studyingIn,
                 ),
                 const SizedBox(height: 16),
                 buildDropdown(
                   "Passed In",
-                      (val) => passedIn = val,
+                  (val) => passedIn = val,
                   passingYearItems,
                   profile.profile.value!.passedIn,
                 ),
                 const SizedBox(height: 16),
                 buildDropdown(
                   "City You Live In",
-                      (val) => city = val,
+                  (val) => city = val,
                   cities,
                   profile.profile.value!.city,
                 ),
@@ -140,7 +149,7 @@ class CompleteProfilePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     UiHelper.getPrimaryBtn(
-                      title: isEditing ? "Update" : "Next",
+                      title: widget.isEditing ? "Update" : "Next",
                       callback: () async {
                         String name = nameController.text.trim();
                         String email = emailController.text.trim();
@@ -183,19 +192,23 @@ class CompleteProfilePage extends StatelessWidget {
                             studyingIn != null &&
                             passedIn != null &&
                             city != null) {
-
                           // Make the API call to update profile using StudentService
-                          Map<String, dynamic>? data = await StudentService.addOrUpdateStudent(
-                            token: profile.userToken.value,
-                            mobileNumber: phNo,
-                            studyingIn: studyingIn!,
-                            city: city!,
-                            passedIn: passedIn!,
-                          );
+                          print("Before calling addOrUpdateStudent");
+                          print("Name: $name, Email: $email, Mobile: $phNo");
+
+                          Map<String, dynamic>? data =
+                              await StudentService.addOrUpdateStudent(
+                                token: profile.userToken.value,
+                                mobileNumber: phNo,
+                                studyingIn: studyingIn!,
+                                city: city!,
+                                passedIn: passedIn!,
+                              );
 
                           if (data != null) {
+                            print("Received: $data");
                             profile.profile.value = Student.fromMap(data);
-                            if (isEditing) {
+                            if (widget.isEditing) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: const Text(
@@ -224,13 +237,37 @@ class CompleteProfilePage extends StatelessWidget {
                             );
                           }
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Enter All Fields"),
-                              backgroundColor: Colors.purple,
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
+                          if (name.isEmpty) {
+                            showSnack(context, "Name is required");
+                            return;
+                          }
+                          if (email.isEmpty) {
+                            showSnack(context, "Email is required");
+                            return;
+                          }
+                          if (phNo.isEmpty) {
+                            showSnack(context, "Mobile number is required");
+                            return;
+                          }
+
+                          if (studyingIn == null || studyingIn!.isEmpty) {
+                            showSnack(
+                              context,
+                              "Please select what you are studying in",
+                            );
+                            return;
+                          }
+                          if (passedIn == null || passedIn!.isEmpty) {
+                            showSnack(
+                              context,
+                              "Please select the year you passed",
+                            );
+                            return;
+                          }
+                          if (city == null || city!.isEmpty) {
+                            showSnack(context, "Please select your city");
+                            return;
+                          }
                         }
                       },
                     ),
@@ -245,11 +282,11 @@ class CompleteProfilePage extends StatelessWidget {
   }
 
   Widget buildDropdown(
-      String label,
-      Function(String?) onChanged,
-      List<String> dropdownItems,
-      val,
-      ) {
+    String label,
+    Function(String?) onChanged,
+    List<String> dropdownItems,
+    val,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -258,9 +295,9 @@ class CompleteProfilePage extends StatelessWidget {
         DropdownButtonFormField<String>(
           value: dropdownItems.first,
           items:
-          dropdownItems
-              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-              .toList(),
+              dropdownItems
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .toList(),
           onChanged: onChanged,
           decoration: const InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.zero),
@@ -270,6 +307,16 @@ class CompleteProfilePage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void showSnack(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.purple,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 

@@ -11,14 +11,14 @@ class Mobilenoauth extends StatefulWidget {
 
 class _MobilenoauthState extends State<Mobilenoauth> {
   final TextEditingController phoneController = TextEditingController();
-  final OtpService otpService = OtpService(); // baseUrl is set in the service file
+  final OtpService otpService =
+      OtpService(); // baseUrl is set in the service file
 
   @override
   void dispose() {
     phoneController.dispose();
     super.dispose();
   }
-
 
   bool isLoading = false;
 
@@ -41,9 +41,7 @@ class _MobilenoauthState extends State<Mobilenoauth> {
     if (success) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => OtpScreen(phone: phone),
-        ),
+        MaterialPageRoute(builder: (context) => OtpScreen(phone: phone)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -55,16 +53,14 @@ class _MobilenoauthState extends State<Mobilenoauth> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/otp_image.png',
-                height: 150,
-              ),
+              Image.asset('assets/otp_image.png', height: 150),
               SizedBox(height: 20),
               Text(
                 "Login with a Mobile Number",
@@ -86,7 +82,10 @@ class _MobilenoauthState extends State<Mobilenoauth> {
                   children: [
                     Text(
                       "+91",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(width: 10),
                     Expanded(
@@ -111,17 +110,18 @@ class _MobilenoauthState extends State<Mobilenoauth> {
                 child: ElevatedButton(
                   onPressed: isLoading ? null : handleContinue,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                    "Continue",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                  child:
+                      isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                            "Continue",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                 ),
               ),
             ],

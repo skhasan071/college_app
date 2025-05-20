@@ -99,40 +99,77 @@ class _PlacementDetailsState extends State<PlacementDetails> {
                       Obx(() {
                         final theme = ThemeController.to.currentTheme;
 
-                        return Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            gradient: theme.backgroundGradient,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Wrap(
-                            spacing: 8, // horizontal space between cards
-                            runSpacing: 12, // vertical space between lines
-                            children: [
-                              _buildStatCard(
-                                context,
-                                'Average Package',
-                                placementData.averagePackage,
+                        return LayoutBuilder(
+                          builder: (context, constraints) {
+                            double horizontalSpacing = 8;
+                            double totalHorizontalPadding = 6 * 2;
+                            double availableWidth =
+                                constraints.maxWidth -
+                                totalHorizontalPadding -
+                                horizontalSpacing;
+                            double itemWidth = availableWidth / 2;
+
+                            return Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                gradient: theme.backgroundGradient,
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              _buildStatCard(
-                                context,
-                                'Highest Package',
-                                placementData.highestPackage,
+                              child: Wrap(
+                                spacing: horizontalSpacing,
+                                runSpacing: 12,
+                                children: [
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: _buildStatCard(
+                                            'Average Package',
+                                            placementData.averagePackage,
+                                            itemWidth,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: _buildStatCard(
+                                            'Highest Package',
+                                            placementData.highestPackage,
+                                            itemWidth,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: _buildStatCard(
+                                            'Placement Rate',
+                                            placementData.placementRate,
+                                            itemWidth,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: _buildStatCard(
+                                            'Number of Companies Visited',
+                                            placementData
+                                                .numberOfCompanyVisited,
+                                            itemWidth,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              _buildStatCard(
-                                context,
-                                'Placement Rate',
-                                placementData.placementRate,
-                              ),
-                              _buildStatCard(
-                                context,
-                                'Number of Companies Visited',
-                                placementData.numberOfCompanyVisited,
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         );
                       }),
+
                       const SizedBox(height: 16),
                       Divider(color: Colors.grey, thickness: 0.5),
                       const SizedBox(height: 22),
@@ -212,11 +249,9 @@ class _PlacementDetailsState extends State<PlacementDetails> {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String title, String value) {
+  Widget _buildStatCard(String title, String value, double width) {
     return Container(
-      width: (MediaQuery.of(context).size.width / 2) - 30,
-
-      height: 110,
+      width: width,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),

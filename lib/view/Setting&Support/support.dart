@@ -95,8 +95,11 @@ class _SupportPageState extends State<SupportPage> {
             ),
             _buildDivider(),
             _subSectionTitle("Contact Us:"),
-            _infoText("Email: support@collegeapp.com"),
-            _infoText("Response Time: 24–48 hours on working days."),
+            _infoRichText("Email: ", "contact-us@talentsconnectss.com"),
+            _infoRichText(
+              "Response Time: ",
+              "Available 24 hours from Monday to Saturday",
+            ),
             _buildDivider(),
             _subSectionTitle("Report an Issue:"),
             _actionTile(
@@ -303,15 +306,21 @@ class _SupportPageState extends State<SupportPage> {
     );
   }
 
-  Widget _infoText(String text) {
+  Widget _infoRichText(
+    String label,
+    String detail, {
+    Color labelColor = Colors.black,
+    Color detailColor = Colors.lightBlue,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 16,
-          color: Colors.lightBlue,
-          fontWeight: FontWeight.bold,
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          children: [
+            TextSpan(text: label, style: TextStyle(color: labelColor)),
+            TextSpan(text: detail, style: TextStyle(color: detailColor)),
+          ],
         ),
       ),
     );

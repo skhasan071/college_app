@@ -7,7 +7,8 @@ import '../model/college.dart';
 import '../model/review.dart';
 
 class StudentService {
-  static const String _baseUrl = 'https://tc-ca-server.onrender.com/api/students';
+  static const String _baseUrl =
+      'https://tc-ca-server.onrender.com/api/students';
 
   Future<Student?> fetchStudentById(String id) async {
     final url = Uri.parse(
@@ -39,7 +40,6 @@ class StudentService {
       );
 
       if (res.statusCode == 200 || res.statusCode == 201) {
-
         Map<String, dynamic> data =
             jsonDecode(res.body) as Map<String, dynamic>;
 
@@ -53,7 +53,7 @@ class StudentService {
   }
 
   /// Add or update student profile
-   static Future<Map<String, dynamic>?> addOrUpdateStudent({
+  static Future<Map<String, dynamic>?> addOrUpdateStudent({
     required String token,
     required String mobileNumber,
     required String studyingIn,
@@ -77,7 +77,9 @@ class StudentService {
 
     // Add image file (if provided)
     if (imageFile != null) {
-      request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+      request.files.add(
+        await http.MultipartFile.fromPath('file', imageFile.path),
+      );
     }
 
     try {
@@ -87,13 +89,13 @@ class StudentService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return json.decode(responseBody);
       } else {
+        print("Server responded: $responseBody");
         return null;
       }
     } catch (e) {
       return null;
     }
   }
-
 
   static Future<Map<String, dynamic>?> saveCoursePreferences({
     required String token,
@@ -154,11 +156,12 @@ class StudentService {
     }
   }
 
-  static Future<List<College>> getFavoriteColleges(String studentId, [void setState]) async {
+  static Future<List<College>> getFavoriteColleges(
+    String studentId, [
+    void setState,
+  ]) async {
     try {
-      final uri = Uri.parse(
-        '$_baseUrl/favorites/$studentId',
-      );
+      final uri = Uri.parse('$_baseUrl/favorites/$studentId');
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
@@ -183,9 +186,7 @@ class StudentService {
     String collegeId,
   ) async {
     try {
-      final uri = Uri.parse(
-        '$_baseUrl/favorites/remove',
-      );
+      final uri = Uri.parse('$_baseUrl/favorites/remove');
       final response = await http.post(
         uri,
         headers: {"Content-Type": "application/json"},
@@ -203,7 +204,9 @@ class StudentService {
   }
 
   Future<Review?> postReview(Review review) async {
-    final url = Uri.parse('https://tc-ca-server.onrender.com/api/colleges/reviews');
+    final url = Uri.parse(
+      'https://tc-ca-server.onrender.com/api/colleges/reviews',
+    );
 
     try {
       final response = await http.post(
@@ -240,9 +243,7 @@ class StudentService {
   ///Filters
   static Future<List<College>> getCollegesByRanking(String studentId) async {
     try {
-      final uri = Uri.parse(
-        '$_baseUrl/rankings?studentId=$studentId',
-      );
+      final uri = Uri.parse('$_baseUrl/rankings?studentId=$studentId');
 
       final response = await http.get(uri);
 
@@ -264,9 +265,7 @@ class StudentService {
     String studentId,
   ) async {
     try {
-      final uri = Uri.parse(
-        '$_baseUrl/private-colleges',
-      );
+      final uri = Uri.parse('$_baseUrl/private-colleges');
 
       final response = await http.post(
         uri,

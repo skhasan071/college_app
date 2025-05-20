@@ -71,8 +71,11 @@ class _CardStructureState extends State<CardStructure> {
     super.initState();
     fetchCourseCount();
   }
+
   void fetchCourseCount() async {
-    List<Course> courses = await CollegeServices.getCoursesByCollege(widget.collegeID);
+    List<Course> courses = await CollegeServices.getCoursesByCollege(
+      widget.collegeID,
+    );
     setState(() {
       courseCount = courses.length;
     });
@@ -108,7 +111,7 @@ class _CardStructureState extends State<CardStructure> {
                   );
                 },
         child: Container(
-          width: widget.width ?? 285,
+          width: widget.width ?? 350,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: Clr.cardClr,
@@ -132,7 +135,8 @@ class _CardStructureState extends State<CardStructure> {
                       () => InkWell(
                         onTap: () async {
                           if (pfpController.isGuestIn.value) {
-                            if (isSnackBarActive) return; // Prevent showing multiple snackbars
+                            if (isSnackBarActive)
+                              return; // Prevent showing multiple snackbars
 
                             isSnackBarActive = true;
                             isSnackBarActionClicked = false;
@@ -151,17 +155,26 @@ class _CardStructureState extends State<CardStructure> {
 
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => LoginPage()),
-                                    );}
-                                },),
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginPage(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(snackBar).closed.then((_) {
                               isSnackBarActive = false;
                               isSnackBarActionClicked = false;
                             });
                           } else {
                             if (controller.isSaved(widget.collegeID)) {
-                              bool success = await CardStructure.remove(widget.studId, widget.clgId);
+                              bool success = await CardStructure.remove(
+                                widget.studId,
+                                widget.clgId,
+                              );
                               if (success) {
                                 controller.toggleSave(widget.collegeID);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -177,7 +190,10 @@ class _CardStructureState extends State<CardStructure> {
                                 );
                               }
                             } else {
-                              bool success = await CardStructure.save(widget.studId, widget.clgId);
+                              bool success = await CardStructure.save(
+                                widget.studId,
+                                widget.clgId,
+                              );
                               if (success) {
                                 controller.toggleSave(widget.collegeID);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -250,7 +266,11 @@ class _CardStructureState extends State<CardStructure> {
                           "$courseCount  courses",
                           themes,
                         ),
-                        _buildInfoColumn("Total Fees Range", widget.feeRange, themes),
+                        _buildInfoColumn(
+                          "Total Fees Range",
+                          widget.feeRange,
+                          themes,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
