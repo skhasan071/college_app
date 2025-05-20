@@ -8,8 +8,12 @@ class BlogPageDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Blog Detail'),
+        title: const Text(
+          'Blog Detail',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -24,11 +28,17 @@ class BlogPageDetail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // "All Posts" link
-              TextButton(
+              OutlinedButton(
                 onPressed: () {
-                  Navigator.pop(context); // Navigate back to the blog list
+                  Navigator.pop(context);
                 },
-                child: Text(
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.blue), // Border color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Optional rounded corners
+                  ),
+                ),
+                child: const Text(
                   'All Posts',
                   style: TextStyle(
                     fontSize: 16,

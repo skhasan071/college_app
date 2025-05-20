@@ -111,7 +111,7 @@ class _CardStructureState extends State<CardStructure> {
                   );
                 },
         child: Container(
-          width: widget.width ?? 350,
+          width: widget.width ?? 320,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: Clr.cardClr,
@@ -337,7 +337,7 @@ class _CardStructureState extends State<CardStructure> {
                           ],
                         )
                         : ElevatedButton.icon(
-                          icon: const Icon(Icons.download, size: 18),
+                          icon: const Icon(Icons.download, size: 18,color: Colors.white),
                           label: const Text(
                             "Brochure",
                             style: TextStyle(fontSize: 18),

@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>{
 
   var controller = Get.put(Controller());
   var profileController = Get.put(ProfileController());
