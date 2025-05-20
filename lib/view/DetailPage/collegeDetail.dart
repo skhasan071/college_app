@@ -24,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/Placement.dart';
 import '../../model/college.dart';
+import '../SignUpLogin/login.dart';
 
 class CollegeDetail extends StatefulWidget {
   final College college;
@@ -55,6 +56,8 @@ class _CollegeDetailState extends State<CollegeDetail> {
   bool isUserLoggedIn = false;
   var pfp = Get.find<ProfileController>();
   var controller = Get.put(Controller());
+  bool isSnackBarActive = false;
+  bool isSnackBarActionClicked = false;
 
   Future<void> _loadPrefs() async {
     prefs = await SharedPreferences.getInstance();
@@ -231,14 +234,36 @@ class _CollegeDetailState extends State<CollegeDetail> {
                               child: OutlinedButton(
                                 onPressed: () async {
                                   if (controller.isGuestIn.value) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Please Login First"),
-                                        duration: Duration(seconds: 3),
-                                        backgroundColor: Colors.black,
-                                        behavior: SnackBarBehavior.floating,
+                                    if (isSnackBarActive) return; // Prevent showing multiple snackbars
+
+                                    isSnackBarActive = true;
+                                    isSnackBarActionClicked = false;
+
+                                    final snackBar = SnackBar(
+                                      content: Text("Please Login First"),
+                                      duration: Duration(seconds: 3),
+                                      backgroundColor: Colors.black,
+                                      behavior: SnackBarBehavior.floating,
+                                      action: SnackBarAction(
+                                        label: 'Login',
+                                        textColor: Colors.blueAccent,
+                                        onPressed: () {
+                                          if (!isSnackBarActionClicked) {
+                                            isSnackBarActionClicked = true;
+
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => LoginPage()),
+                                            );
+                                          }
+                                        },
                                       ),
                                     );
+
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                                      isSnackBarActive = false;
+                                      isSnackBarActionClicked = false;
+                                    });
                                   } else {
                                     Navigator.push(
                                       context,

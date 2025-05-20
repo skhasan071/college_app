@@ -2,7 +2,6 @@ import 'package:college_app/resetPassword/verify.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_services.dart';
 
-
 class SendOtpScreen extends StatefulWidget {
   const SendOtpScreen({super.key});
 
@@ -42,20 +41,15 @@ class _SendOtpPageState extends State<SendOtpScreen> {
   }
 
   void _showSnackbar(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: color,
-    ));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: color));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Forgot Password"),
-        backgroundColor: Colors.purple,
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -73,7 +67,9 @@ class _SendOtpPageState extends State<SendOtpScreen> {
                 decoration: InputDecoration(
                   labelText: "Email",
                   prefixIcon: const Icon(Icons.email),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -82,13 +78,19 @@ class _SendOtpPageState extends State<SendOtpScreen> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   onPressed: loading ? null : _sendOtp,
-                  child: loading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("Send OTP", style: TextStyle(color: Colors.white, fontSize: 18)),
+                  child:
+                      loading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                            "Send OTP",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
                 ),
               ),
             ],
