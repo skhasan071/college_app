@@ -106,13 +106,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 const Text("Enter your mobile number *"),
                 const SizedBox(height: 8),
                 UiHelper.getTextField(
-                  hint: "Mobile",
+                  hint: "Mobile (include +91)",
                   controller: mobileController,
                   pre: const Icon(Icons.phone_outlined),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(10),
-                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(13),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -159,7 +158,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         passedIn ??= passingYearItems[0];
                         city ??= cities[0];
 
-                        if (phNo.length != 10) {
+                        if (phNo.length != 13) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -170,13 +169,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             ),
                           );
                           return;
-                        }
-
-                        if (!RegExp(r'^[6-9]\d{9}$').hasMatch(phNo)) {
+                        }else if(!phNo.contains("+91")){
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                "Please enter a valid mobile number",
+                                "Please enter valid Mobile Number",
                               ),
                               backgroundColor: Colors.purple,
                               duration: Duration(seconds: 2),
@@ -192,9 +189,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             studyingIn != null &&
                             passedIn != null &&
                             city != null) {
-                          // Make the API call to update profile using StudentService
-                          print("Before calling addOrUpdateStudent");
-                          print("Name: $name, Email: $email, Mobile: $phNo");
 
                           Map<String, dynamic>? data =
                               await StudentService.addOrUpdateStudent(
@@ -203,6 +197,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                 studyingIn: studyingIn!,
                                 city: city!,
                                 passedIn: passedIn!,
+                                name: name,
+                                email: email,
                               );
 
                           if (data != null) {
@@ -223,7 +219,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const CoursePreferencesPage(),
+                                  builder: (_) => const CoursePreferencesPage(isFlow: true,),
                                 ),
                               );
                             }
@@ -245,6 +241,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             showSnack(context, "Email is required");
                             return;
                           }
+
                           if (phNo.isEmpty) {
                             showSnack(context, "Mobile number is required");
                             return;
@@ -326,4 +323,5 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     emailController.text = pfp.email ?? '';
     mobileController.text = pfp.mobileNumber ?? "";
   }
+
 }

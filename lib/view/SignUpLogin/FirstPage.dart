@@ -103,7 +103,7 @@ class _FirstpageState extends State<Firstpage> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => CoursePreferencesPage()),
+                    MaterialPageRoute(builder: (context) => CoursePreferencesPage(isFlow: true,)),
                   );
                 },
                 child: const Text(

@@ -7,7 +7,8 @@ import 'package:get/get.dart';
 import '../../constants/ui_helper.dart';
 
 class CoursePreferencesPage extends StatefulWidget {
-  const CoursePreferencesPage({super.key});
+  final bool isFlow;
+  const CoursePreferencesPage({required this.isFlow, super.key});
 
   @override
   State<CoursePreferencesPage> createState() => _CoursePreferencesPageState();
@@ -57,7 +58,7 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                   child: IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -111,7 +112,12 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                         pfpCtrl..coursesInterested.value = selectedCourses.toList();
                       }
 
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage(pfpCtrl.userToken.string)));
+                      if(widget.isFlow){
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> HomePage(pfpCtrl.userToken.string)), (route) => false);
+                      }else{
+                        Navigator.pop(context);
+                      }
+
                     }),
                   ],
                 )

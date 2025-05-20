@@ -8,7 +8,7 @@ import '../model/user.dart';
 import '../view_model/profile_controller.dart';
 
 class OtpService {
-  final String baseUrl = 'http://localhost:8080';
+  final String baseUrl = 'https://tc-ca-server.onrender.com';
   final pfpController = Get.put(ProfileController());
 
   /// Send OTP to the given phone number
@@ -49,6 +49,7 @@ class OtpService {
         print(data['data']);
         print(data['token']);
         saveToken(data['token']);
+        pfpController.userToken.value = data['token'];
         pfpController.profile.value = Student(id: data['data']['_id'], mobileNumber: phone);
         return true;
       } else {

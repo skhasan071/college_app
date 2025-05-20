@@ -20,8 +20,6 @@ class _OtpScreenState extends State<OtpScreen> {
   final OtpService otpService = OtpService();
   final TextEditingController otpController = TextEditingController();
 
-
-
   String otpCode = "";
   int countdown = 60;
   Timer? timer;
@@ -88,9 +86,8 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   void dispose() {
-    timer?.cancel();
-    otpController.dispose();
     super.dispose();
+    timer?.cancel();
   }
 
   @override

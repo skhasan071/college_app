@@ -56,6 +56,8 @@ class StudentService {
   static Future<Map<String, dynamic>?> addOrUpdateStudent({
     required String token,
     required String mobileNumber,
+    required String name,
+    required String email,
     required String studyingIn,
     required String city,
     required String passedIn,
@@ -74,6 +76,8 @@ class StudentService {
     request.fields['studyingIn'] = studyingIn;
     request.fields['city'] = city;
     request.fields['passedIn'] = passedIn;
+    request.fields['name'] = name;
+    request.fields['email'] = email;
 
     // Add image file (if provided)
     if (imageFile != null) {

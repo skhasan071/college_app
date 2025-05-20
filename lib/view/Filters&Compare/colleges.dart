@@ -4,7 +4,9 @@ import 'package:college_app/constants/ui_helper.dart';
 import 'package:college_app/constants/card.dart';
 import 'package:college_app/model/college.dart';
 import 'package:college_app/services/college_services.dart';
+import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:college_app/view_model/controller.dart';
+import 'package:college_app/view_model/data_loader.dart';
 import 'package:college_app/view_model/filterController.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/saveController.dart';
@@ -26,13 +28,13 @@ class _CollegesState extends State<Colleges> {
   var saveCtrl = Get.put(saveController());
   var profile = Get.put(ProfileController());
   var filter = Get.put(FilterController());
+  var loader = Get.put(Loader());
   List<College> colleges = [];
   List<College> countries = [];
   List<College> states = [];
   List<College> cities = [];
   List<College> rankings = [];
   List<College> privates = [];
-  bool isLoading = false; // To track loading state
   Map<String, String?> selectedStreamsBySection = {};
 
   @override
@@ -47,55 +49,68 @@ class _CollegesState extends State<Colleges> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                child: Text(
-                  "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
+      body: SafeArea(
+        child: Obx(
+          ()=> !loader.isLoading.value ? SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    child: Text(
+                      "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+              
+                  _buildBox(
+                    title: "Explore College as per your preference.",
+                    buttonText: "Edit Preferences",
+                    pageNo: 0,
+                    callback: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> CoursePreferencesPage(isFlow: false,)));
+                    }
+                  ),
+              
+                  !controller.isGuestIn.value
+                      ? rankings.isNotEmpty
+                          ? _buildSection(
+                            "Colleges Based on NIRF Ranking",
+                            rankings,
+                          )
+                          : Container()
+                      : Container(),
+              
+                  _buildBox(
+                    title: "Which colleges match your preferences?",
+                    buttonText: "Predict My College",
+                    pageNo: 3,
+                  ),
+              
+                  states.isNotEmpty
+                      ? _buildSection("Colleges Based on State", states)
+                      : Container(),
+                  countries.isNotEmpty
+                      ? _buildSection("Colleges Based on Country", countries)
+                      : Container(),
+                  cities.isNotEmpty
+                      ? _buildSection("Colleges Based on City", cities)
+                      : Container(),
+                  controller.isLoggedIn.value && privates.isNotEmpty
+                      ? _buildSection("Popular Private Colleges", privates)
+                      : Container(),
+              
+                  _buildBox(
+                    title: "Want the latest insights on colleges?",
+                    buttonText: "Read Insights",
+                    pageNo: 2,
+                  ),
+                ],
               ),
-
-              !controller.isGuestIn.value
-                  ? rankings.isNotEmpty
-                      ? _buildSection(
-                        "Colleges Based on NIRF Ranking",
-                        rankings,
-                      )
-                      : Container()
-                  : Container(),
-
-              _buildBox(
-                title: "Which colleges match your preferences?",
-                buttonText: "Predict My College",
-                pageNo: 3,
-              ),
-
-              states.isNotEmpty
-                  ? _buildSection("Colleges Based on State", states)
-                  : Container(),
-              countries.isNotEmpty
-                  ? _buildSection("Colleges Based on Country", countries)
-                  : Container(),
-              cities.isNotEmpty
-                  ? _buildSection("Colleges Based on City", cities)
-                  : Container(),
-              controller.isLoggedIn.value && privates.isNotEmpty
-                  ? _buildSection("Popular Private Colleges", privates)
-                  : Container(),
-
-              _buildBox(
-                title: "Want the latest insights on colleges?",
-                buttonText: "Read Insights",
-                pageNo: 2,
-              ),
-            ],
-          ),
+            ),
+          ) : Center(child: CircularProgressIndicator(color: Colors.black,)),
         ),
       ),
     );
@@ -206,9 +221,6 @@ class _CollegesState extends State<Colleges> {
                     itemBuilder:
                         (context, index) => GestureDetector(
                           onTap: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
 
                             await Future.delayed(Duration(seconds: 5));
 
@@ -229,9 +241,6 @@ class _CollegesState extends State<Colleges> {
                                     ),
                               ),
                             );
-                            setState(() {
-                              isLoading = false;
-                            });
                           },
                           child: CardStructure(
                             collegeID: getFilteredColleges()[index].id,
@@ -302,6 +311,7 @@ class _CollegesState extends State<Colleges> {
     required String title,
     required String buttonText,
     required int pageNo,
+    VoidCallback? callback,
   }) {
     final theme = ThemeController.to.currentTheme;
 
@@ -332,7 +342,7 @@ class _CollegesState extends State<Colleges> {
                 const SizedBox(height: 20),
                 UiHelper.getPrimaryBtn(
                   title: buttonText,
-                  callback: () {
+                  callback: callback ?? () {
                     controller.navSelectedIndex.value = pageNo;
                   },
                 ),
@@ -360,6 +370,9 @@ class _CollegesState extends State<Colleges> {
   }
 
   Future<void> getColleges() async {
+
+    loader.isLoading.value = true;
+
     if (controller.isLoggedIn.value) {
       rankings = await StudentService.getCollegesByRanking(
         profile.profile.value!.id,
@@ -394,6 +407,7 @@ class _CollegesState extends State<Colleges> {
       );
     }
 
-    setState(() {});
+    loader.isLoading.value = false;
+
   }
 }
