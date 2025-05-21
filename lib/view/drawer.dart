@@ -14,8 +14,9 @@ class DrawerWidget extends StatelessWidget {
   var pfpController = Get.put(ProfileController());
   GlobalKey<ScaffoldState> scaffoldKey;
   final int shortlistedCollegesCount;
-  final ShortlistedCollegesController shortlistedCollegesController = Get.find();
-  DrawerWidget(this.scaffoldKey,  this.shortlistedCollegesCount, {super.key});
+  final ShortlistedCollegesController shortlistedCollegesController =
+      Get.find();
+  DrawerWidget(this.scaffoldKey, this.shortlistedCollegesCount, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +56,16 @@ class DrawerWidget extends StatelessWidget {
                         decoration: InputDecoration(
                           hintText: 'Search',
                           prefixIcon: Icon(Icons.search),
+
                           border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
                             borderRadius: BorderRadius.circular(8),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: theme.filterSelectedColor,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
@@ -68,14 +77,25 @@ class DrawerWidget extends StatelessWidget {
                 Expanded(
                   child: ListView(
                     children: [
-                      _buildTile(Icons.home, 'Home', callback: (){
-                        controller.navSelectedIndex.value = 0;
-                        scaffoldKey.currentState?.closeDrawer();
-                      }),
+                      _buildTile(
+                        Icons.home,
+                        'Home',
+                        callback: () {
+                          controller.navSelectedIndex.value = 0;
+                          scaffoldKey.currentState?.closeDrawer();
+                        },
+                      ),
                       _buildTile(
                         Icons.favorite_border,
                         'Shortlist/Favorites',
-                        trailing: _badge(controller.isGuestIn.value ? "Login First" : shortlistedCollegesController.shortlistedCollegesCount.value.toString()),
+                        trailing: _badge(
+                          controller.isGuestIn.value
+                              ? "Login First"
+                              : shortlistedCollegesController
+                                  .shortlistedCollegesCount
+                                  .value
+                                  .toString(),
+                        ),
                         callback: () {
                           if (controller.isGuestIn.value) {
                             scaffoldKey.currentState?.closeDrawer();
@@ -93,13 +113,15 @@ class DrawerWidget extends StatelessWidget {
                                     onPressed: () {
                                       // Use GetX navigation
                                       Get.back(); // Closes snackbar or drawer if open
-                                      Get.off(() => LoginPage()); // Navigate and remove current screen
+                                      Get.off(
+                                        () => LoginPage(),
+                                      ); // Navigate and remove current screen
                                     },
                                   ),
                                 ),
                               );
                             });
-                          }else {
+                          } else {
                             controller.navSelectedIndex.value = 4;
                             scaffoldKey.currentState?.closeDrawer();
                           }
@@ -166,8 +188,16 @@ class DrawerWidget extends StatelessWidget {
                 // Bottom User Info
                 ListTile(
                   leading: CircleAvatar(child: Icon(Icons.person)),
-                  title: Text(controller.isGuestIn.value ? 'Please Login' : pfpController.profile.value!.name!),
-                  subtitle: Text(controller.isGuestIn.value ? 'Login to explore more features' : pfpController.profile.value!.email!),
+                  title: Text(
+                    controller.isGuestIn.value
+                        ? 'Please Login'
+                        : pfpController.profile.value!.name!,
+                  ),
+                  subtitle: Text(
+                    controller.isGuestIn.value
+                        ? 'Login to explore more features'
+                        : pfpController.profile.value!.email!,
+                  ),
                   trailing: Icon(Icons.more_vert),
                   onTap: () {
                     if (controller.isGuestIn.value) {
@@ -186,7 +216,9 @@ class DrawerWidget extends StatelessWidget {
                               onPressed: () {
                                 // Use GetX navigation
                                 Get.back(); // Closes snackbar or drawer if open
-                                Get.off(() => LoginPage()); // Navigate and remove current screen
+                                Get.off(
+                                  () => LoginPage(),
+                                ); // Navigate and remove current screen
                               },
                             ),
                           ),

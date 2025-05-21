@@ -21,6 +21,7 @@ class Scholarships extends StatefulWidget {
 class _ScholarshipsState extends State<Scholarships> {
   late List<dynamic> scholarships = [];
   late double averageFinancialAid = 0.0;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -58,17 +59,23 @@ class _ScholarshipsState extends State<Scholarships> {
 
             // Calculate the average financial aid (if needed)
             averageFinancialAid = calculateAverageFinancialAid(scholarships);
+            _isLoading = false;
           });
         } else {
           setState(() {
-            scholarships = []; // Empty list when no scholarships
+            scholarships = [];
+            _isLoading = false;
           });
         }
       } else {
-        return;
+        setState(() {
+          _isLoading = false;
+        });
       }
     } catch (error) {
-      return;
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -159,15 +166,28 @@ class _ScholarshipsState extends State<Scholarships> {
                           ),
                           const SizedBox(height: 12),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Students receiving aid\n70%',
-                                style: TextStyle(color: Colors.black),
+                              // Left side
+                              Expanded(
+                                child: Text(
+                                  'Students receiving aid - 70% ',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                              Text(
-                                'Average need met\n100%',
-                                style: TextStyle(color: Colors.black),
+
+                              // Right side
+                              Expanded(
+                                child: Text(
+                                  'Average need met - 100%',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -192,7 +212,14 @@ class _ScholarshipsState extends State<Scholarships> {
                 ),
               ),
               const SizedBox(height: 12),
-              scholarships.isNotEmpty
+
+              _isLoading
+                  ? Center(
+                    child: CircularProgressIndicator(
+                      color: theme.filterSelectedColor,
+                    ),
+                  )
+                  : scholarships.isNotEmpty
                   ? ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

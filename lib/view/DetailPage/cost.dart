@@ -101,13 +101,20 @@ class Cost extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          cost.address,
-                          style: const TextStyle(
-                            color: Colors.blue,
-                            fontSize: 15,
-                          ),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on, size: 18),
+                            const SizedBox(width: 4),
+                            Text(
+                              cost.address,
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
                         ),
+
                         const SizedBox(height: 10),
                         /*   Row(
                           children: [
