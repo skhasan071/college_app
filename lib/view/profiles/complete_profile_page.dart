@@ -1,10 +1,13 @@
 import 'package:college_app/services/user_services.dart'; // Ensure this import
+import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:college_app/view_model/profile_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/ui_helper.dart';
+import '../../main.dart';
 import '../../model/user.dart'; // adjust the path as needed
 
 class CompleteProfilePage extends StatefulWidget {
@@ -20,6 +23,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   final emailController = TextEditingController();
   final mobileController = TextEditingController();
   var profile = Get.find<ProfileController>();
+
   @override
   void initState() {
     super.initState();
@@ -37,16 +41,16 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     'Medical Colleges',
     'Design Institutes',
   ];
-  final List<String> passingYearItems = [
-    "2000",
-    "2001",
-    "2002",
-    "2003",
-    "2004",
+  final List<String> states = [
+    "Maharashtra",
+    "Karnataka",
+    "Telangana",
+    "Uttar Pradesh",
+    "Arunachal Pradesh",
   ];
   final List<String> cities = ['Mumbai', 'Pune'];
   String? studyingIn;
-  String? passedIn;
+  String? state;
   String? city;
 
   @override
@@ -124,9 +128,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 ),
                 const SizedBox(height: 16),
                 buildDropdown(
-                  "Passed In",
-                  (val) => passedIn = val,
-                  passingYearItems,
+                  "State",
+                  (val) => state = val,
+                  states,
                   profile.profile.value!.passedIn,
                 ),
                 const SizedBox(height: 16),
@@ -155,7 +159,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         String phNo = mobileController.text.trim();
 
                         studyingIn ??= studyingItems[0];
-                        passedIn ??= passingYearItems[0];
+                        state ??= states[0];
                         city ??= cities[0];
 
                         if (phNo.length != 13) {
@@ -187,23 +191,26 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             email.isNotEmpty &&
                             phNo.isNotEmpty &&
                             studyingIn != null &&
-                            passedIn != null &&
+                            state != null &&
                             city != null) {
 
-                          Map<String, dynamic>? data =
+                          if(profile.userToken.value == ''){
+                            profile.userToken.value = (await getToken()) ?? '';
+                          }
+
+                          Student? data =
                               await StudentService.addOrUpdateStudent(
                                 token: profile.userToken.value,
                                 mobileNumber: phNo,
                                 studyingIn: studyingIn!,
                                 city: city!,
-                                passedIn: passedIn!,
+                                passedIn: state!,
                                 name: name,
                                 email: email,
                               );
 
                           if (data != null) {
-                            print("Received: $data");
-                            profile.profile.value = Student.fromMap(data);
+                            print("Received: ${profile.userToken.value}");
                             if (widget.isEditing) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -214,7 +221,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                   duration: const Duration(seconds: 2),
                                 ),
                               );
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage(profile.userToken.value)));
                             } else {
                               Navigator.pushReplacement(
                                 context,
@@ -254,7 +261,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             );
                             return;
                           }
-                          if (passedIn == null || passedIn!.isEmpty) {
+                          if (state == null || state!.isEmpty) {
                             showSnack(
                               context,
                               "Please select the year you passed",
@@ -322,6 +329,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     nameController.text = pfp.name ?? '';
     emailController.text = pfp.email ?? '';
     mobileController.text = pfp.mobileNumber ?? "";
+    studyingIn = pfp.studyingIn ?? studyingItems[0];
+    state = pfp.passedIn ?? states[0];
+    city = pfp.city ?? cities[0];
   }
 
 }

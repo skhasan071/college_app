@@ -24,6 +24,7 @@ class Colleges extends StatefulWidget {
 }
 
 class _CollegesState extends State<Colleges> {
+
   var controller = Get.put(Controller());
   var saveCtrl = Get.put(saveController());
   var profile = Get.put(ProfileController());
@@ -70,7 +71,7 @@ class _CollegesState extends State<Colleges> {
                     buttonText: "Edit Preferences",
                     pageNo: 0,
                     callback: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> CoursePreferencesPage(isFlow: false,)));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> CoursePreferencesPage(isFlow: false,)));
                     }
                   ),
               
@@ -410,4 +411,5 @@ class _CollegesState extends State<Colleges> {
     loader.isLoading.value = false;
 
   }
+
 }
