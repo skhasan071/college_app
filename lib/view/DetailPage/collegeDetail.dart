@@ -149,7 +149,9 @@ class _CollegeDetailState extends State<CollegeDetail> {
         final theme = ThemeController.to.currentTheme;
         return isLoading
             ? Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: theme.filterSelectedColor,
+              ),
             ) // Show loader while fetching
             : placementData == null || errorMessage.isNotEmpty
             ? Center(
@@ -234,7 +236,8 @@ class _CollegeDetailState extends State<CollegeDetail> {
                               child: OutlinedButton(
                                 onPressed: () async {
                                   if (controller.isGuestIn.value) {
-                                    if (isSnackBarActive) return; // Prevent showing multiple snackbars
+                                    if (isSnackBarActive)
+                                      return; // Prevent showing multiple snackbars
 
                                     isSnackBarActive = true;
                                     isSnackBarActionClicked = false;
@@ -253,14 +256,19 @@ class _CollegeDetailState extends State<CollegeDetail> {
 
                                             Navigator.pushReplacement(
                                               context,
-                                              MaterialPageRoute(builder: (context) => LoginPage()),
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (context) => LoginPage(),
+                                              ),
                                             );
                                           }
                                         },
                                       ),
                                     );
 
-                                    ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).showSnackBar(snackBar).closed.then((_) {
                                       isSnackBarActive = false;
                                       isSnackBarActionClicked = false;
                                     });

@@ -280,7 +280,19 @@ class _AskQuestionPageState extends State<AskQuestionPage> {
       final theme = ThemeController.to.currentTheme;
       return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(title: const Text('Ask a Question')),
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            'Ask a Question',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
+          backgroundColor: Colors.white,
+        ),
+
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

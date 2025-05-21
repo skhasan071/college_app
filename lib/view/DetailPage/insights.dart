@@ -156,7 +156,7 @@ class _InsightsState extends State<Insights> {
               label: Text(category, style: TextStyle(fontSize: 16)),
               selected: isSelected,
               selectedColor: theme.filterSelectedColor,
-              backgroundColor: Colors.grey[200],
+              backgroundColor: Colors.white,
               labelStyle: TextStyle(
                 color: isSelected ? Colors.white : Colors.black,
                 fontWeight: FontWeight.bold,

@@ -51,66 +51,93 @@ class _CollegesState extends State<Colleges> {
 
       body: SafeArea(
         child: Obx(
-          ()=> !loader.isLoading.value ? SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: Text(
-                      "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          () =>
+              !loader.isLoading.value
+                  ? SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 6,
+                            ),
+                            child: Text(
+                              "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                          _buildBox(
+                            title: "Explore College as per your preference.",
+                            buttonText: "Edit Preferences",
+                            pageNo: 0,
+                            callback: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          CoursePreferencesPage(isFlow: false),
+                                ),
+                              );
+                            },
+                          ),
+
+                          !controller.isGuestIn.value
+                              ? rankings.isNotEmpty
+                                  ? _buildSection(
+                                    "Colleges Based on NIRF Ranking",
+                                    rankings,
+                                  )
+                                  : Container()
+                              : Container(),
+
+                          _buildBox(
+                            title: "Which colleges match your preferences?",
+                            buttonText: "Predict My College",
+                            pageNo: 3,
+                          ),
+
+                          states.isNotEmpty
+                              ? _buildSection("Colleges Based on State", states)
+                              : Container(),
+                          countries.isNotEmpty
+                              ? _buildSection(
+                                "Colleges Based on Country",
+                                countries,
+                              )
+                              : Container(),
+                          cities.isNotEmpty
+                              ? _buildSection("Colleges Based on City", cities)
+                              : Container(),
+                          controller.isLoggedIn.value && privates.isNotEmpty
+                              ? _buildSection(
+                                "Popular Private Colleges",
+                                privates,
+                              )
+                              : Container(),
+
+                          _buildBox(
+                            title: "Want the latest insights on colleges?",
+                            buttonText: "Read Insights",
+                            pageNo: 2,
+                          ),
+                        ],
+                      ),
                     ),
+                  )
+                  : Center(
+                    child: CircularProgressIndicator(color: Colors.black),
                   ),
-              
-                  _buildBox(
-                    title: "Explore College as per your preference.",
-                    buttonText: "Edit Preferences",
-                    pageNo: 0,
-                    callback: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> CoursePreferencesPage(isFlow: false,)));
-                    }
-                  ),
-              
-                  !controller.isGuestIn.value
-                      ? rankings.isNotEmpty
-                          ? _buildSection(
-                            "Colleges Based on NIRF Ranking",
-                            rankings,
-                          )
-                          : Container()
-                      : Container(),
-              
-                  _buildBox(
-                    title: "Which colleges match your preferences?",
-                    buttonText: "Predict My College",
-                    pageNo: 3,
-                  ),
-              
-                  states.isNotEmpty
-                      ? _buildSection("Colleges Based on State", states)
-                      : Container(),
-                  countries.isNotEmpty
-                      ? _buildSection("Colleges Based on Country", countries)
-                      : Container(),
-                  cities.isNotEmpty
-                      ? _buildSection("Colleges Based on City", cities)
-                      : Container(),
-                  controller.isLoggedIn.value && privates.isNotEmpty
-                      ? _buildSection("Popular Private Colleges", privates)
-                      : Container(),
-              
-                  _buildBox(
-                    title: "Want the latest insights on colleges?",
-                    buttonText: "Read Insights",
-                    pageNo: 2,
-                  ),
-                ],
-              ),
-            ),
-          ) : Center(child: CircularProgressIndicator(color: Colors.black,)),
         ),
       ),
     );
@@ -221,7 +248,6 @@ class _CollegesState extends State<Colleges> {
                     itemBuilder:
                         (context, index) => GestureDetector(
                           onTap: () async {
-
                             await Future.delayed(Duration(seconds: 5));
 
                             // Navigate to CollegeDetail
@@ -272,7 +298,7 @@ class _CollegesState extends State<Colleges> {
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   shape: const CircleBorder(),
-                  side: BorderSide(color: Clr.primaryBtnClr),
+                  side: BorderSide(color: theme.filterSelectedColor),
                   padding: const EdgeInsets.all(10),
                 ),
                 onPressed: () {
@@ -282,13 +308,17 @@ class _CollegesState extends State<Colleges> {
                     curve: Curves.easeInOut,
                   );
                 },
-                child: const Icon(Icons.arrow_back_ios_new, size: 18),
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 18,
+                  color: theme.filterSelectedColor,
+                ),
               ),
               const SizedBox(width: 12),
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   shape: const CircleBorder(),
-                  side: BorderSide(color: Clr.primaryBtnClr),
+                  side: BorderSide(color: theme.filterSelectedColor),
                   padding: const EdgeInsets.all(10),
                 ),
                 onPressed: () {
@@ -298,7 +328,11 @@ class _CollegesState extends State<Colleges> {
                     curve: Curves.easeInOut,
                   );
                 },
-                child: const Icon(Icons.arrow_forward_ios, size: 18),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 18,
+                  color: theme.filterSelectedColor,
+                ),
               ),
             ],
           ),
@@ -342,9 +376,11 @@ class _CollegesState extends State<Colleges> {
                 const SizedBox(height: 20),
                 UiHelper.getPrimaryBtn(
                   title: buttonText,
-                  callback: callback ?? () {
-                    controller.navSelectedIndex.value = pageNo;
-                  },
+                  callback:
+                      callback ??
+                      () {
+                        controller.navSelectedIndex.value = pageNo;
+                      },
                 ),
               ],
             ),
@@ -370,7 +406,6 @@ class _CollegesState extends State<Colleges> {
   }
 
   Future<void> getColleges() async {
-
     loader.isLoading.value = true;
 
     if (controller.isLoggedIn.value) {
@@ -408,6 +443,5 @@ class _CollegesState extends State<Colleges> {
     }
 
     loader.isLoading.value = false;
-
   }
 }

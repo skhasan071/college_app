@@ -1,6 +1,7 @@
 import 'package:college_app/model/review.dart';
 import 'package:college_app/services/user_services.dart';
 import 'package:college_app/view/SignUpLogin/FirstPage.dart';
+import 'package:college_app/view/SignUpLogin/login.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:get/get.dart';
@@ -19,8 +20,9 @@ class Reviews extends StatefulWidget {
 }
 
 class _ReviewsState extends State<Reviews> {
-  SharedPreferences? prefs;
-  bool isUserLoggedIn = false;
+  bool isSnackBarActive = false;
+  bool isSnackBarActionClicked = false;
+
   List<Review> _reviews = [];
   var pfp = Get.find<ProfileController>();
   var controller = Get.put(Controller());
@@ -30,15 +32,8 @@ class _ReviewsState extends State<Reviews> {
   @override
   void initState() {
     super.initState();
-    _loadPrefs();
-    getReviews();
-  }
 
-  Future<void> _loadPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isUserLoggedIn = prefs?.getString('auth_token') != null;
-    });
+    getReviews();
   }
 
   @override
@@ -93,10 +88,43 @@ class _ReviewsState extends State<Reviews> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (isUserLoggedIn) {
-                        _showReviewDialog(context);
+                      if (controller.isGuestIn.value) {
+                        if (isSnackBarActive)
+                          return; // Prevent showing multiple snackbars
+
+                        isSnackBarActive = true;
+                        isSnackBarActionClicked = false;
+                        final snackBar = SnackBar(
+                          content: Text("Please Login First"),
+                          duration: Duration(seconds: 3),
+                          backgroundColor: Colors.black,
+                          behavior: SnackBarBehavior.floating,
+                          action: SnackBarAction(
+                            label: 'Login',
+                            textColor: Colors.blueAccent,
+                            onPressed: () {
+                              if (!isSnackBarActionClicked) {
+                                isSnackBarActionClicked = true;
+
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(snackBar).closed.then((_) {
+                          isSnackBarActive = false;
+                          isSnackBarActionClicked = false;
+                        });
                       } else {
-                        _showLoginPrompt(context);
+                        _showReviewDialog(context);
                       }
                     },
 
@@ -175,76 +203,6 @@ class _ReviewsState extends State<Reviews> {
           ),
         );
       }),
-    );
-  }
-
-  void _showLoginPrompt(BuildContext context) {
-    showDialog(
-      context: context,
-      builder:
-          (_) => Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Login Required",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "Please log in to write a review.",
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context); // close dialog
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Firstpage(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 20,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                        child: const Text(
-                          "Log In",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
     );
   }
 
@@ -436,39 +394,37 @@ class _ReviewsState extends State<Reviews> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (controller.isGuestIn.value) {
+                        if (reviewController.text.isNotEmpty &&
+                            selectedRating > 0) {
                           Navigator.pop(context);
+                          Review review = Review(
+                            name: pfp.profile.value!.name!,
+                            uid: widget.uid,
+                            studentemail: pfp.profile.value!.email!,
+                            rating: selectedRating,
+                            reviewtext: reviewController.text.trim(),
+                            likes: 0,
+                          );
+                          Review? rev = await StudentService().postReview(
+                            review,
+                          );
+
+                          if (rev != null) {
+                            _reviews.insert(0, rev);
+                            setState(() {});
+                          }
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Please Login First"),
-                              duration: Duration(seconds: 3),
-                              backgroundColor: Colors.black,
-                              behavior: SnackBarBehavior.floating,
+                            const SnackBar(
+                              content: Text(
+                                "Please the review and select a star rating.",
+                              ),
+                              duration: Duration(seconds: 2),
                             ),
                           );
-                        } else {
-                          if (reviewController.text.isNotEmpty &&
-                              selectedRating > 0) {
-                            Navigator.pop(context);
-                            Review review = Review(
-                              name: pfp.profile.value!.name!,
-                              uid: widget.uid,
-                              studentemail: pfp.profile.value!.email!,
-                              rating: selectedRating,
-                              reviewtext: reviewController.text.trim(),
-                              likes: 0,
-                            );
-                            Review? rev = await StudentService().postReview(
-                              review,
-                            );
-
-                            if (rev != null) {
-                              _reviews.insert(0, rev);
-                              setState(() {});
-                            }
-                          }
                         }
                       },
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.filterSelectedColor,
                         foregroundColor: Colors.white,
