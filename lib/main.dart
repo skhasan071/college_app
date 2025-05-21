@@ -51,6 +51,7 @@ class _MyAppState extends State<MyApp> {
     token = await getToken();
     setState(() {});
   }
+
 }
 
 // Function to get the token
