@@ -480,6 +480,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       final theme = ThemeController.to.currentTheme;
 
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 3,
           title: const Text(
@@ -704,6 +705,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
       final theme = ThemeController.to.currentTheme;
 
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 3,
           title: const Text(

@@ -19,7 +19,7 @@ class _QAPageState extends State<QAPage> {
   final List<Question> _questions = [];
   final List<Question> _filteredQuestions = [];
   final TextEditingController _searchController = TextEditingController();
-
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -75,56 +75,14 @@ class _QAPageState extends State<QAPage> {
             }),
           );
           _filteredQuestions.clear();
-          _filteredQuestions.addAll(_questions); // initially show all
+          _filteredQuestions.addAll(_questions);
+          _isLoading = false;
         });
       } else {
-        return;
+        setState(() => _isLoading = false);
       }
     } catch (e) {
-      return;
-    }
-  }
-
-  Future<void> _addQuestion(
-    String collegeId,
-    String userName,
-    String questionText,
-  ) async {
-    final url = Uri.parse('https://tc-ca-server.onrender.com/api/add-question');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'collegeId': collegeId,
-          'user': userName,
-          'question': questionText,
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        final responseData = json.decode(response.body);
-        final createdQuestion = responseData['data']['questions'].last;
-
-        final newQuestion = Question(
-          question: createdQuestion['question'],
-          answer: createdQuestion['answer'] ?? '',
-          user: createdQuestion['user'] ?? 'Anonymous',
-          time: DateFormat(
-            'jm',
-          ).format(DateTime.parse(createdQuestion['createdAt'])),
-        );
-
-        setState(() {
-          _questions.insert(0, newQuestion);
-          filterQuestions(); // refresh filtered list after adding
-        });
-      } else {
-        return;
-      }
-    } catch (e) {
-      return;
+      setState(() => _isLoading = false);
     }
   }
 
@@ -147,7 +105,7 @@ class _QAPageState extends State<QAPage> {
           backgroundColor: Colors.white,
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.only(bottom: 80),
           child: Column(
             children: [
               Padding(
@@ -163,6 +121,12 @@ class _QAPageState extends State<QAPage> {
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
                     ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -170,7 +134,13 @@ class _QAPageState extends State<QAPage> {
                 ),
               ),
 
-              _filteredQuestions.isEmpty
+              _isLoading
+                  ? Center(
+                    child: CircularProgressIndicator(
+                      color: theme.filterSelectedColor,
+                    ),
+                  )
+                  : _filteredQuestions.isEmpty
                   ? const Center(child: Text('No questions found.'))
                   : ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
@@ -196,14 +166,40 @@ class _QAPageState extends State<QAPage> {
         ),
 
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: _showAddQuestionDialog,
+          onPressed: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => AskQuestionPage(collegeId: widget.collegeId),
+              ),
+            );
+
+            if (result != null && result is Map<String, dynamic>) {
+              final newQuestion = Question(
+                question: result['question'],
+                answer: '',
+                user: result['user'],
+                time: DateFormat('jm').format(DateTime.now()),
+              );
+
+              setState(() {
+                _questions.insert(0, newQuestion);
+                filterQuestions(); // refresh the filtered list
+              });
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Submitted successfully")),
+              );
+            }
+          },
           icon: const Icon(Icons.add, size: 20),
           label: const Text(
             'Ask a Question',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
           backgroundColor: theme.filterSelectedColor,
-          foregroundColor: Colors.white,
+          foregroundColor: theme.filterTextColor,
           elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
@@ -212,101 +208,144 @@ class _QAPageState extends State<QAPage> {
       );
     });
   }
+}
 
-  void _showAddQuestionDialog() {
-    final TextEditingController questionController = TextEditingController();
-    final TextEditingController nameController = TextEditingController();
+class AskQuestionPage extends StatefulWidget {
+  final String collegeId;
 
-    final theme = ThemeController.to.currentTheme;
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: Colors.white,
-            title: const Text(
-              'Ask a Question',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0.0),
-            insetPadding: const EdgeInsets.symmetric(
-              horizontal: 40,
-              vertical: 100,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            content: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: Column(
-                children: [
-                  TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your name',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.all(16.0),
-                    ),
-                    style: const TextStyle(fontSize: 16),
+  const AskQuestionPage({super.key, required this.collegeId});
+
+  @override
+  State<AskQuestionPage> createState() => _AskQuestionPageState();
+}
+
+class _AskQuestionPageState extends State<AskQuestionPage> {
+  final TextEditingController questionController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    questionController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
+  void handleSubmit() async {
+    final question = questionController.text.trim();
+    final name = nameController.text.trim();
+
+    if (question.isEmpty || name.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      final url = Uri.parse(
+        'https://tc-ca-server.onrender.com/api/add-question',
+      );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'collegeId': widget.collegeId,
+          'user': name,
+          'question': question,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Navigator.pop(context, {'user': name, 'question': question});
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Submission failed")));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("An error occurred")));
+    } finally {
+      setState(() => _isSubmitting = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(title: const Text('Ask a Question')),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Enter Your Name',
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
                   ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: questionController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your question',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blueAccent),
-                      ),
-                      contentPadding: EdgeInsets.all(16.0),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: theme.filterSelectedColor,
+                      width: 2,
                     ),
-                    maxLines: 8,
-                    style: const TextStyle(fontSize: 16),
-                    keyboardType: TextInputType.multiline,
                   ),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.filterSelectedColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
+              const SizedBox(height: 16),
+              TextField(
+                controller: questionController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: 'Enter Your Question',
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: theme.filterSelectedColor,
+                      width: 2,
+                    ),
                   ),
                 ),
-                onPressed: () {
-                  if (questionController.text.isNotEmpty &&
-                      nameController.text.isNotEmpty) {
-                    _addQuestion(
-                      widget.collegeId,
-                      nameController.text,
-                      questionController.text,
-                    );
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('Submit', style: TextStyle(fontSize: 16)),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isSubmitting ? null : handleSubmit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.filterSelectedColor,
+                    foregroundColor: theme.filterTextColor,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child:
+                      _isSubmitting
+                          ? CircularProgressIndicator(
+                            color: theme.filterSelectedColor,
+                          )
+                          : const Text(
+                            'Submit',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                ),
               ),
             ],
-            actionsPadding: const EdgeInsets.all(16),
           ),
-    );
+        ),
+      );
+    });
   }
 }
 

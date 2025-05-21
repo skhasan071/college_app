@@ -189,7 +189,11 @@ class _CompareWithState extends State<CompareWith> {
                 ),
                 const SizedBox(height: 15),
                 isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? Center(
+                      child: CircularProgressIndicator(
+                        color: theme.filterSelectedColor,
+                      ),
+                    )
                     : filteredColleges.isEmpty
                     ? Padding(
                       padding: const EdgeInsets.only(top: 30.0),

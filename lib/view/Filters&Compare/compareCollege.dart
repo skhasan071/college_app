@@ -158,18 +158,18 @@ class _CompareCollegesState extends State<CompareColleges> {
                 widget.secondCollege.ranking.toString(),
               ]),
               _infoRow('Placement Rate', [
-                placement1?.placementRate ?? ' - ',
-                placement2?.placementRate ?? ' - ',
+                placement1?.placementRate ?? 'Loading...',
+                placement2?.placementRate ?? 'Loading...',
               ]),
 
               _infoRow('No. of Companies Visited', [
-                placement1?.numberOfCompanyVisited ?? ' - ',
-                placement2?.numberOfCompanyVisited ?? ' - ',
+                placement1?.numberOfCompanyVisited ?? 'Loading...',
+                placement2?.numberOfCompanyVisited ?? 'Loading...',
               ]),
 
               _infoRow('Top Recruiters', [
-                placement1?.companiesVisited.join(', ') ?? ' - ',
-                placement2?.companiesVisited.join(', ') ?? ' - ',
+                placement1?.companiesVisited.join(', ') ?? 'Loading...',
+                placement2?.companiesVisited.join(', ') ?? 'Loading...',
               ]),
               const Divider(color: Colors.black, thickness: 1),
             ],
@@ -242,14 +242,24 @@ class _CompareCollegesState extends State<CompareColleges> {
                 decoration: BoxDecoration(gradient: theme.backgroundGradient),
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Center(
-                  child: Text(
-                    values[0],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  child:
+                      isLoading
+                          ? SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.filterSelectedColor,
+                            ),
+                          )
+                          : Text(
+                            values[0],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                 ),
               ),
             ),
@@ -260,14 +270,24 @@ class _CompareCollegesState extends State<CompareColleges> {
                 decoration: BoxDecoration(gradient: theme.backgroundGradient),
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Center(
-                  child: Text(
-                    values[1],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  child:
+                      isLoading
+                          ? SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.filterSelectedColor,
+                            ),
+                          )
+                          : Text(
+                            values[1],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                 ),
               ),
             ),
