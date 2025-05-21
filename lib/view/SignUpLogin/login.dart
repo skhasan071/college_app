@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
         String token = map['token'];
 
         await saveToken(token);
-        final controller = Get.find<Controller>();
+        final controller = Get.put(Controller());
         controller.isGuestIn.value = false; // user is logged in now
         controller.isLoggedIn.value = true;
         Navigator.pushAndRemoveUntil(

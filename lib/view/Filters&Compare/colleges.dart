@@ -81,7 +81,7 @@ class _CollegesState extends State<Colleges> {
                             buttonText: "Edit Preferences",
                             pageNo: 0,
                             callback: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder:

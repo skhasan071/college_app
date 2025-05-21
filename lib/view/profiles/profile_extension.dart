@@ -1,8 +1,15 @@
 import 'package:college_app/constants/ui_helper.dart';
+import 'package:college_app/view/profiles/choice_preferences.dart';
+import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class EducationPreferenceCards extends StatelessWidget {
-  const EducationPreferenceCards({super.key});
+
+  var pfpController = Get.put(ProfileController());
+
+  EducationPreferenceCards({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +22,7 @@ class EducationPreferenceCards extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
+                children: [
                   Expanded(
                     child: Text(
                       'Based on your preferences',
@@ -26,7 +33,9 @@ class EducationPreferenceCards extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Icon(Icons.edit, size: 18),
+                  IconButton(onPressed: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CoursePreferencesPage(isFlow: false)));
+                  }, icon: Icon(Icons.edit, size: 18),),
                 ],
               ),
               const SizedBox(height: 12),
@@ -34,43 +43,50 @@ class EducationPreferenceCards extends StatelessWidget {
                 'Education',
                 style: TextStyle(color: Colors.grey),
               ),
-              const Text(
-                'Full Time, Management, PG',
+              Text(
+                '${pfpController.profile.value!.interestedStreams!.join(", ")}, ${pfpController.profile.value!.preferredCourseLevel ?? ""}, ${pfpController.profile.value!.modeOfStudy ?? ""}',
                 style: TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 12),
               const Text(
-                'Specialization',
+                'Interested Courses',
                 style: TextStyle(color: Colors.grey),
               ),
-              const Text(
-                'MBA (Finance), Entrepreneurship & Startups',
+              Text(
+                pfpController.profile.value!.coursesInterested!.isEmpty? "No Courses selected yet" : pfpController.profile.value!.coursesInterested!.join(", "),
                 style: TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 12),
               Row(
-                children: const [
+                children: [
                   Icon(Icons.location_on_outlined, size: 18),
                   SizedBox(width: 4),
-                  Text('India'),
+                  Text('${pfpController.profile.value!.passedIn}, ${pfpController.profile.value!.city}'),
                   SizedBox(width: 16),
                   Icon(Icons.access_time, size: 18),
                   SizedBox(width: 4),
-                  Text('2026'),
+                  Text('${pfpController.profile.value!.studyingIn}'),
                 ],
               ),
               const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'View Full Preferences',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CoursePreferencesPage(isFlow: false)));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'View Full Preferences',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  Icon(Icons.arrow_forward_ios, size: 16),
-                ],
+                    Icon(Icons.arrow_forward_ios, size: 16),
+                  ],
+                ),
               ),
             ],
           ),

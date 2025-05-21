@@ -53,7 +53,7 @@ class StudentService {
   }
 
   /// Add or update student profile
-  static Future<Map<String, dynamic>?> addOrUpdateStudent({
+  static Future<Student?> addOrUpdateStudent({
     required String token,
     required String mobileNumber,
     required String name,
@@ -91,7 +91,8 @@ class StudentService {
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return json.decode(responseBody);
+        var data = json.decode(responseBody);
+        return Student.fromMap(data);
       } else {
         print("Server responded: $responseBody");
         return null;
