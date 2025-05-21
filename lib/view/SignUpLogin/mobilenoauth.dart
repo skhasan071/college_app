@@ -62,15 +62,22 @@ class _MobilenoauthState extends State<Mobilenoauth> {
             children: [
               Image.asset('assets/otp_image.png', height: 150),
               SizedBox(height: 20),
-              Text(
-                "Login with a Mobile Number",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              Column(
+                children: [
+                  Text(
+                    "Login with a Mobile Number",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Enter your mobile number. We will send you an OTP to verify.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
               ),
-              SizedBox(height: 10),
-              Text(
-                "Enter your mobile number. We will send you an OTP to verify.",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
+
               SizedBox(height: 20),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12),
