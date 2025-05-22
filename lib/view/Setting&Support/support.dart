@@ -23,14 +23,13 @@ class _SupportPageState extends State<SupportPage> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: theme.filterSelectedColor,
-          foregroundColor: Colors.white,
-          centerTitle: true,
+          backgroundColor: Colors.white,
+
           title: const Text(
             'Support & Help',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          elevation: 1,
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -108,7 +107,8 @@ class _SupportPageState extends State<SupportPage> {
               subtitle: "Report any issues to ensure a smooth experience.",
               onTap: () {
                 if (controller.isGuestIn.value) {
-                  if (isSnackBarActive) return; // Prevent showing multiple snackbars
+                  if (isSnackBarActive)
+                    return; // Prevent showing multiple snackbars
 
                   isSnackBarActive = true;
                   isSnackBarActionClicked = false;
@@ -127,14 +127,18 @@ class _SupportPageState extends State<SupportPage> {
 
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => LoginPage()),
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
                           );
                         }
                       },
                     ),
                   );
 
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(snackBar).closed.then((_) {
                     isSnackBarActive = false;
                     isSnackBarActionClicked = false;
                   });
@@ -156,7 +160,8 @@ class _SupportPageState extends State<SupportPage> {
                   "Share your thoughts to help us grow - We value your opinion, share your feedback with us.",
               onTap: () {
                 if (controller.isGuestIn.value) {
-                  if (isSnackBarActive) return; // Prevent showing multiple snackbars
+                  if (isSnackBarActive)
+                    return; // Prevent showing multiple snackbars
 
                   isSnackBarActive = true;
                   isSnackBarActionClicked = false;
@@ -175,14 +180,18 @@ class _SupportPageState extends State<SupportPage> {
 
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => LoginPage()),
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
                           );
                         }
                       },
                     ),
                   );
 
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(snackBar).closed.then((_) {
                     isSnackBarActive = false;
                     isSnackBarActionClicked = false;
                   });

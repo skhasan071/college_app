@@ -107,6 +107,7 @@ class _CompareWithState extends State<CompareWith> {
                             const SizedBox(width: 6),
                             Expanded(
                               child: TextField(
+                                cursorColor: theme.filterSelectedColor,
                                 decoration: const InputDecoration(
                                   hintText: "Search",
                                   hintStyle: TextStyle(fontSize: 13),

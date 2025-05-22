@@ -115,6 +115,7 @@ class _QAPageState extends State<QAPage> {
                 ),
                 child: TextField(
                   controller: _searchController,
+                  cursorColor: theme.filterSelectedColor,
                   decoration: InputDecoration(
                     hintText: 'Search questions',
                     prefixIcon: const Icon(Icons.search, color: Colors.black),

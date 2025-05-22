@@ -67,6 +67,7 @@ class SelectionPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: TextField(
                   controller: searchCtrl,
+                  cursorColor: theme.filterSelectedColor,
                   decoration: InputDecoration(
                     hintText: "Search here...",
                     prefixIcon: Icon(Icons.search),

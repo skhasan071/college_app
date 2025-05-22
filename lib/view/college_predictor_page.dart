@@ -275,6 +275,7 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
         }).toList(),
       ],
       onChanged: onChanged,
+      dropdownColor: Colors.white,
       decoration: InputDecoration(
         border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
         focusedBorder: OutlineInputBorder(
