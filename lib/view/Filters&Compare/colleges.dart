@@ -95,7 +95,7 @@ class _CollegesState extends State<Colleges> {
                           !controller.isGuestIn.value
                               ? rankings.isNotEmpty
                                   ? _buildSection(
-                                    "Colleges Based on NIRF Ranking",
+                                    "Colleges Based on NIRF",
                                     rankings,
                                   )
                                   : Container()
