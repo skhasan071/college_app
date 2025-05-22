@@ -8,7 +8,7 @@ class Student {
   final String? gender;
   final String? studyingIn;
   final String? city;
-  final String? passedIn;
+  final String? state;
   final String? image;
   List<String>? interestedStreams;
   List<String>? coursesInterested;
@@ -27,7 +27,7 @@ class Student {
     this.gender,
     this.studyingIn,
     this.city,
-    this.passedIn,
+    this.state,
     this.image,
     this.interestedStreams,
     this.coursesInterested,
@@ -48,7 +48,7 @@ class Student {
       gender: map['gender'],
       studyingIn: map['studyingIn'],
       city: map['city'],
-      passedIn: map['passedIn'],
+      state: map['state'],
       image: map['image'],
       interestedStreams: map['interestedStreams'] != null
           ? List<String>.from(map['interestedStreams'])
@@ -76,7 +76,7 @@ class Student {
       'gender': gender,
       'studyingIn': studyingIn,
       'city': city,
-      'passedIn': passedIn,
+      'state': state,
       'image': image,
       'interestedStreams': interestedStreams,
       'coursesInterested': coursesInterested,

@@ -30,13 +30,17 @@ class AuthService {
           "student": Student.fromMap(data['data']),
         };
       } else {
-        final data = jsonDecode(response.body);
 
+        final data = jsonDecode(response.body);
+        print(data);
         return {"success": false, "message": data['message']};
+
       }
     } catch (e) {
 
+      print(e);
       return {"success": false, "message": e.toString()};
+
     }
   }
 

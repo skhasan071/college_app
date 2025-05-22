@@ -63,7 +63,7 @@ class EducationPreferenceCards extends StatelessWidget {
                 children: [
                   Icon(Icons.location_on_outlined, size: 18),
                   SizedBox(width: 4),
-                  Text('${pfpController.profile.value!.passedIn}, ${pfpController.profile.value!.city}'),
+                  Text('${pfpController.profile.value!.state}, ${pfpController.profile.value!.city}'),
                   SizedBox(width: 16),
                   Icon(Icons.access_time, size: 18),
                   SizedBox(width: 4),

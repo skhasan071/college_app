@@ -113,7 +113,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   hint: "Mobile (include +91)",
                   controller: mobileController,
                   pre: const Icon(Icons.phone_outlined),
-                  keyboardType: TextInputType.number,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(13),
                   ],
@@ -131,7 +130,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   "State",
                   (val) => state = val,
                   states,
-                  profile.profile.value!.passedIn,
+                  profile.profile.value!.state,
                 ),
                 const SizedBox(height: 16),
                 buildDropdown(
@@ -204,7 +203,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                 mobileNumber: phNo,
                                 studyingIn: studyingIn!,
                                 city: city!,
-                                passedIn: state!,
+                                state: state!,
                                 name: name,
                                 email: email,
                               );
@@ -261,13 +260,15 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             );
                             return;
                           }
+
                           if (state == null || state!.isEmpty) {
                             showSnack(
                               context,
-                              "Please select the year you passed",
+                              "Please select your state",
                             );
                             return;
                           }
+
                           if (city == null || city!.isEmpty) {
                             showSnack(context, "Please select your city");
                             return;
@@ -330,7 +331,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     emailController.text = pfp.email ?? '';
     mobileController.text = pfp.mobileNumber ?? "";
     studyingIn = pfp.studyingIn ?? studyingItems[0];
-    state = pfp.passedIn ?? states[0];
+    state = pfp.state ?? states[0];
     city = pfp.city ?? cities[0];
   }
 

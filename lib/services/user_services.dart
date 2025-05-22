@@ -60,7 +60,7 @@ class StudentService {
     required String email,
     required String studyingIn,
     required String city,
-    required String passedIn,
+    required String state,
     File? imageFile,
   }) async {
     final uri = Uri.parse('$_baseUrl/add'); // Replace with actual URL
@@ -75,7 +75,7 @@ class StudentService {
     request.fields['mobileNumber'] = mobileNumber;
     request.fields['studyingIn'] = studyingIn;
     request.fields['city'] = city;
-    request.fields['passedIn'] = passedIn;
+    request.fields['state'] = state;
     request.fields['name'] = name;
     request.fields['email'] = email;
 

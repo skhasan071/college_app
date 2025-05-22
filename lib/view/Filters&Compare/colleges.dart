@@ -421,11 +421,11 @@ class _CollegesState extends State<Colleges> {
       );
       states = await CollegeServices.fetchFilteredColleges(
         streams: profile.profile.value!.interestedStreams!,
-        state: "Maharashtra",
+        state: profile.profile.value!.state,
       );
       cities = await CollegeServices.fetchFilteredColleges(
         streams: profile.profile.value!.interestedStreams!,
-        city: "Mumbai",
+        city: profile.profile.value!.city,
       );
     } else {
       countries = await CollegeServices.fetchFilteredColleges(
