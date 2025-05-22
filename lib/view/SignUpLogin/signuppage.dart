@@ -265,7 +265,7 @@ class _SignupPageState extends State<SignupPage> {
                   style: const TextStyle(fontSize: 16, color: Colors.black),
                   children: [
                     TextSpan(
-                      text: "Sign in",
+                      text: "Login",
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.blue,

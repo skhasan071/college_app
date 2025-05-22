@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: _handleLogin,
                           child: const Text(
-                            "Sign In",
+                            "Login",
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                         ),
@@ -230,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: 43,
                 ),
                 label: const Text(
-                  "Log in with Mobile Number",
+                  "Login with Mobile Number",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,
@@ -270,7 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: 43,
                 ),
                 label: const Text(
-                  "Log in with Gmail",
+                  "Login with Gmail",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,

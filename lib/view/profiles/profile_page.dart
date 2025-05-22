@@ -95,7 +95,6 @@ class ProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Icon(Icons.more_vert),
                 ],
               ),
               const SizedBox(height: 20),

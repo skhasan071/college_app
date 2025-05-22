@@ -46,7 +46,7 @@ class EducationPreferenceCards extends StatelessWidget {
               Text(
                 '${pfpController.profile.value!.interestedStreams!.join(", ")}, ${pfpController.profile.value!.preferredCourseLevel ?? ""}, ${pfpController.profile.value!.modeOfStudy ?? ""}',
                 style: TextStyle(fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
+                softWrap: true, // This ensures wrapping
               ),
               const SizedBox(height: 12),
               const Text(
@@ -54,11 +54,13 @@ class EducationPreferenceCards extends StatelessWidget {
                 style: TextStyle(color: Colors.grey),
               ),
               Text(
-                pfpController.profile.value!.coursesInterested!.isEmpty? "No Courses selected yet" : pfpController.profile.value!.coursesInterested!.join(", "),
+                pfpController.profile.value!.coursesInterested!.isEmpty
+                    ? "No Courses selected yet"
+                    : pfpController.profile.value!.coursesInterested!.join(", "),
                 style: TextStyle(fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 children: [
                   Icon(Icons.location_on_outlined, size: 18),

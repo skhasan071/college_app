@@ -111,7 +111,8 @@ class Cost extends StatelessWidget {
                                 color: Colors.blue,
                                 fontSize: 15,
                               ),
-                            ),
+                              softWrap: true,
+                            )
                           ],
                         ),
 

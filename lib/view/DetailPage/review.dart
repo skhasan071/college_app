@@ -5,8 +5,6 @@ import 'package:college_app/view/SignUpLogin/login.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:flutter/material.dart';
 import '../../view_model/controller.dart';
 

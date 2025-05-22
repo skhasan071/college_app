@@ -31,28 +31,28 @@ class SettingsPage extends StatelessWidget {
         body: ListView(
           children: [
             const SizedBox(height: 10),
-
-            _buildTile(
-              title: "Update Profile",
-              subtitle:
-                  "Update your Name, Mobile Number, Study In, Passed In, City.",
-              icon: Icons.account_circle_outlined,
-              onTap: () {
-                if (controller.isGuestIn.value) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Please Login First"),
-                      duration: Duration(seconds: 3),
-                      backgroundColor: Colors.black,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                } else {
-                  controller.navSelectedIndex.value = 5;
-                }
-              },
-              iconColor: const Color(0xFF1E88E5),
-            ),
+            //
+            // _buildTile(
+            //   title: "Update Profile",
+            //   subtitle:
+            //       "Update your Name, Mobile Number, Study In, Passed In, City.",
+            //   icon: Icons.account_circle_outlined,
+            //   onTap: () {
+            //     if (controller.isGuestIn.value) {
+            //       ScaffoldMessenger.of(context).showSnackBar(
+            //         SnackBar(
+            //           content: Text("Please Login First"),
+            //           duration: Duration(seconds: 3),
+            //           backgroundColor: Colors.black,
+            //           behavior: SnackBarBehavior.floating,
+            //         ),
+            //       );
+            //     } else {
+            //       controller.navSelectedIndex.value = 5;
+            //     }
+            //   },
+            //   iconColor: const Color(0xFF1E88E5),
+            // ),
 
             const Divider(),
 
