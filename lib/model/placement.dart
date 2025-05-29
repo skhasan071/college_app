@@ -9,6 +9,7 @@ class Placement {
   final String tenToFifteen;
   final String fifteenToTwenty;
   final String aboveTwenty;
+  final List<BranchPlacement> branchWisePlacement;
 
   Placement({
     required this.numberOfCompanyVisited,
@@ -21,12 +22,13 @@ class Placement {
     required this.tenToFifteen,
     required this.fifteenToTwenty,
     required this.aboveTwenty,
+    required this.branchWisePlacement,
   });
 
   // Factory method to create a Placement object from JSON data
   factory Placement.fromJson(Map<String, dynamic> json) {
     return Placement(
-      numberOfCompanyVisited : json['numberOfCompanyVisited']?? '',
+      numberOfCompanyVisited: json['numberOfCompanyVisited'] ?? '',
       averagePackage: json['averagePackage'] ?? '',
       highestPackage: json['highestPackage'] ?? '',
       placementRate: json['placementRate'] ?? '',
@@ -36,13 +38,17 @@ class Placement {
       tenToFifteen: json['tenToFifteen'] ?? '',
       fifteenToTwenty: json['fifteenToTwenty'] ?? '',
       aboveTwenty: json['aboveTwenty'] ?? '',
+      branchWisePlacement:
+          (json['branchWisePlacement'] as List<dynamic>? ?? [])
+              .map((e) => BranchPlacement.fromJson(e))
+              .toList(),
     );
   }
 
   // Method to convert Placement object to JSON format
   Map<String, dynamic> toJson() {
     return {
-      'numberOfCompanyVisited' : numberOfCompanyVisited,
+      'numberOfCompanyVisited': numberOfCompanyVisited,
       'averagePackage': averagePackage,
       'highestPackage': highestPackage,
       'placementRate': placementRate,
@@ -52,6 +58,36 @@ class Placement {
       'tenToFifteen': tenToFifteen,
       'fifteenToTwenty': fifteenToTwenty,
       'aboveTwenty': aboveTwenty,
+      'branchWisePlacement':
+          branchWisePlacement.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class BranchPlacement {
+  final String branch;
+  final String highestPackage;
+  final String averagePackage;
+
+  BranchPlacement({
+    required this.branch,
+    required this.highestPackage,
+    required this.averagePackage,
+  });
+
+  factory BranchPlacement.fromJson(Map<String, dynamic> json) {
+    return BranchPlacement(
+      branch: json['branch'] ?? '',
+      highestPackage: json['highestPackage'] ?? '',
+      averagePackage: json['averagePackage'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'branch': branch,
+      'highestPackage': highestPackage,
+      'averagePackage': averagePackage,
     };
   }
 }

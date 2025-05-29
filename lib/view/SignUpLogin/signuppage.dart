@@ -118,7 +118,11 @@ class _SignupPageState extends State<SignupPage> {
               decoration: InputDecoration(
                 hintText: "Enter your name",
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
@@ -130,10 +134,15 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
+              cursorColor: Colors.black,
               decoration: InputDecoration(
                 hintText: "Enter your email",
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
@@ -145,6 +154,7 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: passwordController,
               obscureText: !isPasswordVisible,
+              cursorColor: Colors.black,
               decoration: InputDecoration(
                 hintText: "Enter your password",
                 suffixIcon: IconButton(
@@ -158,7 +168,11 @@ class _SignupPageState extends State<SignupPage> {
                   },
                 ),
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
@@ -201,26 +215,35 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(
               width: double.infinity,
               height: 50,
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(2),
+                    side: const BorderSide(color: Colors.black),
                   ),
-                  side: const BorderSide(color: Colors.black),
+                  elevation: 2,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Mobilenoauth()),
                   );
                 },
-                child: const Text(
-                  "Sign up with Mobile Number",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                icon: Image.asset(
+                  'assets/Mobile_authlogo.png',
+                  height: 43,
+                  width: 43,
+                ),
+                label: Flexible(
+                  child: Text(
+                    'Sign Up with Mobile Number',
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -247,12 +270,13 @@ class _SignupPageState extends State<SignupPage> {
                   height: 43,
                   width: 43,
                 ),
-                label: const Text(
-                  "Sign Up with Gmail",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                label: Flexible(
+                  child: Text(
+                    "Sign Up with Gmail",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

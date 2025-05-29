@@ -128,9 +128,14 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
+              cursorColor: Colors.black,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
@@ -142,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               controller: passwordController,
               obscureText: !isPasswordVisible,
+              cursorColor: Colors.black,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -153,8 +159,13 @@ class _LoginPageState extends State<LoginPage> {
                     });
                   },
                 ),
+
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
                   borderRadius: BorderRadius.circular(2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2),
                 ),
               ),
             ),
@@ -229,12 +240,13 @@ class _LoginPageState extends State<LoginPage> {
                   height: 43,
                   width: 43,
                 ),
-                label: const Text(
-                  "Login with Mobile Number",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                label: Flexible(
+                  child: Text(
+                    "Login with Mobile Number",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -269,12 +281,13 @@ class _LoginPageState extends State<LoginPage> {
                   height: 43,
                   width: 43,
                 ),
-                label: const Text(
-                  "Login with Gmail",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                label: Flexible(
+                  child: Text(
+                    "Login with Gmail",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

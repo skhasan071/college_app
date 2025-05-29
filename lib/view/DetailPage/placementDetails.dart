@@ -83,6 +83,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
               ) // Show loader while loading data
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
+
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -119,7 +120,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
                                 spacing: horizontalSpacing,
                                 runSpacing: 12,
                                 children: [
-                                  IntrinsicHeight(
+                                  /*  IntrinsicHeight(
                                     child: Row(
                                       children: [
                                         Expanded(
@@ -139,8 +140,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
                                         ),
                                       ],
                                     ),
-                                  ),
-
+                                  ),*/
                                   IntrinsicHeight(
                                     child: Row(
                                       children: [
@@ -169,7 +169,18 @@ class _PlacementDetailsState extends State<PlacementDetails> {
                           },
                         );
                       }),
-
+                      const SizedBox(height: 16),
+                      Divider(color: Colors.grey, thickness: 0.5),
+                      const SizedBox(height: 22),
+                      const Text(
+                        'Branch-wise Package Stats',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      placementStatsTable(),
                       const SizedBox(height: 16),
                       Divider(color: Colors.grey, thickness: 0.5),
                       const SizedBox(height: 22),
@@ -246,6 +257,58 @@ class _PlacementDetailsState extends State<PlacementDetails> {
                   ],
                 ),
               ),
+    );
+  }
+
+  Widget placementStatsTable() {
+    final theme = ThemeController.to.currentTheme;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        headingRowColor: MaterialStateColor.resolveWith(
+          (states) => theme.filterSelectedColor,
+        ),
+        columns: [
+          DataColumn(
+            label: Text(
+              'Branch',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: theme.filterTextColor,
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              'Highest CTC (LPA)',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: theme.filterTextColor,
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              'Average CTC (LPA)',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: theme.filterTextColor,
+              ),
+            ),
+          ),
+        ],
+
+        rows:
+            placementData.branchWisePlacement.map((branch) {
+              return DataRow(
+                cells: [
+                  DataCell(Text(branch.branch)),
+                  DataCell(Text(branch.highestPackage)),
+                  DataCell(Text(branch.averagePackage)),
+                ],
+              );
+            }).toList(),
+      ),
     );
   }
 

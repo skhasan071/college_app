@@ -45,8 +45,8 @@ class EducationPreferenceCards extends StatelessWidget {
               ),
               Text(
                 '${pfpController.profile.value!.interestedStreams!.join(", ")}, ${pfpController.profile.value!.preferredCourseLevel ?? ""}, ${pfpController.profile.value!.modeOfStudy ?? ""}',
-                style: TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                softWrap: true,// This ensures wrapping
+                style: TextStyle(fontWeight: FontWeight.bold),
+                softWrap: true, // This ensures wrapping
               ),
               const SizedBox(height: 12),
               const Text(

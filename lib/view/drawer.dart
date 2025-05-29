@@ -53,6 +53,7 @@ class DrawerWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       TextField(
+                        cursorColor: theme.filterSelectedColor,
                         decoration: InputDecoration(
                           hintText: 'Search',
                           prefixIcon: Icon(Icons.search),

@@ -113,9 +113,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   hint: "Mobile (include +91)",
                   controller: mobileController,
                   pre: const Icon(Icons.phone_outlined),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(13),
-                  ],
+                  inputFormatters: [LengthLimitingTextInputFormatter(13)],
                 ),
                 const SizedBox(height: 16),
 
@@ -172,12 +170,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             ),
                           );
                           return;
-                        }else if(!phNo.contains("+91")){
+                        } else if (!phNo.contains("+91")) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(
-                                "Please enter valid Mobile Number",
-                              ),
+                              content: Text("Please enter valid Mobile Number"),
                               backgroundColor: Colors.purple,
                               duration: Duration(seconds: 2),
                             ),
@@ -192,8 +188,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             studyingIn != null &&
                             state != null &&
                             city != null) {
-
-                          if(profile.userToken.value == ''){
+                          if (profile.userToken.value == '') {
                             profile.userToken.value = (await getToken()) ?? '';
                           }
 
@@ -220,12 +215,22 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                   duration: const Duration(seconds: 2),
                                 ),
                               );
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage(profile.userToken.value)));
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          HomePage(profile.userToken.value),
+                                ),
+                              );
                             } else {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const CoursePreferencesPage(isFlow: true,),
+                                  builder:
+                                      (_) => const CoursePreferencesPage(
+                                        isFlow: true,
+                                      ),
                                 ),
                               );
                             }
@@ -262,10 +267,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           }
 
                           if (state == null || state!.isEmpty) {
-                            showSnack(
-                              context,
-                              "Please select your state",
-                            );
+                            showSnack(context, "Please select your state");
                             return;
                           }
 
@@ -304,6 +306,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                   .toList(),
           onChanged: onChanged,
+          dropdownColor: Colors.white,
           decoration: const InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.zero),
             focusedBorder: OutlineInputBorder(
@@ -334,5 +337,4 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     state = pfp.state ?? states[0];
     city = pfp.city ?? cities[0];
   }
-
 }

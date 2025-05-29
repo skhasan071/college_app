@@ -11,14 +11,17 @@ class ContactDetailsPage extends StatelessWidget {
     final emailController = TextEditingController();
     final messageController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
-
+    bool isExpanded = false;
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Contact Talent Connect'),
-          backgroundColor: theme.filterSelectedColor,
-          foregroundColor: theme.filterTextColor,
+          title: const Text(
+            'Contact Talent Connect',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.white,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -28,43 +31,112 @@ class ContactDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Text(
-                      'Talent Connect',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: theme.filterSelectedColor,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
                   const Text(
                     'Contact Information:',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  const ListTile(
-                    leading: Icon(Icons.phone, color: Colors.black),
-                    title: Text(
-                      '+1 (234) 567-890',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                  const ListTile(
-                    leading: Icon(Icons.email, color: Colors.black),
-                    title: Text(
-                      'contact@talentconnect.com',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                  const ListTile(
-                    leading: Icon(Icons.location_on, color: Colors.black),
-                    title: Text(
-                      '123 Talent St, City, Country',
-                      style: TextStyle(color: Colors.blue),
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Phone Row
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.phone, color: Colors.black),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                '7979863193',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Email Row
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.email, color: Colors.black),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Contact-us@talentsconnectss.com',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Location Row with expand/collapse (StatefulBuilder)
+                      StatefulBuilder(
+                        builder: (context, setState) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Colors.black,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Talent Connect- B BLOCK, first  FLOOR ROOM NO. 1  RUKMINI VENKATASWAMY REDDY ARCADE, ASHOKA LANE, GREEN GLEN LAYOUT, BELLANDUR, BANGALORE KARNATAKA - 560103',
+                                        style: const TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 16,
+                                        ),
+                                        overflow:
+                                            isExpanded
+                                                ? TextOverflow.visible
+                                                : TextOverflow.ellipsis,
+                                        maxLines: isExpanded ? null : 2,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            isExpanded
+                                                ? Icons.keyboard_arrow_up
+                                                : Icons.keyboard_arrow_down,
+                                          ),
+                                          onPressed: () {
+                                            setState(
+                                              () => isExpanded = !isExpanded,
+                                            );
+                                          },
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 20),
