@@ -115,7 +115,6 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                           pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-Time";
                           pfpCtrl.profile.value!.preferredYearOfAdmission = selectedYear ?? "2025";
                           Map<String, dynamic>? data = await StudentService.saveCoursePreferences(token: pfpCtrl.userToken.value, coursesInterested: selectedCourses.toList(), interestedStreams: selectedStreams.toList(), modeOfStudy: selectedMode, preferredCourseLevel: selectedLevel, preferredYearOfAdmission: selectedYear);
-
                         }else{
                           pfpCtrl.interestedStreams.value = selectedStreams.toList();
                           pfpCtrl.coursesInterested.value = selectedCourses.toList();
