@@ -276,7 +276,7 @@ class _CardStructureState extends State<CardStructure> {
                           themes,
                         ),
                         _buildInfoColumn(
-                          "Total Fees Range",
+                          "Fee Range",
                           widget.feeRange,
                           themes,
                         ),

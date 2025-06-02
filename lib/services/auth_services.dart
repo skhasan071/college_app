@@ -78,7 +78,7 @@ class AuthService {
     }
   }
   static Future<Map<String, dynamic>> sendOtp(String email) async {
-    final url = Uri.parse('$baseUrl/forgot-password/send-otp');
+    final url = Uri.parse('https://tc-ca-server.onrender.com/api/auth/student/forgot-password/send-otp');
 
     try {
       final response = await http.post(
@@ -105,7 +105,7 @@ class AuthService {
     required String otp,
     required String newPassword,
   }) async {
-    final url = Uri.parse('$baseUrl/forgot-password/verify-otp');
+    final url = Uri.parse('https://tc-ca-server.onrender.com/api/auth/student/forgot-password/verify-otp');
 
     try {
       final response = await http.post(
