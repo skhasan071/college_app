@@ -102,11 +102,11 @@ class Cost extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start, // Optional but recommended for alignment
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Icon(Icons.location_on, size: 18),
                             const SizedBox(width: 4),
-                            Expanded( // ⬅️ This makes the text wrap properly
+                            Expanded(
                               child: Text(
                                 cost.address,
                                 style: const TextStyle(

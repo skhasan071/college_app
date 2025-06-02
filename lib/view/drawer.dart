@@ -104,13 +104,18 @@ class DrawerWidget extends StatelessWidget {
                             SchedulerBinding.instance.addPostFrameCallback((_) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text("Please Login First"),
+                                  content: Text(
+                                    "Please Login First",
+                                    style: TextStyle(
+                                      color: theme.filterTextColor,
+                                    ),
+                                  ),
                                   duration: Duration(seconds: 3),
-                                  backgroundColor: Colors.black,
+                                  backgroundColor: theme.filterSelectedColor,
                                   behavior: SnackBarBehavior.floating,
                                   action: SnackBarAction(
                                     label: 'Login',
-                                    textColor: Colors.blueAccent,
+                                    textColor: theme.filterTextColor,
                                     onPressed: () {
                                       // Use GetX navigation
                                       Get.back(); // Closes snackbar or drawer if open
@@ -207,13 +212,16 @@ class DrawerWidget extends StatelessWidget {
                       SchedulerBinding.instance.addPostFrameCallback((_) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Please Login First"),
+                            content: Text(
+                              "Please Login First",
+                              style: TextStyle(color: theme.filterTextColor),
+                            ),
                             duration: Duration(seconds: 3),
-                            backgroundColor: Colors.black,
+                            backgroundColor: theme.filterSelectedColor,
                             behavior: SnackBarBehavior.floating,
                             action: SnackBarAction(
                               label: 'Login',
-                              textColor: Colors.blueAccent,
+                              textColor: theme.filterTextColor,
                               onPressed: () {
                                 // Use GetX navigation
                                 Get.back(); // Closes snackbar or drawer if open

@@ -209,7 +209,9 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                       )
-                      : Center(child: CircularProgressIndicator()),
+                      : Center(
+                        child: CircularProgressIndicator(color: Colors.black),
+                      ),
             ),
             const SizedBox(height: 25),
             SizedBox(

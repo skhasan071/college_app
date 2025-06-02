@@ -46,101 +46,113 @@ class _CollegesState extends State<Colleges> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Scaffold(
+        backgroundColor: Colors.white,
 
-      body: SafeArea(
-        child: Obx(
-          () =>
-              !loader.isLoading.value
-                  ? SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 6,
-                            ),
-                            child: Text(
-                              "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
+        body: SafeArea(
+          child: Obx(
+            () =>
+                !loader.isLoading.value
+                    ? SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 16,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 6,
+                              ),
+                              child: Text(
+                                "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
 
-                          _buildBox(
-                            title: "Explore College as per your preference.",
-                            buttonText: "Edit Preferences",
-                            pageNo: 0,
-                            callback: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          CoursePreferencesPage(isFlow: false),
-                                ),
-                              );
-                            },
-                          ),
+                            _buildBox(
+                              title: "Explore College as per your preference.",
+                              buttonText: "Edit Preferences",
+                              pageNo: 0,
+                              callback: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => CoursePreferencesPage(
+                                          isFlow: false,
+                                        ),
+                                  ),
+                                );
+                              },
+                            ),
 
-                          !controller.isGuestIn.value
-                              ? rankings.isNotEmpty
-                                  ? _buildSection(
-                                    "Colleges Based on NIRF",
-                                    rankings,
-                                  )
-                                  : Container()
-                              : Container(),
+                            !controller.isGuestIn.value
+                                ? rankings.isNotEmpty
+                                    ? _buildSection(
+                                      "Colleges Based on NIRF",
+                                      rankings,
+                                    )
+                                    : Container()
+                                : Container(),
 
-                          _buildBox(
-                            title: "Which colleges match your preferences?",
-                            buttonText: "Predict My College",
-                            pageNo: 3,
-                          ),
+                            _buildBox(
+                              title: "Which colleges match your preferences?",
+                              buttonText: "Predict My College",
+                              pageNo: 3,
+                            ),
 
-                          states.isNotEmpty
-                              ? _buildSection("Colleges Based on State", states)
-                              : Container(),
-                          countries.isNotEmpty
-                              ? _buildSection(
-                                "Colleges Based on Country",
-                                countries,
-                              )
-                              : Container(),
-                          cities.isNotEmpty
-                              ? _buildSection("Colleges Based on City", cities)
-                              : Container(),
-                          controller.isLoggedIn.value && privates.isNotEmpty
-                              ? _buildSection(
-                                "Popular Private Colleges",
-                                privates,
-                              )
-                              : Container(),
+                            states.isNotEmpty
+                                ? _buildSection(
+                                  "Colleges Based on State",
+                                  states,
+                                )
+                                : Container(),
+                            countries.isNotEmpty
+                                ? _buildSection(
+                                  "Colleges Based on Country",
+                                  countries,
+                                )
+                                : Container(),
+                            cities.isNotEmpty
+                                ? _buildSection(
+                                  "Colleges Based on City",
+                                  cities,
+                                )
+                                : Container(),
+                            controller.isLoggedIn.value && privates.isNotEmpty
+                                ? _buildSection(
+                                  "Popular Private Colleges",
+                                  privates,
+                                )
+                                : Container(),
 
-                          _buildBox(
-                            title: "Want the latest insights on colleges?",
-                            buttonText: "Read Insights",
-                            pageNo: 2,
-                          ),
-                        ],
+                            _buildBox(
+                              title: "Want the latest insights on colleges?",
+                              buttonText: "Read Insights",
+                              pageNo: 2,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    : Center(
+                      child: CircularProgressIndicator(
+                        color: theme.filterSelectedColor,
                       ),
                     ),
-                  )
-                  : Center(
-                    child: CircularProgressIndicator(color: Colors.black),
-                  ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildSection(String title, List<College> data) {

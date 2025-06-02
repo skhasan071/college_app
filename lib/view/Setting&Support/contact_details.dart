@@ -149,9 +149,20 @@ class ContactDetailsPage extends StatelessWidget {
                   // Name Field
                   TextFormField(
                     controller: nameController,
-                    decoration: const InputDecoration(
+                    cursorColor: theme.filterSelectedColor,
+                    decoration: InputDecoration(
                       labelText: 'Your Name',
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.black),
+
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.filterSelectedColor,
+                          width: 2,
+                        ),
+                      ),
                     ),
                     validator:
                         (value) =>
@@ -164,9 +175,19 @@ class ContactDetailsPage extends StatelessWidget {
                   // Email Field
                   TextFormField(
                     controller: emailController,
-                    decoration: const InputDecoration(
+                    cursorColor: theme.filterSelectedColor,
+                    decoration: InputDecoration(
                       labelText: 'Your Email',
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.black),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.filterSelectedColor,
+                          width: 2,
+                        ),
+                      ),
                     ),
                     validator:
                         (value) =>
@@ -180,9 +201,19 @@ class ContactDetailsPage extends StatelessWidget {
                   TextFormField(
                     controller: messageController,
                     maxLines: 4,
-                    decoration: const InputDecoration(
+                    cursorColor: theme.filterSelectedColor,
+                    decoration: InputDecoration(
                       labelText: 'Your Message',
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.black),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.filterSelectedColor,
+                          width: 2,
+                        ),
+                      ),
                     ),
                     validator:
                         (value) =>

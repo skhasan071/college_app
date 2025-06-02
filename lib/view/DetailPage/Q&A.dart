@@ -300,8 +300,10 @@ class _AskQuestionPageState extends State<AskQuestionPage> {
             children: [
               TextField(
                 controller: nameController,
+                cursorColor: theme.filterSelectedColor,
                 decoration: InputDecoration(
                   labelText: 'Enter Your Name',
+                  labelStyle: TextStyle(color: Colors.black),
                   border: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
                   ),
@@ -317,8 +319,10 @@ class _AskQuestionPageState extends State<AskQuestionPage> {
               TextField(
                 controller: questionController,
                 maxLines: 4,
+                cursorColor: theme.filterSelectedColor,
                 decoration: InputDecoration(
                   labelText: 'Enter Your Question',
+                  labelStyle: TextStyle(color: Colors.black),
                   border: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
                   ),

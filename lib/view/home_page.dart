@@ -10,6 +10,7 @@ import 'package:college_app/view/predicted_college.dart';
 import 'package:college_app/view/profiles/profile_page.dart';
 import 'package:college_app/view/Filters&Compare/searchPage.dart';
 import 'package:college_app/view/Filters&Compare/shortlistCollegePage.dart';
+import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../view_model/controller.dart';
@@ -17,18 +18,15 @@ import '../view_model/profile_controller.dart';
 import 'Setting&Support/notification_page.dart';
 
 class HomePage extends StatefulWidget {
-
   final String token;
 
-  const HomePage(this.token,{super.key});
+  const HomePage(this.token, {super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
-
 }
 
-class _HomePageState extends State<HomePage>{
-
+class _HomePageState extends State<HomePage> {
   var controller = Get.put(Controller());
   var profileController = Get.put(ProfileController());
   bool isSnackBarActive = false;
@@ -88,56 +86,114 @@ class _HomePageState extends State<HomePage>{
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return WillPopScope(
+        onWillPop: () async {
+          if (controller.navSelectedIndex.value == 0) {
+            bool? shouldExit = await showDialog<bool>(
+              context: context,
+              builder:
+                  (context) => Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: theme.backgroundGradient,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Exit",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Are you sure you want to exit?",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: BorderSide(
+                                    color: theme.filterSelectedColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                                child: Text(
+                                  "No",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: theme.filterSelectedColor,
+                                  foregroundColor: theme.filterTextColor,
+                                  side: BorderSide(
+                                    color: theme.filterSelectedColor,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                },
+                                child: Text("Yes"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+            );
+            return shouldExit ?? false;
+          } else {
+            controller.navSelectedIndex.value = 0;
+            return false;
+          }
+        },
+        child: Scaffold(
+          key: scaffoldKey,
 
-        if(controller.navSelectedIndex.value == 0){
+          backgroundColor: Colors.white,
 
-          bool? shouldExit = await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text("Exit", style: TextStyle(color: Colors.black)),
-              content: Text("Are you sure you want to exit?"),
-              actions: [
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false); // Don't exit
-                  },
-                  child: Text("No"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true); // Exit
-                  },
-                  child: Text("Yes"),
-                ),
-              ],
-            ),
-          );
-          return shouldExit ?? false;
+          appBar: getAppBar(),
 
-        }else{
-          controller.navSelectedIndex.value = 0;
-          return false;
-        }
-      },
-      child: Scaffold(
-        key: scaffoldKey,
+          body: Obx(
+            () =>
+                controller.isLoggedIn.value || controller.isGuestIn.value
+                    ? screens[controller.navSelectedIndex.value]
+                    : Center(child: CircularProgressIndicator()),
+          ),
 
-        backgroundColor: Colors.white,
+          drawer: DrawerWidget(scaffoldKey, shortlistedCollegesCount),
 
-        appBar: getAppBar(),
-
-        body: Obx(() => controller.isLoggedIn.value || controller.isGuestIn.value? screens[controller.navSelectedIndex.value] : Center(child: CircularProgressIndicator())),
-
-        drawer: DrawerWidget(scaffoldKey,shortlistedCollegesCount),
-
-        bottomNavigationBar: getBottomNavBar(),
-      ),
-    );
+          bottomNavigationBar: getBottomNavBar(),
+        ),
+      );
+    });
   }
 
   PreferredSizeWidget getAppBar() {
+    final theme = ThemeController.to.currentTheme;
     return PreferredSize(
       preferredSize: Size.fromHeight(40),
       child: SafeArea(
@@ -200,35 +256,45 @@ class _HomePageState extends State<HomePage>{
                       ),
                       GestureDetector(
                         onTap: () {
-                          if(controller.isGuestIn.value){
-                          if (isSnackBarActive) return; // Prevent showing multiple snackbars
+                          if (controller.isGuestIn.value) {
+                            if (isSnackBarActive)
+                              return; // Prevent showing multiple snackbars
 
-                          isSnackBarActive = true;
-                          isSnackBarActionClicked = false;
+                            isSnackBarActive = true;
+                            isSnackBarActionClicked = false;
 
-                          final snackBar = SnackBar(
-                          content: Text("Please Login First"),
-                          duration: Duration(seconds: 3),
-                          backgroundColor: Colors.black,
-                          behavior: SnackBarBehavior.floating,
-                          action: SnackBarAction(
-                          label: 'Login',
-                          textColor: Colors.blueAccent,
-                          onPressed: () {
-                          if (!isSnackBarActionClicked) {
-                          isSnackBarActionClicked = true;
+                            final snackBar = SnackBar(
+                              content: Text(
+                                "Please Login First",
+                                style: TextStyle(color: theme.filterTextColor),
+                              ),
+                              duration: Duration(seconds: 3),
+                              backgroundColor: theme.filterSelectedColor,
+                              behavior: SnackBarBehavior.floating,
+                              action: SnackBarAction(
+                                label: 'Login',
+                                textColor: theme.filterTextColor,
+                                onPressed: () {
+                                  if (!isSnackBarActionClicked) {
+                                    isSnackBarActionClicked = true;
 
-                          Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                          );}
-                          },),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
-                          isSnackBarActive = false;
-                          isSnackBarActionClicked = false;
-                          });
-                          }else{
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginPage(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(snackBar).closed.then((_) {
+                              isSnackBarActive = false;
+                              isSnackBarActionClicked = false;
+                            });
+                          } else {
                             controller.navSelectedIndex.value = 5;
                           }
                         },
@@ -238,9 +304,18 @@ class _HomePageState extends State<HomePage>{
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(20)),
-                            border: Border.all(color: Colors.black, width: 2)
+                            border: Border.all(color: Colors.black, width: 2),
                           ),
-                          child: Center(child: Text(controller.isGuestIn.value ? "?" : "P", style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 16),)),
+                          child: Center(
+                            child: Text(
+                              controller.isGuestIn.value ? "?" : "P",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -255,6 +330,7 @@ class _HomePageState extends State<HomePage>{
   }
 
   Widget getBottomNavBar() {
+    final theme = ThemeController.to.currentTheme;
     return Container(
       width: double.infinity,
       height: 80,
@@ -302,38 +378,45 @@ class _HomePageState extends State<HomePage>{
               label: "Shortlist",
               icon: Icons.list,
               callback: () {
-                if(controller.isGuestIn.value){
-                  if (isSnackBarActive) return; // Prevent showing multiple snackbars
+                if (controller.isGuestIn.value) {
+                  if (isSnackBarActive)
+                    return; // Prevent showing multiple snackbars
 
                   isSnackBarActive = true;
                   isSnackBarActionClicked = false;
                   final snackBar = SnackBar(
-                  content: Text("Please Login First"),
-                  duration: Duration(seconds: 3),
-                  backgroundColor: Colors.black,
-                  behavior: SnackBarBehavior.floating,
-                  action: SnackBarAction(
-                  label: 'Login',
-                  textColor: Colors.blueAccent,
-                  onPressed: () {
-                  if (!isSnackBarActionClicked) {
-                  isSnackBarActionClicked = true;
+                    content: Text(
+                      "Please Login First",
+                      style: TextStyle(color: theme.filterTextColor),
+                    ),
+                    duration: Duration(seconds: 3),
+                    backgroundColor: theme.filterSelectedColor,
+                    behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: 'Login',
+                      textColor: theme.filterTextColor,
+                      onPressed: () {
+                        if (!isSnackBarActionClicked) {
+                          isSnackBarActionClicked = true;
 
-                  Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                  }
-                  },
-                  ),
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   );
 
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
-                  isSnackBarActive = false;
-                  isSnackBarActionClicked = false;
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(snackBar).closed.then((_) {
+                    isSnackBarActive = false;
+                    isSnackBarActionClicked = false;
                   });
-                }
-                else{
+                } else {
                   controller.navSelectedIndex.value = 4;
                 }
               },
@@ -352,5 +435,4 @@ class _HomePageState extends State<HomePage>{
     profileController.coursesInterested.value = student.coursesInterested!;
     controller.isLoggedIn.value = true;
   }
-
 }

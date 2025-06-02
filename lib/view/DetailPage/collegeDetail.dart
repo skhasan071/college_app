@@ -243,13 +243,19 @@ class _CollegeDetailState extends State<CollegeDetail> {
                                     isSnackBarActionClicked = false;
 
                                     final snackBar = SnackBar(
-                                      content: Text("Please Login First"),
+                                      content: Text(
+                                        "Please Login First",
+                                        style: TextStyle(
+                                          color: theme.filterTextColor,
+                                        ),
+                                      ),
                                       duration: Duration(seconds: 3),
-                                      backgroundColor: Colors.black,
+                                      backgroundColor:
+                                          theme.filterSelectedColor,
                                       behavior: SnackBarBehavior.floating,
                                       action: SnackBarAction(
                                         label: 'Login',
-                                        textColor: Colors.blueAccent,
+                                        textColor: theme.filterTextColor,
                                         onPressed: () {
                                           if (!isSnackBarActionClicked) {
                                             isSnackBarActionClicked = true;
