@@ -6,33 +6,35 @@ import 'package:get/get.dart';
 
 class Courses extends StatefulWidget {
   final String uid;
-  const Courses(
-    this.uid, {
-    super.key,
-    required this.collegeImage,
-    required this.collegeName,
-  });
   final String collegeImage;
   final String collegeName;
+
+  const Courses(
+      this.uid, {
+        super.key,
+        required this.collegeImage,
+        required this.collegeName,
+      });
 
   @override
   State<Courses> createState() => _CoursesState();
 }
 
-class _CoursesState extends State<Courses> {
+class _CoursesState extends State<Courses> with TickerProviderStateMixin {
   List<Course> main_courses = [];
-  List<Course> filter_courses = [];
-  List<Course> eng_courses = [];
-  List<Course> med_courses = [];
-  List<Course> arts_courses = [];
-  List<Course> business_courses = [];
-  Map<String, dynamic> visibleFilter = {
-    'Engineering': false,
-    'Medical': false,
-    'Management': false,
-    'Arts': false,
-  };
+  Map<String, List<Course>> categorizedCourses = {};
   bool isLoading = true;
+  late TabController _tabController;
+
+  final categoryMap = {
+    'All Courses': 'All Courses',
+    'Engineering': 'Engineering',
+    'Medical': 'Medical',
+    'Management': 'Management',
+    'Arts': 'Arts',
+  };
+
+  List<String> activeTabs = [];
 
   @override
   void initState() {
@@ -40,12 +42,42 @@ class _CoursesState extends State<Courses> {
     getCourse();
   }
 
+  void getCourse() async {
+    setState(() => isLoading = true);
+
+    main_courses = await CollegeServices.getCoursesByCollege(widget.uid);
+
+    categorizedCourses['All Courses'] = main_courses;
+    categorizedCourses['Engineering'] =
+        main_courses.where((c) => c.category == 'Engineering').toList();
+    categorizedCourses['Medical'] =
+        main_courses.where((c) => c.category == 'Medical').toList();
+    categorizedCourses['Management'] =
+        main_courses.where((c) => c.category == 'Management').toList();
+    categorizedCourses['Arts'] =
+        main_courses.where((c) => c.category == 'Arts').toList();
+
+    activeTabs = categoryMap.keys
+        .where((category) => categorizedCourses[category]?.isNotEmpty ?? false)
+        .toList();
+
+    _tabController = TabController(length: activeTabs.length, vsync: this);
+
+    setState(() => isLoading = false);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
       return DefaultTabController(
-        length: 5,
+        length: activeTabs.length,
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -63,31 +95,32 @@ class _CoursesState extends State<Courses> {
             ),
             backgroundColor: Colors.white,
           ),
-
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildCollegeLogo(),
               const SizedBox(height: 10),
-
               isLoading
-                  ? Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(color: Colors.black),
-                    ),
-                  )
-                  : Container(
+                  ? const Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(color: Colors.black),
+                ),
+              )
+                  : Column(
+                children: [
+                  Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
                         top: BorderSide(color: Colors.grey, width: 0.4),
-                        bottom: BorderSide(color: Colors.grey, width: 0.4),
+                        bottom:
+                        BorderSide(color: Colors.grey, width: 0.4),
                       ),
                     ),
                     child: TabBar(
+                      controller: _tabController,
                       isScrollable: true,
                       labelColor: Colors.white,
-                      tabAlignment: TabAlignment.start,
                       unselectedLabelColor: Colors.black,
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.w500,
@@ -100,41 +133,43 @@ class _CoursesState extends State<Courses> {
                         color: theme.filterSelectedColor,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      tabs:
-                          [
-                                'All Courses',
-                                visibleFilter['Engineering']
-                                    ? 'Engineering'
-                                    : "",
-                                visibleFilter['Medical'] ? 'Medical' : "",
-                                visibleFilter['Management'] ? 'Management' : "",
-                                visibleFilter['Arts'] ? 'Arts' : "",
-                              ]
-                              .map(
-                                (title) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 2,
-                                  ),
-                                  child: Tab(child: Text(title)),
-                                ),
-                              )
-                              .toList(),
+                      tabs: activeTabs
+                          .map(
+                            (title) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 2),
+                          child: Tab(
+                            child: Text(title),
+                          ),
+                        ),
+                      )
+                          .toList(),
                     ),
                   ),
-
-              isLoading
-                  ? SizedBox.shrink()
-                  : filter_courses.isNotEmpty
-                  ? Expanded(
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.55,
                     child: TabBarView(
-                      children: [
-                        ListView.builder(
-                          itemBuilder: (context, index) {
-                            Course course = filter_courses[index];
+                      controller: _tabController,
+                      children: activeTabs.map((category) {
+                        List<Course> courses =
+                            categorizedCourses[category] ?? [];
 
+                        return courses.isEmpty
+                            ? const Center(
+                          child: Text(
+                            "No Course Offered",
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 20),
+                          ),
+                        )
+                            : ListView.builder(
+                          itemCount: courses.length,
+                          itemBuilder: (context, index) {
+                            final course = courses[index];
                             return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
+                              padding:
+                              const EdgeInsets.only(bottom: 16),
                               child: _buildCourseCard(
                                 courseName: course.courseName,
                                 duration: course.duration,
@@ -144,95 +179,12 @@ class _CoursesState extends State<Courses> {
                               ),
                             );
                           },
-                          itemCount: filter_courses.length,
-                          shrinkWrap: true,
-                        ),
-                        ListView.builder(
-                          itemBuilder: (context, index) {
-                            Course course = eng_courses[index];
-
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _buildCourseCard(
-                                courseName: course.courseName,
-                                duration: course.duration,
-                                fees: '\$${course.fees}',
-                                eligibility: course.examType,
-                                intake: 'Sep 2025',
-                              ),
-                            );
-                          },
-                          itemCount: eng_courses.length,
-                          shrinkWrap: true,
-                        ),
-                        ListView.builder(
-                          itemBuilder: (context, index) {
-                            Course course = med_courses[index];
-
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _buildCourseCard(
-                                courseName: course.courseName,
-                                duration: course.duration,
-                                fees: '\$${course.fees}',
-                                eligibility: course.examType,
-                                intake: 'Sep 2025',
-                              ),
-                            );
-                          },
-                          itemCount: med_courses.length,
-                          shrinkWrap: true,
-                        ),
-                        ListView.builder(
-                          itemBuilder: (context, index) {
-                            Course course = business_courses[index];
-
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _buildCourseCard(
-                                courseName: course.courseName,
-                                duration: course.duration,
-                                fees: '\$${course.fees}',
-                                eligibility: course.examType,
-                                intake: 'Sep 2025',
-                              ),
-                            );
-                          },
-                          itemCount: business_courses.length,
-                          shrinkWrap: true,
-                        ),
-                        ListView.builder(
-                          itemBuilder: (context, index) {
-                            Course course = arts_courses[index];
-
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _buildCourseCard(
-                                courseName: course.courseName,
-                                duration: course.duration,
-                                fees: '\$${course.fees}',
-                                eligibility: course.examType,
-                                intake: 'Sep 2025',
-                              ),
-                            );
-                          },
-                          itemCount: arts_courses.length,
-                          shrinkWrap: true,
-                        ),
-                      ],
+                        );
+                      }).toList(),
                     ),
-                  )
-                  : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          "No Course Offered",
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                        ),
-                      ),
-                    ],
                   ),
+                ],
+              ),
             ],
           ),
         ),
@@ -259,8 +211,6 @@ class _CoursesState extends State<Courses> {
             ),
           ),
           const SizedBox(width: 12),
-
-          // 🔥 Wrap with Expanded
           Expanded(
             child: Text(
               widget.collegeName,
@@ -314,10 +264,8 @@ class _CoursesState extends State<Courses> {
                 ),
                 const SizedBox(width: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     gradient: theme.backgroundGradient,
                     borderRadius: BorderRadius.circular(4),
@@ -374,34 +322,5 @@ class _CoursesState extends State<Courses> {
         ],
       ),
     );
-  }
-
-  getCourse() async {
-    isLoading = true;
-    main_courses = await CollegeServices.getCoursesByCollege(widget.uid);
-    filter_courses = main_courses;
-    eng_courses = getFiltered(filter: "Engineering");
-    med_courses = getFiltered(filter: "Medical");
-    arts_courses = getFiltered(filter: "Arts");
-    business_courses = getFiltered(filter: "Management");
-    setState(() {
-      visibleFilter['Engineering'] = eng_courses.isNotEmpty;
-      visibleFilter['Medical'] = med_courses.isNotEmpty;
-      visibleFilter['Arts'] = arts_courses.isNotEmpty;
-      visibleFilter['Management'] = business_courses.isNotEmpty;
-      isLoading = false;
-    });
-  }
-
-  List<Course> getFiltered({required String filter}) {
-    List<Course> temp = [];
-
-    for (Course course in main_courses) {
-      if (course.category.toLowerCase() == filter.toLowerCase()) {
-        temp.add(course);
-      }
-    }
-
-    return temp;
   }
 }
