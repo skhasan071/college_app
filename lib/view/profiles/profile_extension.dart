@@ -3,13 +3,17 @@ import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:college_app/view_model/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-class EducationPreferenceCards extends StatelessWidget {
+class EducationPreferenceCards extends StatefulWidget {
 
+  const EducationPreferenceCards({super.key});
+
+  @override
+  State<EducationPreferenceCards> createState() => _EducationPreferenceCardsState();
+}
+
+class _EducationPreferenceCardsState extends State<EducationPreferenceCards> {
   var pfpController = Get.put(ProfileController());
-
-  EducationPreferenceCards({super.key});
 
   @override
   Widget build(BuildContext context) {
