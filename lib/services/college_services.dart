@@ -264,7 +264,7 @@ class CollegeServices {
   }
   static Future<Map<String, dynamic>> getScholarshipsByCollege(String collegeId) async {
     final response = await http.get(
-      Uri.parse('${_baseUrl}scholarships/$collegeId'), // Modify with your API URL
+      Uri.parse('https://tc-ca-server.onrender.com/api/scholarships/$collegeId'), // Modify with your API URL
     );
 
     if (response.statusCode == 200) {
