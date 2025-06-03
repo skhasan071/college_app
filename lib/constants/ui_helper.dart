@@ -65,6 +65,7 @@ class UiHelper {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      cursorColor: Colors.black,
       inputFormatters:
           inputFormatters, // Accept input formatters as an optional parameter
       decoration: InputDecoration(

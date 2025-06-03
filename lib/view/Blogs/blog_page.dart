@@ -85,7 +85,9 @@ class _BlogPageState extends State<BlogPage> {
                         // List of blog cards
                         blogs.isEmpty
                             ? Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                color: theme.filterSelectedColor,
+                              ),
                             ) // Show loading indicator while fetching
                             : ListView.builder(
                               itemCount: blogs.length,
@@ -126,7 +128,8 @@ class BlogCard extends StatelessWidget {
   final String image;
   final Map<String, dynamic> blog;
 
-  const BlogCard({super.key,
+  const BlogCard({
+    super.key,
     required this.title,
     required this.category,
     required this.readingTime,
@@ -137,64 +140,73 @@ class BlogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
-        borderRadius: BorderRadius.circular(20),
-      ),
-      margin: EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Blog image
-            Image.asset(image), // Replace with your image assets or URLs
-
-            SizedBox(height: 16),
-
-            // Category and reading time
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(category, style: TextStyle(color: Colors.grey)),
-                Text(readingTime, style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-
-            SizedBox(height: 16),
-
-            // Blog title
-            Text(
-              title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-
-            // Blog description
-            Text(description, style: TextStyle(color: Colors.grey)),
-
-            SizedBox(height: 16),
-
-            // Read more button
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlogPageDetail(blog: blog),
-                  ),
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [Text('Read more'), Icon(Icons.arrow_forward)],
-              ),
-            ),
-          ],
+    return Obx(() {
+      final theme = ThemeController.to.currentTheme;
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5)],
+          borderRadius: BorderRadius.circular(20),
         ),
-      ),
-    );
+        margin: EdgeInsets.only(bottom: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Blog image
+              Image.asset(image), // Replace with your image assets or URLs
+
+              SizedBox(height: 16),
+
+              // Category and reading time
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(category, style: TextStyle(color: Colors.grey)),
+                  Text(readingTime, style: TextStyle(color: Colors.black)),
+                ],
+              ),
+
+              SizedBox(height: 16),
+
+              // Blog title
+              Text(
+                title,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+
+              // Blog description
+              Text(description, style: TextStyle(color: Colors.grey)),
+
+              SizedBox(height: 16),
+
+              // Read more button
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlogPageDetail(blog: blog),
+                    ),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Read more',
+                      style: TextStyle(color: theme.filterSelectedColor),
+                    ),
+                    Icon(Icons.arrow_forward, color: theme.filterSelectedColor),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

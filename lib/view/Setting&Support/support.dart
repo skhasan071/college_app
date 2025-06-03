@@ -114,13 +114,16 @@ class _SupportPageState extends State<SupportPage> {
                   isSnackBarActionClicked = false;
 
                   final snackBar = SnackBar(
-                    content: Text("Please Login First"),
+                    content: Text(
+                      "Please Login First",
+                      style: TextStyle(color: theme.filterTextColor),
+                    ),
                     duration: Duration(seconds: 3),
-                    backgroundColor: Colors.black,
+                    backgroundColor: theme.filterSelectedColor,
                     behavior: SnackBarBehavior.floating,
                     action: SnackBarAction(
                       label: 'Login',
-                      textColor: Colors.blueAccent,
+                      textColor: theme.filterTextColor,
                       onPressed: () {
                         if (!isSnackBarActionClicked) {
                           isSnackBarActionClicked = true;
@@ -167,13 +170,16 @@ class _SupportPageState extends State<SupportPage> {
                   isSnackBarActionClicked = false;
 
                   final snackBar = SnackBar(
-                    content: Text("Please Login First"),
+                    content: Text(
+                      "Please Login First",
+                      style: TextStyle(color: theme.filterTextColor),
+                    ),
                     duration: Duration(seconds: 3),
-                    backgroundColor: Colors.black,
+                    backgroundColor: theme.filterSelectedColor,
                     behavior: SnackBarBehavior.floating,
                     action: SnackBarAction(
                       label: 'Login',
-                      textColor: Colors.blueAccent,
+                      textColor: theme.filterTextColor,
                       onPressed: () {
                         if (!isSnackBarActionClicked) {
                           isSnackBarActionClicked = true;
@@ -491,7 +497,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 3,
+          elevation: 0,
           title: const Text(
             'Report an Issue',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -526,10 +532,21 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       issueType = val!;
                     });
                   },
-                  decoration: const InputDecoration(
+                  dropdownColor: Colors.white,
+                  decoration: InputDecoration(
                     labelText: 'Issue Type',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                     filled: true,
                     fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -546,10 +563,25 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                       profession = val!;
                     });
                   },
-                  decoration: const InputDecoration(
+                  dropdownColor: Colors.white,
+                  decoration: InputDecoration(
                     labelText: 'Profession',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                     filled: true,
                     fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                   ),
                   validator:
                       (value) =>
@@ -560,9 +592,22 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
+                  cursorColor: theme.filterSelectedColor,
+                  decoration: InputDecoration(
                     labelText: "Name",
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -573,22 +618,45 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                               : null,
                 ),
                 const SizedBox(height: 16),
-                TextField(
+                /* TextField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                  cursorColor: theme.filterSelectedColor,
+                  decoration: InputDecoration(
                     labelText: "Email (optional)",
-                    border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.black),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 16),*/
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 4,
-                  decoration: const InputDecoration(
+                  cursorColor: theme.filterSelectedColor,
+                  decoration: InputDecoration(
                     labelText: "Issue Description",
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -602,9 +670,22 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                 TextField(
                   controller: _reproduceController,
                   maxLines: 3,
-                  decoration: const InputDecoration(
+                  cursorColor: theme.filterSelectedColor,
+                  decoration: InputDecoration(
                     labelText: "Steps to Reproduce (optional)",
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -751,10 +832,21 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       feedbackType = val!;
                     });
                   },
-                  decoration: const InputDecoration(
+                  dropdownColor: Colors.white,
+                  decoration: InputDecoration(
                     labelText: 'Feedback Type',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                     filled: true,
                     fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -771,10 +863,24 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       profession = val!;
                     });
                   },
-                  decoration: const InputDecoration(
+                  dropdownColor: Colors.white,
+                  decoration: InputDecoration(
                     labelText: 'Profession',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                     filled: true,
                     fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                   ),
                   validator:
                       (value) =>
@@ -785,9 +891,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
+                  cursorColor: theme.filterSelectedColor,
+                  decoration: InputDecoration(
                     labelText: "Name",
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -799,22 +918,45 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 ),
 
                 const SizedBox(height: 16),
-                TextField(
+                /*   TextField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                    cursorColor: theme.filterSelectedColor,
+                  decoration:  InputDecoration(
                     labelText: "Email (optional)",
-                    border: OutlineInputBorder(),
+                   labelStyle: TextStyle(color: Colors.black),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 16),*/
                 TextFormField(
                   controller: _feedbackController,
                   maxLines: 4,
-                  decoration: const InputDecoration(
+                  cursorColor: theme.filterSelectedColor,
+                  decoration: InputDecoration(
                     labelText: "Your Feedback",
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: theme.filterSelectedColor,
+                        width: 2,
+                      ),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                   ),

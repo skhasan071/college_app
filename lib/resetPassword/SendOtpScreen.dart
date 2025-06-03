@@ -17,7 +17,7 @@ class _SendOtpPageState extends State<SendOtpScreen> {
     final email = emailController.text.trim();
 
     if (email.isEmpty) {
-      _showSnackbar("Please enter your email", Colors.red);
+      _showSnackbar("Please enter your email", Colors.black);
       return;
     }
 
@@ -28,7 +28,7 @@ class _SendOtpPageState extends State<SendOtpScreen> {
     }
 
     if (result['success']) {
-      _showSnackbar("OTP sent successfully", Colors.green);
+      _showSnackbar("OTP sent successfully", Colors.black);
       Future.delayed(const Duration(milliseconds: 800), () {
         Navigator.push(
           context,
@@ -36,7 +36,7 @@ class _SendOtpPageState extends State<SendOtpScreen> {
         );
       });
     } else {
-      _showSnackbar(result['message'], Colors.red);
+      _showSnackbar(result['message'], Colors.black);
     }
   }
 
@@ -64,11 +64,17 @@ class _SendOtpPageState extends State<SendOtpScreen> {
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
+                cursorColor: Colors.black,
                 decoration: InputDecoration(
                   labelText: "Email",
+                  labelStyle: TextStyle(color: Colors.black),
                   prefixIcon: const Icon(Icons.email),
                   border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2),
                   ),
                 ),
               ),

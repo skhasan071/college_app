@@ -164,8 +164,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             SnackBar(
                               content: Text(
                                 "Please enter a 10-digit mobile number",
+                                style: TextStyle(color: Colors.white),
                               ),
-                              backgroundColor: Colors.purple,
+                              backgroundColor: Colors.black,
                               duration: Duration(seconds: 2),
                             ),
                           );
@@ -173,8 +174,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         } else if (!phNo.contains("+91")) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Please enter valid Mobile Number"),
-                              backgroundColor: Colors.purple,
+                              content: Text(
+                                "Please enter valid Mobile Number",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.black,
                               duration: Duration(seconds: 2),
                             ),
                           );
@@ -237,8 +241,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Something Went Wrong, Retry..."),
-                                backgroundColor: Colors.purple,
+                                content: Text(
+                                  "Something Went Wrong, Retry...",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.black,
                                 duration: Duration(seconds: 2),
                               ),
                             );
@@ -321,8 +328,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   void showSnack(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.purple,
+        content: Text(message, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.black,
         duration: const Duration(seconds: 2),
       ),
     );

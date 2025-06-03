@@ -127,14 +127,16 @@ class _CompareCollegesState extends State<CompareColleges> {
 
               Row(
                 children: [
-                  Expanded(
+                  Flexible(
+                    fit: FlexFit.loose,
                     child: _collegeLogoWithName(
                       widget.firstCollege.name,
                       widget.clg.image,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Expanded(
+                  Flexible(
+                    fit: FlexFit.loose,
                     child: _collegeLogoWithName(
                       widget.secondCollege.name,
                       widget.clg.image,

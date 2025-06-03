@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
           bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
         ),
       ),
-       home: token == null || token == "" ? Firstpage() : HomePage(token!),
+       home: Firstpage()
     );
   }
 
