@@ -1,6 +1,7 @@
 import 'package:college_app/services/shortListCollegeController.dart';
 import 'package:college_app/view/SignUpLogin/FirstPage.dart';
 import 'package:college_app/view_model/themeController.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +11,8 @@ Future<void> main() async {
   Get.put(ShortlistedCollegesController());
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    // DevicePreview(builder: (context)=>MyApp())
-      MyApp()
+    DevicePreview(builder: (context)=>MyApp())
+    //MyApp()
   );
 }
 
