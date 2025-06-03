@@ -1,6 +1,5 @@
 import 'package:college_app/services/shortListCollegeController.dart';
 import 'package:college_app/view/SignUpLogin/FirstPage.dart';
-import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +33,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         iconTheme: IconThemeData(color: Colors.black),
