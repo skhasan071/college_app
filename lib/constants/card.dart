@@ -148,7 +148,7 @@ class _CardStructureState extends State<CardStructure> {
                               behavior: SnackBarBehavior.floating,
                               action: SnackBarAction(
                                 label: 'Login',
-                                textColor: Colors.blueAccent,
+                                textColor: Colors.white,
                                 onPressed: () {
                                   if (!isSnackBarActionClicked) {
                                     isSnackBarActionClicked = true;

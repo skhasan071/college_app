@@ -427,6 +427,8 @@ class ReportIssuePage extends StatefulWidget {
 }
 
 class _ReportIssuePageState extends State<ReportIssuePage> {
+  final theme = ThemeController.to.currentTheme;
+
   Future<void> submitIssue() async {
     const url = 'https://tc-ca-server.onrender.com/api/report';
 
@@ -447,13 +449,25 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
       if (response.statusCode == 201) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Issue reported successfully")),
+          SnackBar(
+            content: Text(
+              "Issue reported successfully",
+              style: TextStyle(color: theme.filterTextColor),
+            ),
+            backgroundColor: theme.filterSelectedColor,
+          ),
         );
         Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Failed to submit issue")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Failed to submit issue",
+              style: TextStyle(color: theme.filterTextColor),
+            ),
+            backgroundColor: theme.filterSelectedColor,
+          ),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(
@@ -736,6 +750,7 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
+  final theme = ThemeController.to.currentTheme;
   Future<void> submitFeedback() async {
     const url = 'https://tc-ca-server.onrender.com/api/feedback';
 
@@ -755,12 +770,24 @@ class _FeedbackPageState extends State<FeedbackPage> {
       if (response.statusCode == 201) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Feedback Submitted successfully")),
+          SnackBar(
+            content: Text(
+              "Feedback Submitted successfully",
+              style: TextStyle(color: theme.filterTextColor),
+            ),
+            backgroundColor: theme.filterSelectedColor,
+          ),
         );
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to submit Feedback")),
+          SnackBar(
+            content: Text(
+              "Failed to submit Feedback",
+              style: TextStyle(color: theme.filterTextColor),
+            ),
+            backgroundColor: theme.filterSelectedColor,
+          ),
         );
       }
     } catch (e) {

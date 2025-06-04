@@ -1,3 +1,4 @@
+import 'package:college_app/main.dart';
 import 'package:college_app/view/SignUpLogin/login.dart';
 import 'package:college_app/view/profiles/choice_preferences.dart';
 import 'package:college_app/view/SignUpLogin/signuppage.dart';
@@ -101,6 +102,7 @@ class _FirstpageState extends State<Firstpage> {
               const SizedBox(height: 20),
               InkWell(
                 onTap: () {
+                  delToken("");
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => CoursePreferencesPage(isFlow: true,)),

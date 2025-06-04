@@ -64,19 +64,29 @@ class _CollegesState extends State<Colleges> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 8,
                                 vertical: 6,
                               ),
                               child: Text(
-                                "Hello, ${profile.profile.value == null ? "User" : profile.profile.value!.name}",
+                                "Hello, ${profile.profile.value == null ? "Guest" : profile.profile.value!.name}",
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
+
+                            !controller.isGuestIn.value
+                                ? rankings.isNotEmpty
+                                ? _buildSection(
+                              "Colleges Based on NIRF",
+                              rankings,
+                            )
+                                : Container()
+                                : Container(),
 
                             _buildBox(
                               title: "Explore College as per your preference.",
@@ -95,13 +105,11 @@ class _CollegesState extends State<Colleges> {
                               },
                             ),
 
-                            !controller.isGuestIn.value
-                                ? rankings.isNotEmpty
-                                    ? _buildSection(
-                                      "Colleges Based on NIRF",
-                                      rankings,
-                                    )
-                                    : Container()
+                            states.isNotEmpty
+                                ? _buildSection(
+                              "Colleges Based on State",
+                              states,
+                            )
                                 : Container(),
 
                             _buildBox(
@@ -109,13 +117,6 @@ class _CollegesState extends State<Colleges> {
                               buttonText: "Predict My College",
                               pageNo: 3,
                             ),
-
-                            states.isNotEmpty
-                                ? _buildSection(
-                                  "Colleges Based on State",
-                                  states,
-                                )
-                                : Container(),
                             countries.isNotEmpty
                                 ? _buildSection(
                                   "Colleges Based on Country",
@@ -128,6 +129,13 @@ class _CollegesState extends State<Colleges> {
                                   cities,
                                 )
                                 : Container(),
+
+                            _buildBox(
+                              title: "Want the latest insights on colleges?",
+                              buttonText: "Read Insights",
+                              pageNo: 2,
+                            ),
+
                             controller.isLoggedIn.value && privates.isNotEmpty
                                 ? _buildSection(
                                   "Popular Private Colleges",
@@ -135,11 +143,6 @@ class _CollegesState extends State<Colleges> {
                                 )
                                 : Container(),
 
-                            _buildBox(
-                              title: "Want the latest insights on colleges?",
-                              buttonText: "Read Insights",
-                              pageNo: 2,
-                            ),
                           ],
                         ),
                       ),
@@ -353,12 +356,7 @@ class _CollegesState extends State<Colleges> {
     });
   }
 
-  Widget _buildBox({
-    required String title,
-    required String buttonText,
-    required int pageNo,
-    VoidCallback? callback,
-  }) {
+  Widget _buildBox({required String title, required String buttonText, required int pageNo, VoidCallback? callback,}) {
     final theme = ThemeController.to.currentTheme;
 
     return Padding(
@@ -456,4 +454,5 @@ class _CollegesState extends State<Colleges> {
 
     loader.isLoading.value = false;
   }
+
 }

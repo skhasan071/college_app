@@ -28,8 +28,22 @@ class _SignupPageState extends State<SignupPage> {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
     String name = fullNameController.text.trim();
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-    if (email.isNotEmpty && password.isNotEmpty) {
+    if(!emailRegex.hasMatch(email)){
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please enter a valid Email"),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.black,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      loader.isLoading(false);
+      return false;
+
+    } else if (email.isNotEmpty && password.isNotEmpty) {
       loader.isLoading(true);
       Map<String, dynamic> msgs = await AuthService.registerStudent(
         name,
@@ -45,6 +59,7 @@ class _SignupPageState extends State<SignupPage> {
         return true;
       } else {
         String string = msgs['message'];
+
         loader.isLoading(false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -115,6 +130,7 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: fullNameController,
               keyboardType: TextInputType.name,
+              cursorColor: Colors.black,
               decoration: InputDecoration(
                 hintText: "Enter your name",
                 border: OutlineInputBorder(
@@ -134,6 +150,7 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
+              
               cursorColor: Colors.black,
               decoration: InputDecoration(
                 hintText: "Enter your email",
@@ -232,11 +249,7 @@ class _SignupPageState extends State<SignupPage> {
                     MaterialPageRoute(builder: (context) => Mobilenoauth()),
                   );
                 },
-                icon: Image.asset(
-                  'assets/Mobile_authlogo.png',
-                  height: 43,
-                  width: 43,
-                ),
+                icon: Icon(Icons.phone, color: Colors.black, size: 24,),
                 label: Flexible(
                   child: Text(
                     'Sign Up with Mobile Number',

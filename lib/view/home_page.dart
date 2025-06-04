@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        "Talent",
+                        "RawRecruit",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -430,9 +430,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getUser() async {
     Student? student = await StudentService().getStudent(widget.token);
+    print(profileController.interestedStreams);
+    print(profileController.coursesInterested);
     profileController.profile.value = student;
     profileController.interestedStreams.value = student!.interestedStreams!;
     profileController.coursesInterested.value = student.coursesInterested!;
     controller.isLoggedIn.value = true;
   }
+
 }

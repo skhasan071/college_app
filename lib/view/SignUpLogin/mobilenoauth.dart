@@ -89,6 +89,7 @@ class _MobilenoauthState extends State<Mobilenoauth> {
                   children: [
                     Text(
                       "+91",
+
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -100,6 +101,7 @@ class _MobilenoauthState extends State<Mobilenoauth> {
                         controller: phoneController,
                         keyboardType: TextInputType.number,
                         maxLength: 10,
+                        cursorColor: Colors.black,
                         decoration: InputDecoration(
                           counterText: "",
                           border: InputBorder.none,

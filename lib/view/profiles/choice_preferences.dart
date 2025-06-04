@@ -140,12 +140,12 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)), (route)=>false);
         return false;
       },
-      child: Scaffold(
-
-        backgroundColor: Colors.white,
-
-        body: Center(
-          child: Container(
+      child: SafeArea(
+        child: Scaffold(
+        
+          backgroundColor: Colors.white,
+        
+          body: Container(
             constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
@@ -153,8 +153,8 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Close Button
-                  !widget.isFlow?
-                    Align(
+                  !widget.isFlow
+                      ? Align(
                       alignment: Alignment.topRight,
                       child: IconButton(
                         icon: const Icon(Icons.close),
@@ -162,18 +162,21 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)), (route)=>false);
                         },
                       ),
-                    ) : SizedBox.shrink(),
-
+                    )
+                      : SizedBox.shrink(),
+        
                   const SizedBox(height: 12),
                   const Text("Course Preferences", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  const Text("Choose preferences to explore colleges you prefer.",
-                      style: TextStyle(color: Colors.black54)),
+                  const Text(
+                    "Choose preferences to explore colleges you prefer.",
+                    style: TextStyle(color: Colors.black54,),
+                  ),
                   const SizedBox(height: 24),
-
+        
                   _buildSectionTitle("Interested Streams"),
                   _buildChips(streams, selectedStreams, isMulti: true),
-
+        
                   SizedBox(height: selectedStreams.isNotEmpty ? 16 : 0),
                   selectedStreams.isNotEmpty ? _buildSectionTitle("Course(s) Interested In") : SizedBox.shrink(),
                   selectedStreams.isNotEmpty
@@ -182,53 +185,60 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                     selectedCourses,
                     isMulti: true,
                   ) : SizedBox.shrink(),
-
+        
                   const SizedBox(height: 16),
                   _buildSectionTitle("Preferred Course Level"),
                   _buildChips(levels, {selectedLevel}, isMulti: false, onChanged: (val) => setState(() => selectedLevel = val)),
-
+        
                   const SizedBox(height: 16),
                   _buildSectionTitle("Mode of Study"),
                   _buildChips(modes, {selectedMode}, isMulti: false, onChanged: (val) => setState(() => selectedMode = val)),
-
+        
                   const SizedBox(height: 16),
                   _buildSectionTitle("Preferred year of admission (optional)"),
                   _buildChips(years, {selectedYear}, isMulti: false, onChanged: (val) => setState(() => selectedYear = val)),
-
+        
                   const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+        
                       UiHelper.getSecondaryBtn(title: "Back", callback: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
                       }),
+        
                       UiHelper.getPrimaryBtn(title: "Next", callback: () async {
                         pfpCtrl.userToken.value = await getToken() ?? "";
                         if (pfpCtrl.userToken.value != "") {
-                          print('courses');
+
+                          print(selectedStreams.toList());
+                          print(selectedCourses.toList());
                           pfpCtrl.profile.value!.interestedStreams = selectedStreams.toList();
                           pfpCtrl.profile.value!.coursesInterested = selectedCourses.toList();
+                          print(pfpCtrl.profile.value!.interestedStreams);
+                          print(pfpCtrl.profile.value!.coursesInterested);
                           pfpCtrl.profile.value!.preferredCourseLevel = selectedLevel ?? "UG";
-                          pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-Time";
+                          pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-time";
                           pfpCtrl.profile.value!.preferredYearOfAdmission = selectedYear ?? "2025";
-
+        
                           Map<String, dynamic>? data = await StudentService.saveCoursePreferences(
                             token: pfpCtrl.userToken.value,
                             coursesInterested: selectedCourses.toList(),
                             interestedStreams: selectedStreams.toList(),
-                            modeOfStudy: selectedMode ?? "Full-Time",
+                            modeOfStudy: selectedMode ?? "Full-time",
                             preferredCourseLevel: selectedLevel ?? "UG",
                             preferredYearOfAdmission: selectedYear ?? "2025",
                           );
+        
                         } else {
                           pfpCtrl.interestedStreams.value = selectedStreams.toList();
                           pfpCtrl.coursesInterested.value = selectedCourses.toList();
                         }
-
+        
                         if (widget.isFlow) {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.string)),
+                            MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)),
                                 (route) => false,
                           );
                         } else {
@@ -239,7 +249,7 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                           );
                         }
                       }),
-
+        
                     ],
                   )
                 ],

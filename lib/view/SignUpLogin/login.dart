@@ -40,8 +40,21 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _handleLogin() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-    if (email.isNotEmpty && password.isNotEmpty) {
+    if(!emailRegex.hasMatch(email)){
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please enter a valid Email"),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.black,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      loader.isLoading(false);
+
+    } else if (email.isNotEmpty && password.isNotEmpty) {
       loader.isLoading(true);
       Map<String, dynamic> map = await AuthService.loginStudent(
         email,
@@ -235,11 +248,8 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => Mobilenoauth()),
                   );
                 },
-                icon: Image.asset(
-                  'assets/Mobile_authlogo.png',
-                  height: 43,
-                  width: 43,
-                ),
+                icon: Icon(Icons.phone, color: Colors.black, size: 24,),
+
                 label: Flexible(
                   child: Text(
                     "Login with Mobile Number",

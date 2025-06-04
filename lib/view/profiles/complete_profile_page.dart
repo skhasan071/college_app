@@ -230,6 +230,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                               ),
                               backgroundColor: Colors.black,
                               duration: Duration(seconds: 2),
+                              behavior: SnackBarBehavior.floating,
                             ),
                           );
                           return;
@@ -242,6 +243,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                               ),
                               backgroundColor: Colors.black,
                               duration: Duration(seconds: 2),
+                              behavior: SnackBarBehavior.floating,
                             ),
                           );
                           return;
@@ -279,6 +281,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                   ),
                                   backgroundColor: Colors.black,
                                   duration: const Duration(seconds: 2),
+                                  behavior: SnackBarBehavior.floating,
                                 ),
                               );
                               Navigator.pushReplacement(
@@ -309,6 +312,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                 ),
                                 backgroundColor: Colors.black,
                                 duration: Duration(seconds: 2),
+                                behavior: SnackBarBehavior.floating,
                               ),
                             );
                           }
@@ -395,6 +399,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         content: Text(message, style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black,
         duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
