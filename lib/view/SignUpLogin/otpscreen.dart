@@ -53,19 +53,33 @@ class _OtpScreenState extends State<OtpScreen> {
 
     if (otp.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Enter a valid 6-digit OTP")),
+        SnackBar(
+          content: Text(
+            "Enter a valid 6-digit OTP",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.black,
+        ),
       );
       return;
     }
 
     bool success = await otpService.verifyOtp(widget.phone, otp);
     if (success) {
-
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteProfilePage()), (route) => false);
-
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => CompleteProfilePage()),
+        (route) => false,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid or expired OTP")),
+        SnackBar(
+          content: Text(
+            "Invalid or expired OTP",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.black,
+        ),
       );
     }
   }
@@ -74,12 +88,24 @@ class _OtpScreenState extends State<OtpScreen> {
     bool sent = await otpService.sendOtp(widget.phone);
     if (sent) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OTP resent successfully")),
+        SnackBar(
+          content: Text(
+            "OTP resent successfully",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.black,
+        ),
       );
       startCountdown(); // Restart timer
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to resend OTP")),
+        SnackBar(
+          content: Text(
+            "Failed to resend OTP",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.black,
+        ),
       );
     }
   }
@@ -100,10 +126,7 @@ class _OtpScreenState extends State<OtpScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/otpscreen.jpg',
-                height: 150,
-              ),
+              Image.asset('assets/otpscreen.jpg', height: 150),
               SizedBox(height: 20),
 
               Text(
@@ -126,7 +149,10 @@ class _OtpScreenState extends State<OtpScreen> {
                   controller: otpController,
                   onChanged: (value) => otpCode = value,
                   keyboardType: TextInputType.number,
-                  textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  textStyle: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.underline,
                     fieldHeight: 50,
@@ -169,7 +195,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 child: ElevatedButton(
                   onPressed: verifyOtp,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

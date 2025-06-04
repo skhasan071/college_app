@@ -190,7 +190,13 @@ class _QAPageState extends State<QAPage> {
               });
 
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Submitted successfully")),
+                SnackBar(
+                  content: Text(
+                    "Submitted successfully",
+                    style: TextStyle(color: theme.filterTextColor),
+                  ),
+                  backgroundColor: theme.filterSelectedColor,
+                ),
               );
             }
           },
@@ -223,6 +229,7 @@ class AskQuestionPage extends StatefulWidget {
 class _AskQuestionPageState extends State<AskQuestionPage> {
   final TextEditingController questionController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  final theme = ThemeController.to.currentTheme;
   bool _isSubmitting = false;
 
   @override
@@ -237,9 +244,15 @@ class _AskQuestionPageState extends State<AskQuestionPage> {
     final name = nameController.text.trim();
 
     if (question.isEmpty || name.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please fill all fields",
+            style: TextStyle(color: theme.filterTextColor),
+          ),
+          backgroundColor: theme.filterSelectedColor,
+        ),
+      );
       return;
     }
 
@@ -262,14 +275,26 @@ class _AskQuestionPageState extends State<AskQuestionPage> {
       if (response.statusCode == 201) {
         Navigator.pop(context, {'user': name, 'question': question});
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Submission failed")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Submission failed",
+              style: TextStyle(color: theme.filterTextColor),
+            ),
+            backgroundColor: theme.filterSelectedColor,
+          ),
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("An error occurred")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "An error occurred",
+            style: TextStyle(color: theme.filterTextColor),
+          ),
+          backgroundColor: theme.filterSelectedColor,
+        ),
+      );
     } finally {
       setState(() => _isSubmitting = false);
     }
