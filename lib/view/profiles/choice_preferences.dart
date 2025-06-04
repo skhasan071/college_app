@@ -19,13 +19,107 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
 
   final List<String> streams = [
     'Engineering', 'Management', 'Arts', 'Science', 'Law',
-    'Medicine', 'Design', 'Humanities'
+    'Medical', 'Design', 'Humanities'
   ];
 
-  final List<String> courses = [
-    "BBA/MBA(General)", "MBA(Finance)", "MBA(Marketing)", "MBA(HR)", "MBA(Operations)", "PGDM", "Entrepreneurship & Startups", "Business Analytics"
-  ];
-
+  final Map<String, List<String>> courses = {
+    'Engineering': [
+      'B.Tech in Computer Science & Engineering',
+      'B.Tech in Mechanical Engineering',
+      'B.Tech in Civil Engineering',
+      'B.Tech in Electrical Engineering',
+      'B.Tech in Electronics & Communication Engineering',
+      'B.Tech in Chemical Engineering',
+      'B.Tech in Information Technology',
+      'M.Tech in Computer Science',
+      'M.Tech in Mechanical Engineering',
+      'M.Tech in Electronics Engineering',
+    ],
+    'Management': [
+      'BBA (Bachelor of Business Administration)',
+      'MBA (Master of Business Administration)',
+      'BBA in Marketing',
+      'MBA in Marketing',
+      'BBA in Finance',
+      'MBA in Finance',
+      'MBA in Human Resource Management',
+      'MBA in International Business',
+      'MBA in Operations Management',
+      'PGDM (Post Graduate Diploma in Management)',
+    ],
+    'Arts': [
+      'BA in English',
+      'BA in History',
+      'BA in Political Science',
+      'BA in Psychology',
+      'BA in Sociology',
+      'BA in Economics',
+      'BA in Philosophy',
+      'BA in Geography',
+      'BA in Public Administration',
+      'BA in Journalism & Mass Communication',
+    ],
+    'Science': [
+      'BSc in Physics',
+      'BSc in Chemistry',
+      'BSc in Mathematics',
+      'BSc in Computer Science',
+      'BSc in Biotechnology',
+      'BSc in Microbiology',
+      'BSc in Environmental Science',
+      'BSc in Zoology',
+      'BSc in Botany',
+      'BSc in Statistics',
+    ],
+    'Law': [
+      'BA LLB (Hons.)',
+      'BBA LLB',
+      'BCom LLB',
+      'LLB (3 Years)',
+      'LLM (Corporate Law)',
+      'LLM (International Law)',
+      'LLM (Constitutional Law)',
+      'Diploma in Cyber Law',
+      'Diploma in Intellectual Property Rights',
+      'Certificate in Environmental Law',
+    ],
+    'Medical': [
+      'MBBS',
+      'BDS (Bachelor of Dental Surgery)',
+      'BAMS (Ayurveda)',
+      'BHMS (Homeopathy)',
+      'BPT (Physiotherapy)',
+      'BSc Nursing',
+      'BPharm (Pharmacy)',
+      'BNYS (Naturopathy & Yogic Science)',
+      'BMLT (Medical Lab Technology)',
+      'BOT (Occupational Therapy)',
+    ],
+    'Design': [
+      'Bachelor of Design (B.Des)',
+      'B.Des in Fashion Design',
+      'B.Des in Graphic Design',
+      'B.Des in Interior Design',
+      'B.Des in Product Design',
+      'B.Des in Industrial Design',
+      'B.Des in Textile Design',
+      'B.Des in Animation & Multimedia',
+      'B.Des in Visual Communication',
+      'B.Des in UX/UI Design',
+    ],
+    'Humanities': [
+      'BA in Philosophy',
+      'BA in Psychology',
+      'BA in Sociology',
+      'BA in History',
+      'BA in Political Science',
+      'BA in Linguistics',
+      'BA in Literature',
+      'BA in Anthropology',
+      'BA in Education',
+      'BA in Gender Studies',
+    ],
+  };
 
   final List<String> levels = ['UG', 'PG', 'Diploma/Certification'];
   final List<String> modes = ['Full-time', 'Part-time', 'Online', 'Distance learning'];
@@ -46,12 +140,12 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)), (route)=>false);
         return false;
       },
-      child: Scaffold(
-
-        backgroundColor: Colors.white,
-
-        body: Center(
-          child: Container(
+      child: SafeArea(
+        child: Scaffold(
+        
+          backgroundColor: Colors.white,
+        
+          body: Container(
             constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
@@ -59,8 +153,8 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Close Button
-                  !widget.isFlow?
-                    Align(
+                  !widget.isFlow
+                      ? Align(
                       alignment: Alignment.topRight,
                       child: IconButton(
                         icon: const Icon(Icons.close),
@@ -68,65 +162,89 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)), (route)=>false);
                         },
                       ),
-                    ) : SizedBox.shrink(),
-
+                    )
+                      : SizedBox.shrink(),
+        
                   const SizedBox(height: 12),
                   const Text("Course Preferences", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  const Text("Choose preferences to explore colleges you prefer.",
-                      style: TextStyle(color: Colors.black54)),
+                  const Text(
+                    "Choose preferences to explore colleges you prefer.",
+                    style: TextStyle(color: Colors.black54,),
+                  ),
                   const SizedBox(height: 24),
-
+        
                   _buildSectionTitle("Interested Streams"),
                   _buildChips(streams, selectedStreams, isMulti: true),
-
-                  const SizedBox(height: 16),
-                  _buildSectionTitle("Course(s) Interested In"),
-                  _buildChips(courses, selectedCourses, isMulti: true),
-
+        
+                  SizedBox(height: selectedStreams.isNotEmpty ? 16 : 0),
+                  selectedStreams.isNotEmpty ? _buildSectionTitle("Course(s) Interested In") : SizedBox.shrink(),
+                  selectedStreams.isNotEmpty
+                      ? _buildChips(
+                    _getCoursesForSelectedStreams(),
+                    selectedCourses,
+                    isMulti: true,
+                  ) : SizedBox.shrink(),
+        
                   const SizedBox(height: 16),
                   _buildSectionTitle("Preferred Course Level"),
                   _buildChips(levels, {selectedLevel}, isMulti: false, onChanged: (val) => setState(() => selectedLevel = val)),
-
+        
                   const SizedBox(height: 16),
                   _buildSectionTitle("Mode of Study"),
                   _buildChips(modes, {selectedMode}, isMulti: false, onChanged: (val) => setState(() => selectedMode = val)),
-
+        
                   const SizedBox(height: 16),
                   _buildSectionTitle("Preferred year of admission (optional)"),
                   _buildChips(years, {selectedYear}, isMulti: false, onChanged: (val) => setState(() => selectedYear = val)),
-
+        
                   const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+        
                       UiHelper.getSecondaryBtn(title: "Back", callback: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Firstpage()));
                       }),
+        
                       UiHelper.getPrimaryBtn(title: "Next", callback: () async {
-
                         pfpCtrl.userToken.value = await getToken() ?? "";
-
-                        if(pfpCtrl.userToken.value != ""){
-
+                        if (pfpCtrl.userToken.value != "") {
                           pfpCtrl.profile.value!.interestedStreams = selectedStreams.toList();
                           pfpCtrl.profile.value!.coursesInterested = selectedCourses.toList();
                           pfpCtrl.profile.value!.preferredCourseLevel = selectedLevel ?? "UG";
                           pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-Time";
                           pfpCtrl.profile.value!.preferredYearOfAdmission = selectedYear ?? "2025";
-                          Map<String, dynamic>? data = await StudentService.saveCoursePreferences(token: pfpCtrl.userToken.value, coursesInterested: selectedCourses.toList(), interestedStreams: selectedStreams.toList(), modeOfStudy: selectedMode, preferredCourseLevel: selectedLevel, preferredYearOfAdmission: selectedYear);
-
-                        }else{
+        
+                          Map<String, dynamic>? data = await StudentService.saveCoursePreferences(
+                            token: pfpCtrl.userToken.value,
+                            coursesInterested: selectedCourses.toList(),
+                            interestedStreams: selectedStreams.toList(),
+                            modeOfStudy: selectedMode ?? "Full-Time",
+                            preferredCourseLevel: selectedLevel ?? "UG",
+                            preferredYearOfAdmission: selectedYear ?? "2025",
+                          );
+        
+                        } else {
                           pfpCtrl.interestedStreams.value = selectedStreams.toList();
                           pfpCtrl.coursesInterested.value = selectedCourses.toList();
                         }
-
-                        if(widget.isFlow){
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> HomePage(pfpCtrl.userToken.string)), (route) => false);
-                        }else{
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)), (route) => false);
+        
+                        if (widget.isFlow) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.string)),
+                                (route) => false,
+                          );
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)),
+                                (route) => false,
+                          );
                         }
                       }),
+        
                     ],
                   )
                 ],
@@ -136,6 +254,14 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
         ),
       ),
     );
+  }
+
+  List<String> _getCoursesForSelectedStreams() {
+    List<String> allCourses = [];
+    for (var stream in selectedStreams) {
+      allCourses.addAll(courses[stream] ?? []);
+    }
+    return allCourses;
   }
 
   Widget _buildSectionTitle(String title) {

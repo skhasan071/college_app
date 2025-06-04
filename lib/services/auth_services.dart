@@ -32,8 +32,7 @@ class AuthService {
       } else {
 
         final data = jsonDecode(response.body);
-        print(data);
-        return {"success": false, "message": data['message']};
+        return {"success": false, "message": formatErrorMessage(data['error']['details'][0]['message'])};
 
       }
     } catch (e) {
@@ -69,8 +68,7 @@ class AuthService {
         };
       } else {
         final data = jsonDecode(response.body);
-
-        return {"success": false, "message": data['message']};
+        return {"success": false, "message": formatErrorMessage(data['message'])};
       }
     } catch (e) {
 
@@ -78,7 +76,7 @@ class AuthService {
     }
   }
   static Future<Map<String, dynamic>> sendOtp(String email) async {
-    final url = Uri.parse('$baseUrl/forgot-password/send-otp');
+    final url = Uri.parse('https://tc-ca-server.onrender.com/api/auth/student/forgot-password/send-otp');
 
     try {
       final response = await http.post(
@@ -94,7 +92,9 @@ class AuthService {
       } else {
         return {"success": false, "message": data['message']};
       }
+
     } catch (e) {
+      print(e);
       return {"success": false, "message": e.toString()};
     }
   }
@@ -105,7 +105,7 @@ class AuthService {
     required String otp,
     required String newPassword,
   }) async {
-    final url = Uri.parse('$baseUrl/forgot-password/verify-otp');
+    final url = Uri.parse('https://tc-ca-server.onrender.com/api/auth/student/forgot-password/verify-otp');
 
     try {
       final response = await http.post(
@@ -129,4 +129,23 @@ class AuthService {
       return {"success": false, "message": e.toString()};
     }
   }
+
+  static String formatErrorMessage(String message) {
+    // Remove quotes around the field name
+    message = message.replaceAll('"', '');
+
+    // Capitalize the first word (field name)
+    List<String> words = message.split(' ');
+    if (words.isNotEmpty) {
+      words[0] = words[0][0].toUpperCase() + words[0].substring(1);
+    }
+
+    // Capitalize the last word if it matches the field name
+    if (words.isNotEmpty && words.last.toLowerCase() == words[0].toLowerCase()) {
+      words[words.length - 1] = words.last[0].toUpperCase() + words.last.substring(1);
+    }
+
+    return words.join(' ');
+  }
+
 }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 class Cost extends StatelessWidget {
   final String collegeId;
   final String collegeName;
@@ -25,20 +24,16 @@ class Cost extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-
-        final costDetails = jsonData['costDetails'];
-        if (costDetails != null) {
-          return CostModel.fromJson(costDetails);
-        } else {
-          return null;
-        }
+        return CostModel.fromJson(jsonData);  // No need to extract costDetails
       } else {
         return null;
       }
     } catch (e) {
+      print("Error: $e");
       return null;
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

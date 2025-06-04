@@ -64,8 +64,8 @@ class _AdmissionState extends State<Admission> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: const Text(
-            'Admissions & Eligibility',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            'Admissions Details',
+            style: TextStyle(fontWeight: FontWeight.bold)
           ),
           centerTitle: true,
           leading: IconButton(

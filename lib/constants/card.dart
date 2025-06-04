@@ -148,7 +148,7 @@ class _CardStructureState extends State<CardStructure> {
                               behavior: SnackBarBehavior.floating,
                               action: SnackBarAction(
                                 label: 'Login',
-                                textColor: Colors.blueAccent,
+                                textColor: Colors.white,
                                 onPressed: () {
                                   if (!isSnackBarActionClicked) {
                                     isSnackBarActionClicked = true;
@@ -276,7 +276,7 @@ class _CardStructureState extends State<CardStructure> {
                           themes,
                         ),
                         _buildInfoColumn(
-                          "Total Fees Range",
+                          "Fee Range",
                           widget.feeRange,
                           themes,
                         ),

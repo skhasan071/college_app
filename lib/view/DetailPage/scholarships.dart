@@ -30,52 +30,47 @@ class _ScholarshipsState extends State<Scholarships> {
   }
 
   Future<void> fetchScholarships() async {
-    try {
-      final response = await http.get(
-        Uri.parse(
-          'https://tc-ca-server.onrender.com/api/scholarships/${widget.collegeId}',
-        ),
-      );
+    final result = await fetchScholarshipByCollegeId(widget.collegeId);
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        // Check if the scholarships key exists and has valid data
-        if (data['scholarships'] != null && data['scholarships'].isNotEmpty) {
-          var scholarshipsList = data['scholarships'][0]['scholarships'];
-
-          setState(() {
-            scholarships =
-                scholarshipsList.map((scholarship) {
-                  return {
-                    'ScholarshipName':
-                        scholarship['ScholarshipName'] ?? 'No name provided',
-                    'ScholarshipMoney': scholarship['ScholarshipMoney'] ?? 0,
-                    'ScholarshipDescription':
-                        scholarship['ScholarshipDescription'] ??
-                        'No description provided',
-                  };
-                }).toList();
-
-            // Calculate the average financial aid (if needed)
-            averageFinancialAid = calculateAverageFinancialAid(scholarships);
-            _isLoading = false;
-          });
-        } else {
-          setState(() {
-            scholarships = [];
-            _isLoading = false;
-          });
-        }
-      } else {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    } catch (error) {
+    if (result['status'] == 200) {
       setState(() {
+        scholarships = (result['data'] as List).map((scholarship) {
+          return {
+            'ScholarshipName': scholarship['ScholarshipName'] ?? 'No name provided',
+            'ScholarshipMoney': scholarship['ScholarshipMoney'] ?? 0,
+            'ScholarshipDescription': scholarship['ScholarshipDescription'] ?? 'No description provided',
+          };
+        }).toList();
+
+        averageFinancialAid = calculateAverageFinancialAid(scholarships);
         _isLoading = false;
       });
+    } else {
+      setState(() {
+        scholarships = [];
+        _isLoading = false;
+      });
+      print('Error fetching scholarships: ${result['data']}');
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchScholarshipByCollegeId(String collegeId) async {
+    final url = Uri.parse('https://tc-ca-server.onrender.com/api/scholarships/$collegeId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final scholarships = data['scholarships']; // Extract the array
+        return {'status': 200, 'data': scholarships};
+      } else {
+        final data = jsonDecode(response.body);
+        return {'status': response.statusCode, 'data': data};
+      }
+    } catch (e) {
+      print("Error fetching scholarship: $e");
+      return {'status': 500, 'data': e.toString()};
     }
   }
 
@@ -115,7 +110,6 @@ class _ScholarshipsState extends State<Scholarships> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Unified container for heading and content
               Container(
                 decoration: BoxDecoration(
                   gradient: theme.backgroundGradient,
@@ -135,8 +129,6 @@ class _ScholarshipsState extends State<Scholarships> {
                         ),
                       ),
                     ),
-
-                    // Content section
                     Container(
                       margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       decoration: BoxDecoration(
@@ -165,44 +157,15 @@ class _ScholarshipsState extends State<Scholarships> {
                             style: TextStyle(fontSize: 16, color: Colors.black),
                           ),
                           const SizedBox(height: 12),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Left side
-                              Expanded(
-                                child: Text(
-                                  'Students receiving aid - 70% ',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              // Right side
-                              Expanded(
-                                child: Text(
-                                  'Average need met - 100%',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-
               const SizedBox(height: 16),
               Divider(color: Colors.grey, thickness: 0.5),
               const SizedBox(height: 16),
-
-              // Available Scholarships section
               Text(
                 'Available Scholarships',
                 style: TextStyle(
@@ -212,32 +175,28 @@ class _ScholarshipsState extends State<Scholarships> {
                 ),
               ),
               const SizedBox(height: 12),
-
               _isLoading
                   ? Center(
-                    child: CircularProgressIndicator(
-                      color: theme.filterSelectedColor,
-                    ),
-                  )
+                child: CircularProgressIndicator(
+                  color: theme.filterSelectedColor,
+                ),
+              )
                   : scholarships.isNotEmpty
                   ? ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: scholarships.length,
-                    itemBuilder: (context, index) {
-                      return _buildScholarshipTile(
-                        title: scholarships[index]['ScholarshipName'],
-                        subtitle:
-                            '\$${scholarships[index]['ScholarshipMoney']} per year',
-                        description:
-                            scholarships[index]['ScholarshipDescription'],
-                      );
-                    },
-                  )
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: scholarships.length,
+                itemBuilder: (context, index) {
+                  return _buildScholarshipTile(
+                    title: scholarships[index]['ScholarshipName'],
+                    subtitle: '\$${scholarships[index]['ScholarshipMoney']} per year',
+                    description: scholarships[index]['ScholarshipDescription'],
+                  );
+                },
+              )
                   : const Center(
-                    child: Text("No scholarships found for this college"),
-                  ),
-
+                child: Text("No scholarships found for this college"),
+              ),
               const SizedBox(height: 16),
               Divider(color: Colors.grey, thickness: 0.5),
               const SizedBox(height: 16),
@@ -262,7 +221,7 @@ class _ScholarshipsState extends State<Scholarships> {
         elevation: 6,
         child: Container(
           decoration: BoxDecoration(
-            gradient: theme.backgroundGradient, // Use your custom gradient
+            gradient: theme.backgroundGradient,
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(

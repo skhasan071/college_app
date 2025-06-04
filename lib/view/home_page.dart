@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        "Talent",
+                        "RawRecruit",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -435,4 +435,5 @@ class _HomePageState extends State<HomePage> {
     profileController.coursesInterested.value = student.coursesInterested!;
     controller.isLoggedIn.value = true;
   }
+
 }

@@ -41,14 +41,69 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     'Medical Colleges',
     'Design Institutes',
   ];
-  final List<String> states = [
-    "Maharashtra",
-    "Karnataka",
-    "Telangana",
-    "Uttar Pradesh",
-    "Arunachal Pradesh",
+
+  List<String> states = [
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
   ];
-  final List<String> cities = ['Mumbai', 'Pune'];
+
+  Map<String, List<String>> cities = {
+    'Andhra Pradesh': ['Visakhapatnam', 'Vijayawada', 'Guntur', 'Nellore', 'Tirupati'],
+    'Arunachal Pradesh': ['Itanagar', 'Tawang', 'Pasighat', 'Ziro', 'Bomdila'],
+    'Assam': ['Guwahati', 'Silchar', 'Dibrugarh', 'Jorhat', 'Tezpur'],
+    'Bihar': ['Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur', 'Darbhanga'],
+    'Chhattisgarh': ['Raipur', 'Bhilai', 'Bilaspur', 'Korba', 'Durg'],
+    'Goa': ['Panaji', 'Margao', 'Vasco da Gama', 'Mapusa', 'Ponda'],
+    'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar'],
+    'Haryana': ['Faridabad', 'Gurgaon', 'Panipat', 'Ambala', 'Hisar'],
+    'Himachal Pradesh': ['Shimla', 'Manali', 'Dharamshala', 'Solan', 'Mandi'],
+    'Jharkhand': ['Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro', 'Deoghar'],
+    'Karnataka': ['Bengaluru', 'Mysuru', 'Mangaluru', 'Hubli-Dharwad', 'Belagavi'],
+    'Kerala': ['Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Alappuzha'],
+    'Madhya Pradesh': ['Bhopal', 'Indore', 'Jabalpur', 'Gwalior', 'Ujjain'],
+    'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Aurangabad'],
+    'Manipur': ['Imphal', 'Thoubal', 'Bishnupur', 'Churachandpur', 'Ukhrul'],
+    'Meghalaya': ['Shillong', 'Tura', 'Nongstoin', 'Jowai', 'Baghmara'],
+    'Mizoram': ['Aizawl', 'Lunglei', 'Champhai', 'Serchhip', 'Kolasib'],
+    'Nagaland': ['Kohima', 'Dimapur', 'Mokokchung', 'Tuensang', 'Wokha'],
+    'Odisha': ['Bhubaneswar', 'Cuttack', 'Rourkela', 'Berhampur', 'Sambalpur'],
+    'Punjab': ['Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala', 'Bathinda'],
+    'Rajasthan': ['Jaipur', 'Jodhpur', 'Udaipur', 'Kota', 'Bikaner'],
+    'Sikkim': ['Gangtok', 'Namchi', 'Gyalshing', 'Mangan', 'Rangpo'],
+    'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem'],
+    'Telangana': ['Hyderabad', 'Warangal', 'Nizamabad', 'Khammam', 'Karimnagar'],
+    'Tripura': ['Agartala', 'Udaipur', 'Dharmanagar', 'Kailasahar', 'Belonia'],
+    'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Varanasi', 'Agra', 'Allahabad'],
+    'Uttarakhand': ['Dehradun', 'Haridwar', 'Roorkee', 'Haldwani', 'Nainital'],
+    'West Bengal': ['Kolkata', 'Howrah', 'Durgapur', 'Asansol', 'Siliguri'],
+  };
+
   String? studyingIn;
   String? state;
   String? city;
@@ -126,16 +181,23 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 const SizedBox(height: 16),
                 buildDropdown(
                   "State",
-                  (val) => state = val,
+                      (val) {
+                    setState(() {
+                      state = val;
+                      city = (val != null && cities.containsKey(val)) ? cities[val]!.first : null;
+                    });
+                  },
                   states,
-                  profile.profile.value!.state,
+                  state,
                 ),
                 const SizedBox(height: 16),
                 buildDropdown(
                   "City You Live In",
-                  (val) => city = val,
-                  cities,
-                  profile.profile.value!.city,
+                      (val) => city = val,
+                  state != null && cities.containsKey(state!)
+                      ? cities[state!]!
+                      : [],
+                  city,
                 ),
                 const SizedBox(height: 24),
                 Row(
@@ -157,7 +219,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
                         studyingIn ??= studyingItems[0];
                         state ??= states[0];
-                        city ??= cities[0];
+                        city ??= cities[state!]![0] ?? '';
 
                         if (phNo.length != 13) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -295,24 +357,26 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     );
   }
 
-  Widget buildDropdown(
-    String label,
-    Function(String?) onChanged,
-    List<String> dropdownItems,
-    val,
-  ) {
+  buildDropdown(
+      String label,
+      Function(String?) onChanged,
+      List<String> dropdownItems,
+      String? selectedValue,
+      ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: dropdownItems.first,
-          items:
-              dropdownItems
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
-          onChanged: onChanged,
+          value: selectedValue ?? dropdownItems.first,
+          items: dropdownItems
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+          onChanged: (val) {
+            onChanged(val);
+            setState(() {}); // Update the UI when state changes
+          },
           dropdownColor: Colors.white,
           decoration: const InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.zero),
@@ -342,6 +406,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     mobileController.text = pfp.mobileNumber ?? "";
     studyingIn = pfp.studyingIn ?? studyingItems[0];
     state = pfp.state ?? states[0];
-    city = pfp.city ?? cities[0];
+    if (state != null && cities.containsKey(state!)) {
+      city = pfp.city ?? cities[state!]!.first;
+    } else {
+      city = null;
+    }
   }
 }
