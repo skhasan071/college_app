@@ -144,11 +144,11 @@ class _CardStructureState extends State<CardStructure> {
                             final snackBar = SnackBar(
                               content: Text("Please Login First"),
                               duration: Duration(seconds: 3),
-                              backgroundColor: Colors.black,
+                              backgroundColor: themes.filterSelectedColor,
                               behavior: SnackBarBehavior.floating,
                               action: SnackBarAction(
                                 label: 'Login',
-                                textColor: Colors.white,
+                                textColor: themes.filterTextColor,
                                 onPressed: () {
                                   if (!isSnackBarActionClicked) {
                                     isSnackBarActionClicked = true;
@@ -181,10 +181,12 @@ class _CardStructureState extends State<CardStructure> {
                                   SnackBar(
                                     content: Text(
                                       "Removed from Shortlist",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                        color: themes.filterTextColor,
+                                      ),
                                     ),
                                     duration: Duration(seconds: 2),
-                                    backgroundColor: Colors.black,
+                                    backgroundColor: themes.filterSelectedColor,
                                     behavior: SnackBarBehavior.floating,
                                   ),
                                 );
@@ -200,10 +202,12 @@ class _CardStructureState extends State<CardStructure> {
                                   SnackBar(
                                     content: Text(
                                       "Added To Shortlist",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                        color: themes.filterTextColor,
+                                      ),
                                     ),
                                     duration: Duration(seconds: 2),
-                                    backgroundColor: Colors.black,
+                                    backgroundColor: themes.filterSelectedColor,
                                     behavior: SnackBarBehavior.floating,
                                   ),
                                 );
@@ -275,11 +279,7 @@ class _CardStructureState extends State<CardStructure> {
                           "$courseCount  courses",
                           themes,
                         ),
-                        _buildInfoColumn(
-                          "Fee Range",
-                          widget.feeRange,
-                          themes,
-                        ),
+                        _buildInfoColumn("Fee Range", widget.feeRange, themes),
                       ],
                     ),
                     const SizedBox(height: 10),
