@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../services/auth_services.dart';
 import '../view/SignUpLogin/login.dart';
 
-
 class VerifyOtpPage extends StatefulWidget {
   final String email;
   const VerifyOtpPage({super.key, required this.email});
@@ -14,7 +13,8 @@ class VerifyOtpPage extends StatefulWidget {
 class _VerifyOtpPageState extends State<VerifyOtpPage> {
   final TextEditingController otpController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
@@ -26,12 +26,12 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     final confirmPassword = confirmPasswordController.text.trim();
 
     if ([otp, newPassword, confirmPassword].any((field) => field.isEmpty)) {
-      _showSnackbar("Please fill in all fields", Colors.red);
+      _showSnackbar("Please fill in all fields", Colors.black);
       return;
     }
 
     if (newPassword != confirmPassword) {
-      _showSnackbar("Passwords do not match", Colors.red);
+      _showSnackbar("Passwords do not match", Colors.black);
       return;
     }
 
@@ -44,27 +44,34 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     setState(() => loading = false);
 
     if (result['success']) {
-      _showSnackbar("Password reset successfully", Colors.green);
+      _showSnackbar("Password reset successfully", Colors.black);
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginPage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => LoginPage()),
+        );
       });
     } else {
-      _showSnackbar(result['message'], Colors.red);
+      _showSnackbar(result['message'], Colors.black);
     }
   }
 
   void _showSnackbar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: color),
+      SnackBar(
+        content: Text(message, style: TextStyle(color: Colors.white)),
+        backgroundColor: color,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Verify OTP"),
-        backgroundColor: Colors.purple,
+        title: const Text("Verify OTP", style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
         centerTitle: true,
       ),
       body: Center(
@@ -75,26 +82,51 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
               children: [
                 _buildTextField(otpController, "Enter OTP", Icons.numbers),
                 const SizedBox(height: 15),
-                _buildPasswordField(passwordController, "New Password", isPasswordVisible, () {
-                  setState(() => isPasswordVisible = !isPasswordVisible);
-                }),
+                _buildPasswordField(
+                  passwordController,
+                  "New Password",
+                  isPasswordVisible,
+                  () {
+                    setState(() => isPasswordVisible = !isPasswordVisible);
+                  },
+                ),
                 const SizedBox(height: 15),
-                _buildPasswordField(confirmPasswordController, "Confirm Password", isConfirmPasswordVisible, () {
-                  setState(() => isConfirmPasswordVisible = !isConfirmPasswordVisible);
-                }),
+                _buildPasswordField(
+                  confirmPasswordController,
+                  "Confirm Password",
+                  isConfirmPasswordVisible,
+                  () {
+                    setState(
+                      () =>
+                          isConfirmPasswordVisible = !isConfirmPasswordVisible,
+                    );
+                  },
+                ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      backgroundColor: Colors.black,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     onPressed: loading ? null : _verifyAndResetPassword,
-                    child: loading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text("Reset Password", style: TextStyle(color: Colors.white, fontSize: 18)),
+                    child:
+                        loading
+                            ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                            : const Text(
+                              "Reset Password",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
                   ),
                 ),
               ],
@@ -105,27 +137,39 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, IconData icon) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String label,
+    IconData icon,
+  ) {
     return TextField(
       controller: controller,
+      cursorColor: Colors.black,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
+          borderRadius: BorderRadius.circular(2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 2),
+        ),
       ),
       keyboardType: TextInputType.number,
     );
   }
 
   Widget _buildPasswordField(
-      TextEditingController controller,
-      String label,
-      bool isVisible,
-      VoidCallback toggle,
-      ) {
+    TextEditingController controller,
+    String label,
+    bool isVisible,
+    VoidCallback toggle,
+  ) {
     return TextField(
       controller: controller,
       obscureText: !isVisible,
+      cursorColor: Colors.black,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: const Icon(Icons.lock),
@@ -133,7 +177,13 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
           icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),
           onPressed: toggle,
         ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
+          borderRadius: BorderRadius.circular(2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 2),
+        ),
       ),
     );
   }

@@ -115,6 +115,7 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: fullNameController,
               keyboardType: TextInputType.name,
+              cursorColor: Colors.black,
               decoration: InputDecoration(
                 hintText: "Enter your name",
                 border: OutlineInputBorder(
@@ -134,6 +135,7 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
+              
               cursorColor: Colors.black,
               decoration: InputDecoration(
                 hintText: "Enter your email",

@@ -237,8 +237,12 @@ class ContactDetailsPage extends StatelessWidget {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Message sent successfully!'),
+                            SnackBar(
+                              content: Text(
+                                'Message sent successfully!',
+                                style: TextStyle(color: theme.filterTextColor),
+                              ),
+                              backgroundColor: theme.filterTextColor,
                             ),
                           );
                           nameController.clear();
