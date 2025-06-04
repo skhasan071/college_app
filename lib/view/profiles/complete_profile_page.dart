@@ -33,13 +33,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   final List<String> studyingItems = [
     'SSC',
     'HSC',
-    'Engineering Colleges',
-    'Management Colleges',
-    'Business Schools',
-    'Arts & Humanities Colleges',
-    'Law Schools',
-    'Medical Colleges',
-    'Design Institutes',
+    'Engineering College',
+    'Management College',
+    'Business School',
+    'Arts & Humanities College',
+    'Law School',
+    'Medical College',
+    'Design Institute',
   ];
 
   List<String> states = [
