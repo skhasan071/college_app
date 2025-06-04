@@ -1,5 +1,6 @@
 import 'package:college_app/services/shortListCollegeController.dart';
 import 'package:college_app/view/SignUpLogin/FirstPage.dart';
+import 'package:college_app/view/home_page.dart';
 import 'package:college_app/view_model/themeController.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,8 @@ Future<void> main() async {
   Get.put(ShortlistedCollegesController());
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    DevicePreview(builder: (context)=>MyApp())
-    //MyApp()
+    //DevicePreview(builder: (context)=>MyApp())
+    MyApp()
   );
 }
 
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
           bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
         ),
       ),
-       home: Firstpage()
+       home: token == "" ? Firstpage() : HomePage(token!),
     );
   }
 
@@ -63,18 +64,4 @@ Future<String?> getToken() async {
 Future<void> delToken(String token) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('auth_token', token);
-}
-
-class TestingPage extends StatefulWidget {
-  const TestingPage({super.key});
-
-  @override
-  State<TestingPage> createState() => _TestingPageState();
-}
-
-class _TestingPageState extends State<TestingPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("All The Best Guys")));
-  }
 }

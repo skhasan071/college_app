@@ -210,17 +210,22 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                       UiHelper.getPrimaryBtn(title: "Next", callback: () async {
                         pfpCtrl.userToken.value = await getToken() ?? "";
                         if (pfpCtrl.userToken.value != "") {
+
+                          print(selectedStreams.toList());
+                          print(selectedCourses.toList());
                           pfpCtrl.profile.value!.interestedStreams = selectedStreams.toList();
                           pfpCtrl.profile.value!.coursesInterested = selectedCourses.toList();
+                          print(pfpCtrl.profile.value!.interestedStreams);
+                          print(pfpCtrl.profile.value!.coursesInterested);
                           pfpCtrl.profile.value!.preferredCourseLevel = selectedLevel ?? "UG";
-                          pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-Time";
+                          pfpCtrl.profile.value!.modeOfStudy = selectedMode ?? "Full-time";
                           pfpCtrl.profile.value!.preferredYearOfAdmission = selectedYear ?? "2025";
         
                           Map<String, dynamic>? data = await StudentService.saveCoursePreferences(
                             token: pfpCtrl.userToken.value,
                             coursesInterested: selectedCourses.toList(),
                             interestedStreams: selectedStreams.toList(),
-                            modeOfStudy: selectedMode ?? "Full-Time",
+                            modeOfStudy: selectedMode ?? "Full-time",
                             preferredCourseLevel: selectedLevel ?? "UG",
                             preferredYearOfAdmission: selectedYear ?? "2025",
                           );
@@ -233,7 +238,7 @@ class _CoursePreferencesPageState extends State<CoursePreferencesPage> {
                         if (widget.isFlow) {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.string)),
+                            MaterialPageRoute(builder: (context) => HomePage(pfpCtrl.userToken.value)),
                                 (route) => false,
                           );
                         } else {
