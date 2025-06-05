@@ -147,6 +147,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
       cursorColor: Colors.black,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: Colors.black),
         prefixIcon: Icon(icon),
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),
@@ -172,6 +173,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
       cursorColor: Colors.black,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: Colors.black),
         prefixIcon: const Icon(Icons.lock),
         suffixIcon: IconButton(
           icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),
