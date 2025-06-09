@@ -4,7 +4,6 @@ import 'package:college_app/view_model/themeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
 import '../SignUpLogin/login.dart';
 
 class SupportPage extends StatefulWidget {
@@ -94,7 +93,7 @@ class _SupportPageState extends State<SupportPage> {
             ),
             _buildDivider(),
             _subSectionTitle("Contact Us:"),
-            _infoRichText("Email: ", "contact-us@talentsconnectss.com"),
+            _infoRichText("Email: ", "contact-us hr@talentconnectss.com."),
             _infoRichText(
               "Response Time: ",
               "Available 24 hours from Monday to Saturday",
@@ -239,7 +238,7 @@ class _SupportPageState extends State<SupportPage> {
           icon: Icons.school,
           title: "College Search",
           description:
-              "Easily find colleges by name, course, or location with smart filters.",
+              "Easily find colleges by name,stream, or location with smart filters.",
         ),
         _featureTile(
           icon: Icons.compare,
@@ -257,7 +256,7 @@ class _SupportPageState extends State<SupportPage> {
           icon: Icons.feedback,
           title: "Personal Counseling",
           description:
-              "Yes, we care about your well-being. Please contact your college counselor or write to us at counseling@collegeapp.com. We’ll connect you with the right help.",
+              "Yes, we care about your well-being. Please contact your college counselor or write to us at hr@talentconnectss.com. We’ll connect you with the right help.",
         ),
       ],
     );

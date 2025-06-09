@@ -123,70 +123,9 @@ class BlogPageDetail extends StatelessWidget {
                 ],
 
                 // Static Subscribe Section
-                SizedBox(height: 40),
-                Text(
-                  'Subscribe to our newsletter',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.',
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 8),
-                TextField(
-                  cursorColor: theme.filterSelectedColor,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your email',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: theme.filterSelectedColor,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.filterSelectedColor,
-                    foregroundColor: theme.filterTextColor,
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text('Subscribe'),
-                ),
 
                 SizedBox(height: 20),
 
-                // Share Section
-                Text(
-                  'Share',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.link, color: Colors.blue),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.image, color: Colors.deepPurpleAccent),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.share, color: Colors.black),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

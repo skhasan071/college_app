@@ -280,7 +280,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
           ),
           DataColumn(
             label: Text(
-              'Highest CTC (LPA)',
+              'Highest CTC',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: theme.filterTextColor,
@@ -289,7 +289,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
           ),
           DataColumn(
             label: Text(
-              'Average CTC (LPA)',
+              'Average CTC',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: theme.filterTextColor,
