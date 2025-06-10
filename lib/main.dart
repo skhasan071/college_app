@@ -13,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     //DevicePreview(builder: (context)=>MyApp())
-    MyApp()
+    MyApp(),
   );
 }
 
@@ -33,16 +33,30 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        iconTheme: IconThemeData(color: Colors.black),
-        fontFamily: 'Poppins',
-        textTheme: TextTheme(
-          bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
-        ),
-      ),
-       home: token == null || token == "" ? Firstpage() : HomePage(token!),
+    return GetBuilder<ThemeController>(
+      // ⬅️ Make theme reactive
+      builder: (themeController) {
+        final theme = themeController.currentTheme;
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            iconTheme: IconThemeData(color: Colors.black),
+            fontFamily: 'Poppins',
+            textTheme: TextTheme(
+              bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
+            ),
+            textSelectionTheme: TextSelectionThemeData(
+              selectionColor:
+                  theme
+                      .selectedTextBackground, // Highlight background of selected text
+              selectionHandleColor: theme.filterSelectedColor, // Drag handles
+              cursorColor: theme.filterSelectedColor, // Blinking cursor
+            ),
+          ),
+
+          home: token == null || token == "" ? Firstpage() : HomePage(token!),
+        );
+      },
     );
   }
 
@@ -50,7 +64,6 @@ class _MyAppState extends State<MyApp> {
     token = await getToken() ?? '';
     setState(() {});
   }
-
 }
 
 // Function to get the token

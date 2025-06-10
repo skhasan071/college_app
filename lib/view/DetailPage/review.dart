@@ -274,12 +274,21 @@ class _ReviewsState extends State<Reviews> {
     int likes,
     int comments,
   ) {
+    final theme = ThemeController.to.currentTheme;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(radius: 30, child: Icon(Icons.person, size: 36)),
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: theme.selectedTextBackground,
+            child: Icon(
+              Icons.person,
+              size: 36,
+              color: theme.filterSelectedColor,
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
