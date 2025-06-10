@@ -43,12 +43,12 @@ class _MyAppState extends State<MyApp> {
           bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
         ),
       ),
-       home: token == "" ? Firstpage() : HomePage(token!),
+       home: token == null || token == "" ? Firstpage() : HomePage(token!),
     );
   }
 
   Future<void> loadToken() async {
-    token = await getToken();
+    token = await getToken() ?? '';
     setState(() {});
   }
 
