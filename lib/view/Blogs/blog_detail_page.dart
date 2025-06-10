@@ -123,9 +123,7 @@ class BlogPageDetail extends StatelessWidget {
                 ],
 
                 // Static Subscribe Section
-
                 SizedBox(height: 20),
-
               ],
             ),
           ),
@@ -151,11 +149,16 @@ class BlogPageDetail extends StatelessWidget {
 
   // Contributor Card Widget
   Widget contributorCard(String name, String title) {
+    final theme = ThemeController.to.currentTheme;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         children: [
-          CircleAvatar(radius: 20, child: Icon(Icons.person)),
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: theme.selectedTextBackground,
+            child: Icon(Icons.person, color: theme.filterSelectedColor),
+          ),
           SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

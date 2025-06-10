@@ -49,19 +49,22 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
               ),
               const SizedBox(height: 4),
               isLoading
-                  ? const SizedBox(
-                height: 30,
-                width: 30,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
+                  ? SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: theme.filterSelectedColor,
+                    ),
+                  )
                   : Text(
-                "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Clr.primaryBtnClr,
-                  fontSize: 33,
-                ),
-              ),
+                    "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Clr.primaryBtnClr,
+                      fontSize: 33,
+                    ),
+                  ),
               const SizedBox(height: 4),
               const Text(
                 "Explore the colleges you’ve saved for future reference.",
@@ -135,4 +138,5 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
 
     isLoading = false;
     setState(() {}); // Hide loader and update UI
-  }}
+  }
+}

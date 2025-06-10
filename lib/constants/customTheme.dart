@@ -58,7 +58,7 @@ class AppThemes {
     ),
     boxShadow: [
       BoxShadow(
-        color: Color(0xFFB197D8).withOpacity(0.3),
+        color: Colors.grey.shade800..withOpacity(0.3),
         blurRadius: 14,
         spreadRadius: 2,
         offset: Offset(0, 6),
@@ -68,7 +68,7 @@ class AppThemes {
     bottomNav: Colors.black,
     bottomIcons: Colors.white,
     chipGradient: LinearGradient(colors: [Colors.white, Colors.grey]),
-    selectedTextBackground: Colors.black.withOpacity(0.53),
+    selectedTextBackground: Colors.black.withOpacity(0.25),
   );
 
   static final coloredTheme = CustomTheme(
@@ -112,7 +112,7 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
-    selectedTextBackground: Color(0x884B0082).withOpacity(0.53),
+    selectedTextBackground: Color(0x884B0082).withOpacity(0.25),
   );
 
   static final emeraldTheme = CustomTheme(
@@ -148,7 +148,7 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
-    selectedTextBackground: Color(0x881B5E20).withOpacity(0.53),
+    selectedTextBackground: Color(0x881B5E20).withOpacity(0.25),
   );
 
   static final sunsetTheme = CustomTheme(
@@ -184,7 +184,7 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
-    selectedTextBackground: Color(0x88D84315).withOpacity(0.53),
+    selectedTextBackground: Color(0x88D84315).withOpacity(0.25),
   );
 
   static final coolBlueTheme = CustomTheme(
@@ -220,6 +220,6 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
-    selectedTextBackground: Color(0x881976D2).withOpacity(0.53),
+    selectedTextBackground: Color(0x881976D2).withOpacity(0.25),
   );
 }
