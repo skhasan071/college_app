@@ -175,7 +175,8 @@ class _CoursesState extends State<Courses> with TickerProviderStateMixin {
                                 duration: course.duration,
                                 fees: '\$${course.fees}',
                                 eligibility: course.examType,
-                                intake: 'Sep 2025',
+                                intake: course.maxRankOrPercentile.toString(),
+                                RankPer:course.rankType,
                               ),
                             );
                           },
@@ -230,6 +231,7 @@ class _CoursesState extends State<Courses> with TickerProviderStateMixin {
     required String fees,
     required String eligibility,
     required String intake,
+    required String RankPer,
   }) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
@@ -277,7 +279,7 @@ class _CoursesState extends State<Courses> with TickerProviderStateMixin {
             const SizedBox(height: 12),
             _buildCourseDetail('Annual Fees', fees),
             _buildCourseDetail('Eligibility', eligibility),
-            _buildCourseDetail('Next Intake', intake),
+            _buildCourseDetail(RankPer, intake),
             const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,

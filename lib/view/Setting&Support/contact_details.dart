@@ -51,7 +51,7 @@ class ContactDetailsPage extends StatelessWidget {
                               child: Text(
                                 '7979863193',
                                 style: TextStyle(
-                                  color: Colors.blue,
+                                  color: theme.filterSelectedColor,
                                   fontSize: 16,
                                 ),
                               ),
@@ -72,7 +72,7 @@ class ContactDetailsPage extends StatelessWidget {
                               child: Text(
                                 'Contact-us@talentsconnectss.com',
                                 style: TextStyle(
-                                  color: Colors.blue,
+                                  color: theme.filterSelectedColor,
                                   fontSize: 16,
                                 ),
                               ),
@@ -101,8 +101,8 @@ class ContactDetailsPage extends StatelessWidget {
                                     children: [
                                       Text(
                                         'Talent Connect- B BLOCK, first  FLOOR ROOM NO. 1  RUKMINI VENKATASWAMY REDDY ARCADE, ASHOKA LANE, GREEN GLEN LAYOUT, BELLANDUR, BANGALORE KARNATAKA - 560103',
-                                        style: const TextStyle(
-                                          color: Colors.blue,
+                                        style: TextStyle(
+                                          color: theme.filterSelectedColor,
                                           fontSize: 16,
                                         ),
                                         overflow:

@@ -67,6 +67,23 @@ class _CollegePredictorScreenState extends State<CollegePredictorPage> {
     "NEET",
     "BITSAT",
     "VITEEE",
+    //new
+    "CAT",
+    "CLAT",
+    "MH-CET LAW",
+    "MAH-CET",
+    "SLAT",
+    "HSC",
+    "SSC",
+    "CUET",
+    "IPU-CET",
+    "KLEE",
+    "KEAM",
+    "GUJCET",
+    "SAJEE",
+    "SRMHCAT",
+    "TNEA",
+
   ];
 
   final List<String> categories = [
