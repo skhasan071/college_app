@@ -13,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     //DevicePreview(builder: (context)=>MyApp())
-    MyApp()
+    MyApp(),
   );
 }
 
@@ -34,6 +34,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeController.to.currentTheme;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -42,8 +43,15 @@ class _MyAppState extends State<MyApp> {
         textTheme: TextTheme(
           bodyMedium: TextStyle(fontFamilyFallback: ['NotoSans']),
         ),
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor:
+              theme
+                  .selectedTextBackground, // Highlight background of selected text
+          selectionHandleColor: theme.filterSelectedColor, // Drag handles
+          cursorColor: theme.filterSelectedColor, // Blinking cursor
+        ),
       ),
-       home: token == "" ? Firstpage() : HomePage(token!),
+      home: token == "" ? Firstpage() : HomePage(token!),
     );
   }
 
@@ -51,7 +59,6 @@ class _MyAppState extends State<MyApp> {
     token = await getToken();
     setState(() {});
   }
-
 }
 
 // Function to get the token

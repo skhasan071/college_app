@@ -359,10 +359,19 @@ class _ReviewsState extends State<Reviews> {
                   const SizedBox(height: 12),
                   TextField(
                     controller: reviewController,
+                    cursorColor: theme.filterSelectedColor,
                     maxLines: 4,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: "Write your thoughts here...",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.filterSelectedColor,
+                          width: 2,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),

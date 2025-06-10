@@ -88,6 +88,15 @@ class SelectionPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.all(
+                              Colors.transparent,
+                            ), // removes ripple highlight on press
+                            elevation: MaterialStateProperty.all(0),
+                            shadowColor: MaterialStateProperty.all(
+                              Colors.transparent,
+                            ),
+                          ),
                           onPressed: () async {
                             List<College> clgs = await CollegeServices()
                                 .searchColleges(

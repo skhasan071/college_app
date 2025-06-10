@@ -415,6 +415,7 @@ class _QuestionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeController.to.currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Column(
@@ -454,9 +455,9 @@ class _QuestionItem extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: onAnswerPressed,
-                          child: const Text(
+                          child: Text(
                             'Answer',
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(color: theme.filterSelectedColor),
                           ),
                         ),
                       ],

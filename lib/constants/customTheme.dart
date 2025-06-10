@@ -14,6 +14,7 @@ class CustomTheme {
   final Color bottomNav;
   final Color bottomIcons;
   final LinearGradient chipGradient;
+  final Color selectedTextBackground;
 
   const CustomTheme({
     required this.brochureBtnColor,
@@ -29,6 +30,7 @@ class CustomTheme {
     required this.bottomNav,
     required this.bottomIcons,
     required this.chipGradient,
+    required this.selectedTextBackground,
   });
 }
 
@@ -66,6 +68,7 @@ class AppThemes {
     bottomNav: Colors.black,
     bottomIcons: Colors.white,
     chipGradient: LinearGradient(colors: [Colors.white, Colors.grey]),
+    selectedTextBackground: Colors.black.withOpacity(0.53),
   );
 
   static final coloredTheme = CustomTheme(
@@ -109,6 +112,7 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
+    selectedTextBackground: Color(0x884B0082).withOpacity(0.53),
   );
 
   static final emeraldTheme = CustomTheme(
@@ -144,6 +148,7 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
+    selectedTextBackground: Color(0x881B5E20).withOpacity(0.53),
   );
 
   static final sunsetTheme = CustomTheme(
@@ -179,6 +184,7 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
+    selectedTextBackground: Color(0x88D84315).withOpacity(0.53),
   );
 
   static final coolBlueTheme = CustomTheme(
@@ -214,5 +220,6 @@ class AppThemes {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
+    selectedTextBackground: Color(0x881976D2).withOpacity(0.53),
   );
 }

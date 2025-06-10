@@ -323,17 +323,25 @@ class _SupportPageState extends State<SupportPage> {
   Widget _infoRichText(
     String label,
     String detail, {
-    Color labelColor = Colors.black,
-    Color detailColor = Colors.lightBlue,
+    Color? labelColor,
+    Color? detailColor,
   }) {
+    final theme = ThemeController.to.currentTheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: RichText(
         text: TextSpan(
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           children: [
-            TextSpan(text: label, style: TextStyle(color: labelColor)),
-            TextSpan(text: detail, style: TextStyle(color: detailColor)),
+            TextSpan(
+              text: label,
+              style: TextStyle(color: labelColor ?? Colors.black),
+            ),
+            TextSpan(
+              text: detail,
+              style: TextStyle(color: detailColor ?? theme.filterSelectedColor),
+            ),
           ],
         ),
       ),
