@@ -252,12 +252,11 @@ class _CollegesState extends State<Colleges> {
 
                 // Cards
                 SizedBox(
-                  height: 430,
+                  height: 390,
                   child: ListView.builder(
                     controller: scrollController,
                     scrollDirection: Axis.horizontal,
                     itemCount: getFilteredColleges().length,
-
                     itemBuilder:
                         (context, index) => GestureDetector(
                           onTap: () async {

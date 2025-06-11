@@ -134,16 +134,6 @@ class _CollegeDetailState extends State<CollegeDetail> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share, color: Colors.black),
-            onPressed: () {
-              // Text to be shared
-              String textToShare = "This is a basic text that I want to share.";
-              Share.share(textToShare);
-            },
-          ),
-        ],
       ),
       body: Obx(() {
         final theme = ThemeController.to.currentTheme;
@@ -206,108 +196,84 @@ class _CollegeDetailState extends State<CollegeDetail> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        Row(
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // Apply Now logic
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 14,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero,
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Apply Now",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () async {
-                                  if (controller.isGuestIn.value) {
-                                    if (isSnackBarActive)
-                                      return; // Prevent showing multiple snackbars
+                            OutlinedButton(
+                              onPressed: () async {
+                                if (controller.isGuestIn.value) {
+                                  if (isSnackBarActive)
+                                    return; // Prevent showing multiple snackbars
 
-                                    isSnackBarActive = true;
-                                    isSnackBarActionClicked = false;
+                                  isSnackBarActive = true;
+                                  isSnackBarActionClicked = false;
 
-                                    final snackBar = SnackBar(
-                                      content: Text(
-                                        "Please Login First",
-                                        style: TextStyle(
-                                          color: theme.filterTextColor,
-                                        ),
+                                  final snackBar = SnackBar(
+                                    content: Text(
+                                      "Please Login First",
+                                      style: TextStyle(
+                                        color: theme.filterTextColor,
                                       ),
-                                      duration: Duration(seconds: 3),
-                                      backgroundColor:
-                                          theme.filterSelectedColor,
-                                      behavior: SnackBarBehavior.floating,
-                                      action: SnackBarAction(
-                                        label: 'Login',
-                                        textColor: theme.filterTextColor,
-                                        onPressed: () {
-                                          if (!isSnackBarActionClicked) {
-                                            isSnackBarActionClicked = true;
+                                    ),
+                                    duration: Duration(seconds: 3),
+                                    backgroundColor:
+                                        theme.filterSelectedColor,
+                                    behavior: SnackBarBehavior.floating,
+                                    action: SnackBarAction(
+                                      label: 'Login',
+                                      textColor: theme.filterTextColor,
+                                      onPressed: () {
+                                        if (!isSnackBarActionClicked) {
+                                          isSnackBarActionClicked = true;
 
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (context) => LoginPage(),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    );
-
-                                    ScaffoldMessenger.of(
-                                      context,
-                                    ).showSnackBar(snackBar).closed.then((_) {
-                                      isSnackBarActive = false;
-                                      isSnackBarActionClicked = false;
-                                    });
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => CompareWith(
-                                              clg: widget.college,
-                                              collegeId: widget.college.id,
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) => LoginPage(),
                                             ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 14,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.zero,
-                                  ),
-                                  side: const BorderSide(color: Colors.green),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  );
+
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).showSnackBar(snackBar).closed.then((_) {
+                                    isSnackBarActive = false;
+                                    isSnackBarActionClicked = false;
+                                  });
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => CompareWith(
+                                            clg: widget.college,
+                                            collegeId: widget.college.id,
+                                          ),
+                                    ),
+                                  );
+                                }
+                              },
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
                                 ),
-                                child: const Text(
-                                  "Compare",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                side: const BorderSide(color: Colors.green),
+                              ),
+                              child: const Text(
+                                "Compare",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),

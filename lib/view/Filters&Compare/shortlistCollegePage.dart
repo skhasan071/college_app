@@ -38,26 +38,28 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
       final theme = ThemeController.to.currentTheme;
       return Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Your Top Picks, One Step Closer!",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+        body: isLoading
+            ? Center(
+              child: SizedBox(
+                height: 30,
+                width: 30,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: theme.filterSelectedColor,
+                ),
               ),
-              const SizedBox(height: 4),
-              isLoading
-                  ? SizedBox(
-                    height: 30,
-                    width: 30,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: theme.filterSelectedColor,
-                    ),
-                  )
-                  : Text(
+            )
+            : SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+              child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Your Top Picks, One Step Closer!",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
                     "Shortlisted Colleges (${shortlistedCollegesController.shortlistedCollegesCount.value})",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -65,16 +67,15 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                       fontSize: 33,
                     ),
                   ),
-              const SizedBox(height: 4),
-              const Text(
-                "Explore the colleges you’ve saved for future reference.",
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-              const SizedBox(height: 10),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Explore the colleges you’ve saved for future reference.",
+                    style: TextStyle(fontSize: 15, color: Colors.black),
+                  ),
+                  const SizedBox(height: 10),
 
-              //const SizedBox(height: 16),
-              colleges.isNotEmpty
-                  ? Container(
+                  colleges.isNotEmpty
+                      ? Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       gradient: theme.backgroundGradient,
@@ -107,20 +108,20 @@ class _ShortlistedCollegesPageState extends State<ShortlistedCollegesPage> {
                           itemCount: colleges.length,
                           shrinkWrap: true,
                           physics:
-                              const NeverScrollableScrollPhysics(), // important!
+                          const NeverScrollableScrollPhysics(), // important!
                         ),
                       ],
                     ),
                   )
-                  : Center(
+                      : Center(
                     child: Text(
                       "No Colleges Shortlisted",
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                   ),
-            ],
-          ),
-        ),
+                ],
+              ),
+            ),
       );
     });
   }

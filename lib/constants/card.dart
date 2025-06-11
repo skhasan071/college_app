@@ -123,6 +123,7 @@ class _CardStructureState extends State<CardStructure> {
             border: Border.all(color: Colors.black),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Stack(
@@ -301,7 +302,7 @@ class _CardStructureState extends State<CardStructure> {
                         ),
                         const SizedBox(width: 20),
                         Text(
-                          "#${widget.ranking} NIRF",
+                          widget.ranking != "0" ? "#${widget.ranking} NIRF" : '',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -334,6 +335,7 @@ class _CardStructureState extends State<CardStructure> {
                             ),
 
                             const SizedBox(height: 8),
+
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
@@ -350,25 +352,7 @@ class _CardStructureState extends State<CardStructure> {
                             ),
                           ],
                         )
-                        : ElevatedButton.icon(
-                          icon: const Icon(
-                            Icons.download,
-                            size: 18,
-                            color: Colors.white,
-                          ),
-                          label: const Text(
-                            "Brochure",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: themes.brochureBtnColor,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                          ),
-                          onPressed: () {
-                            // brochure action
-                          },
-                        ),
+                        : SizedBox.shrink(),
                   ],
                 ),
               ),
@@ -382,6 +366,7 @@ class _CardStructureState extends State<CardStructure> {
   Widget _buildInfoColumn(String title, String value, CustomTheme themes) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(title, style: const TextStyle(fontSize: 15)),
         const SizedBox(height: 2),
@@ -396,4 +381,25 @@ class _CardStructureState extends State<CardStructure> {
       ],
     );
   }
+
+  // ElevatedButton.icon(
+  // icon: const Icon(
+  // Icons.download,
+  // size: 18,
+  // color: Colors.white,
+  // ),
+  // label: const Text(
+  // "Brochure",
+  // style: TextStyle(fontSize: 18),
+  // ),
+  // style: ElevatedButton.styleFrom(
+  // backgroundColor: themes.brochureBtnColor,
+  // foregroundColor: Colors.white,
+  // padding: const EdgeInsets.symmetric(horizontal: 16),
+  // ),
+  // onPressed: () {
+  // // brochure action
+  // },
+  // )
+
 }
