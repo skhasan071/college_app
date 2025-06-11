@@ -429,7 +429,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
   final theme = ThemeController.to.currentTheme;
 
   Future<void> submitIssue() async {
-    const url = 'https://tc-ca-server.onrender.com/api/report';
+    const url = 'https://tc-ca-server.onrender.com/api/colleges/report';
 
     try {
       final response = await http.post(
@@ -751,7 +751,7 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPageState extends State<FeedbackPage> {
   final theme = ThemeController.to.currentTheme;
   Future<void> submitFeedback() async {
-    const url = 'https://tc-ca-server.onrender.com/api/feedback';
+    const url = 'https://tc-ca-server.onrender.com/api/colleges/feedback';
 
     try {
       final response = await http.post(

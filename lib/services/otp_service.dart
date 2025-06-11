@@ -13,7 +13,7 @@ class OtpService {
 
   /// Send OTP to the given phone number
   Future<bool> sendOtp(String phone) async {
-    final url = Uri.parse('$baseUrl/send-otp');
+    final url = Uri.parse('$baseUrl/api/students/send-otp');
     try {
       final response = await http.post(
         url,
@@ -36,7 +36,7 @@ class OtpService {
 
   /// Verify the OTP for the given phone number
   Future<bool> verifyOtp(String phone, String otp) async {
-    final url = Uri.parse('$baseUrl/verify-otp');
+    final url = Uri.parse('$baseUrl/api/students/send-otp');
     try {
       final response = await http.post(
         url,
