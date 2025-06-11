@@ -29,12 +29,12 @@ class CollegeServices {
     }
   }
 
-  Future<List<College>> searchColleges({required String searchText, List<String>? streams, List<String>? countries, List<String>? states,}) async {
+  Future<List<College>> searchColleges({required String searchText, List<String>? streams, List<String>? states, List<String>? cities,}) async {
     final uri = Uri.https('tc-ca-server.onrender.com', '/api/colleges/search', {
       'search': searchText,
       if (streams != null && streams.isNotEmpty) 'stream': streams.join(','),
-      if (countries != null && countries.isNotEmpty) 'country': countries.join(','),
       if (states != null && states.isNotEmpty) 'state': states.join(','),
+      if (cities != null && cities.isNotEmpty) 'cities': cities.join(','),
     });
 
     try {
