@@ -16,6 +16,7 @@ class SearchRes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: Colors.white,
 
       appBar: AppBar(
@@ -28,8 +29,7 @@ class SearchRes extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.black),
       ),
 
-      body:
-          colleges.isNotEmpty
+      body: colleges.isNotEmpty
               ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(

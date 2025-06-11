@@ -6,18 +6,29 @@ import 'package:get/get.dart';
 import 'package:college_app/view_model/searchController.dart';
 import '../../model/college.dart';
 
-class SelectionPage extends StatelessWidget {
+class SelectionPage extends StatefulWidget {
+
+  const SelectionPage({super.key});
+
+  @override
+  State<SelectionPage> createState() => _SelectionPageState();
+
+}
+
+class _SelectionPageState extends State<SelectionPage> {
+
   final controller = Get.put(SelectionController());
+
   var searchCtrl = TextEditingController();
 
   // Countries
-  final List<String> countries = [
-    'India',
-    'USA',
-    'Germany',
-    'UK',
-    'France',
-    'Japan',
+  final List<String> states = [
+    'Maharashtra',
+    'Karnataka',
+    'Delhi',
+    'Kerala',
+    'Gujarat',
+    'Tamil Nadu'
   ];
 
   final List<String> streams = [
@@ -26,39 +37,32 @@ class SelectionPage extends StatelessWidget {
     'Arts',
     'Science',
     'Law',
-    'Medicine',
+    'Medical',
     'Design',
     'Humanities',
   ];
 
   // Mapping of countries to their states
-  final Map<String, List<String>> countryStates = {
-    'India': [
-      'Delhi',
-      'Maharashtra',
-      'Gujarat',
-      'Karnataka',
-      'Tamil Nadu',
-      'West Bengal',
-    ],
-    'USA': ['California', 'Texas', 'Florida', 'New York'],
-    'Germany': ['Berlin', 'Hamburg', 'Munich'],
-    'UK': ['England', 'Scotland', 'Wales'],
-    'France': ['Paris', 'Lyon', 'Marseille'],
-    'Japan': ['Tokyo', 'Osaka', 'Kyoto'],
+  final Map<String, List<String>> stateCities = {
+    'Maharashtra' : ['Mumbai', 'Pune', 'Navi Mumbai', "Nagpur",],
+    'Karnataka': ['Mangaluru', "Kalaburagi", 'Bangalore', 'Udupi'],
+    'Delhi': ['Jamia Nagar', 'Dwarka', 'Rohini', 'New Delhi'],
+    'Kerala' : ['Thiruvananthapuram', 'Kochi', 'Kottayam', 'Palakkad'],
+    'Gujarat' : ['Surat', 'Ahmedabad', 'Gandhinagar', 'Anand'],
+    'Tamil Nadu' : ['Chennai', 'Vellore', 'Tiruchirappalli', 'Krishnankoil']
   };
 
   // Initially display all states (this will update based on selected country)
-  RxList<String> displayedStates = RxList<String>([]);
-
-  SelectionPage({super.key});
+  RxList<String> displayedCities = RxList<String>([]);
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final theme = ThemeController.to.currentTheme;
       return Scaffold(
+
         backgroundColor: Colors.white,
+
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: ListView(
@@ -97,22 +101,26 @@ class SelectionPage extends StatelessWidget {
                               Colors.transparent,
                             ),
                           ),
-                          onPressed: () async {
-                            List<College> clgs = await CollegeServices()
-                                .searchColleges(
-                                  searchText: searchCtrl.text.trim(),
-                                  streams: controller.selectedStreams.toList(),
-                                  states: controller.selectedLocations.toList(),
-                                  countries:
-                                      controller.selectedCountries.toList(),
-                                );
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SearchRes(clgs),
-                              ),
-                            );
+                          onPressed: () async {
+
+                            if(searchCtrl.text.isNotEmpty){
+                              List<College> clgs = await CollegeServices()
+                                  .searchColleges(
+                                searchText: searchCtrl.text.trim(),
+                                streams: controller.selectedStreams.toList(),
+                                states: controller.selectedStates.toList(),
+                                cities: controller.selectedCities.toList(),
+                              );
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchRes(clgs),
+                                ),
+                              );
+                            }
+
                           },
                           child: Text(
                             "Search",
@@ -125,6 +133,10 @@ class SelectionPage extends StatelessWidget {
                 ),
               ),
 
+              buildStreamSection("Search by Streams", streams),
+
+              SizedBox(height: 24,),
+
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -132,10 +144,10 @@ class SelectionPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: buildGridSection(
-                  "Search by Country",
-                  countries,
-                  controller.selectedCountries,
-                  controller.toggleCountry,
+                  "Search by States",
+                  states,
+                  controller.selectedStates,
+                  controller.toggleStates,
                   isGreyBox: true,
                 ),
               ),
@@ -143,16 +155,16 @@ class SelectionPage extends StatelessWidget {
 
               // Display states only after a country is selected
               Obx(() {
-                if (controller.selectedCountries.isNotEmpty) {
+                if (controller.selectedStates.isNotEmpty) {
                   // Clear the displayed states list
-                  displayedStates.clear();
+                  displayedCities.clear();
                   // Loop through all selected countries and add their states to displayedStates
-                  for (String country in controller.selectedCountries) {
-                    displayedStates.addAll(countryStates[country] ?? []);
+                  for (String state in controller.selectedStates) {
+                    displayedCities.addAll(stateCities[state] ?? []);
                   }
                   // Ensure unique states are displayed
-                  displayedStates = RxList<String>(
-                    displayedStates.toSet().toList(),
+                  displayedCities = RxList<String>(
+                    displayedCities.toSet().toList(),
                   );
                   return Container(
                     padding: const EdgeInsets.all(12),
@@ -161,24 +173,23 @@ class SelectionPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: buildGridSection(
-                      "Search by States",
-                      displayedStates,
-                      controller.selectedLocations,
-                      controller.toggleLocation,
+                      "Search by Cities",
+                      displayedCities,
+                      controller.selectedCities,
+                      controller.toggleCities,
                       isGreyBox: true,
                     ),
                   );
                 } else {
-                  return Container();
+                  return SizedBox.shrink();
                 }
               }),
 
               SizedBox(height: 24),
-
-              buildStreamSection("Search by Streams", streams),
             ],
           ),
         ),
+
       );
     });
   }

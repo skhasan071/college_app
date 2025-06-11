@@ -66,16 +66,21 @@ class _CardStructureState extends State<CardStructure> {
   int courseCount = 0;
   bool isSnackBarActive = false;
   bool isSnackBarActionClicked = false;
+
   @override
   void initState() {
     super.initState();
-    fetchCourseCount();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchCourseCount();
+    });
   }
 
   void fetchCourseCount() async {
     List<Course> courses = await CollegeServices.getCoursesByCollege(
       widget.collegeID,
     );
+
+    if (!mounted) return; // Prevent calling setState after dispose
     setState(() {
       courseCount = courses.length;
     });

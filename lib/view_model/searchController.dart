@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 
 class SelectionController extends GetxController {
-  var selectedLocations = <String>{}.obs;
+  var selectedStates = <String>{}.obs;
+  var selectedCities = <String>{}.obs;
   var selectedStreams = <String>{}.obs;
-  var selectedCountries = <String>{}.obs;
 
-  void toggleLocation(String item) {
-    selectedLocations.contains(item)
-        ? selectedLocations.remove(item)
-        : selectedLocations.add(item);
+  void toggleStates(String item) {
+    selectedStates.contains(item)
+        ? selectedStates.remove(item)
+        : selectedStates.add(item);
   }
 
   void toggleStream(String item) {
@@ -17,9 +17,9 @@ class SelectionController extends GetxController {
         : selectedStreams.add(item);
   }
 
-  void toggleCountry(String item) {
-    selectedCountries.contains(item)
-        ? selectedCountries.remove(item)
-        : selectedCountries.add(item);
+  void toggleCities(String item) {
+    selectedCities.contains(item)
+        ? selectedCities.remove(item)
+        : selectedCities.add(item);
   }
 }
