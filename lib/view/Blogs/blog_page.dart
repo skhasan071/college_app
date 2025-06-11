@@ -18,7 +18,7 @@ class _BlogPageState extends State<BlogPage> {
   // Fetch blogs from the backend
   Future<void> fetchBlogs() async {
     final response = await http.get(
-      Uri.parse('https://tc-ca-server.onrender.com/api/blogs'),
+      Uri.parse('https://tc-ca-server.onrender.com/api/colleges/get/Blogs'),
     ); // Change to your backend URL
 
     if (response.statusCode == 200) {
