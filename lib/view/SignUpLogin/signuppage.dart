@@ -23,6 +23,10 @@ class _SignupPageState extends State<SignupPage> {
   bool isPasswordVisible = false;
   var profile = Get.put(ProfileController());
   var loader = Get.put(Loader());
+  bool isPasswordValid(String password) {
+    final regex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$%^&*])[A-Za-z\d!@#\$%^&*]{8,}$');
+    return regex.hasMatch(password);
+  }
 
   Future<bool> _handleSignUp() async {
     String email = emailController.text.trim();
@@ -43,6 +47,17 @@ class _SignupPageState extends State<SignupPage> {
       loader.isLoading(false);
       return false;
 
+    } else if (password.isEmpty || !isPasswordValid(password)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Password must be at least 4 characters long,and a mixture of uppercase,lowercase,numeric and special characters"),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.black,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      loader.isLoading(false);
+      return false;
     } else if (email.isNotEmpty && password.isNotEmpty) {
       loader.isLoading(true);
       Map<String, dynamic> msgs = await AuthService.registerStudent(
