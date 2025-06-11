@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 class Cost extends StatelessWidget {
   final String collegeId;
   final String collegeName;
@@ -24,7 +25,7 @@ class Cost extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-        return CostModel.fromJson(jsonData);  // No need to extract costDetails
+        return CostModel.fromJson(jsonData); // No need to extract costDetails
       } else {
         return null;
       }
@@ -33,7 +34,6 @@ class Cost extends StatelessWidget {
       return null;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,11 @@ class Cost extends StatelessWidget {
           future: fetchCostData(collegeId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: CircularProgressIndicator(
+                  color: theme.filterSelectedColor,
+                ),
+              );
             } else if (snapshot.hasError || snapshot.data == null) {
               return const Center(child: Text("Failed to load data"));
             }
@@ -104,8 +108,8 @@ class Cost extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 cost.address,
-                                style: const TextStyle(
-                                  color: Colors.blue,
+                                style: TextStyle(
+                                  color: theme.filterSelectedColor,
                                   fontSize: 15,
                                 ),
                                 softWrap: true,

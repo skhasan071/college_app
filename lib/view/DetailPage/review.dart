@@ -274,12 +274,21 @@ class _ReviewsState extends State<Reviews> {
     int likes,
     int comments,
   ) {
+    final theme = ThemeController.to.currentTheme;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(radius: 30, child: Icon(Icons.person, size: 36)),
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: theme.selectedTextBackground,
+            child: Icon(
+              Icons.person,
+              size: 36,
+              color: theme.filterSelectedColor,
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -359,10 +368,19 @@ class _ReviewsState extends State<Reviews> {
                   const SizedBox(height: 12),
                   TextField(
                     controller: reviewController,
+                    cursorColor: theme.filterSelectedColor,
                     maxLines: 4,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: "Write your thoughts here...",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: theme.filterSelectedColor,
+                          width: 2,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),

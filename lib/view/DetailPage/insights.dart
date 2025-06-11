@@ -161,6 +161,7 @@ class _InsightsState extends State<Insights> {
                 color: isSelected ? Colors.white : Colors.black,
                 fontWeight: FontWeight.bold,
               ),
+              checkmarkColor: Colors.white,
               onSelected: (_) {
                 setState(() {
                   selectedCategory = category;

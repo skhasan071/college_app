@@ -192,6 +192,13 @@ class BlogCard extends StatelessWidget {
                     ),
                   );
                 },
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(
+                    Colors.transparent,
+                  ), // removes ripple highlight on press
+                  elevation: MaterialStateProperty.all(0),
+                  shadowColor: MaterialStateProperty.all(Colors.transparent),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

@@ -64,7 +64,6 @@ class _CollegesState extends State<Colleges> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 8,
@@ -81,11 +80,11 @@ class _CollegesState extends State<Colleges> {
 
                             !controller.isGuestIn.value
                                 ? rankings.isNotEmpty
-                                ? _buildSection(
-                              "Colleges Based on NIRF",
-                              rankings,
-                            )
-                                : Container()
+                                    ? _buildSection(
+                                      "Colleges Based on NIRF",
+                                      rankings,
+                                    )
+                                    : Container()
                                 : Container(),
 
                             _buildBox(
@@ -107,9 +106,9 @@ class _CollegesState extends State<Colleges> {
 
                             states.isNotEmpty
                                 ? _buildSection(
-                              "Colleges Based on State",
-                              states,
-                            )
+                                  "Colleges Based on State",
+                                  states,
+                                )
                                 : Container(),
 
                             _buildBox(
@@ -142,7 +141,6 @@ class _CollegesState extends State<Colleges> {
                                   privates,
                                 )
                                 : Container(),
-
                           ],
                         ),
                       ),
@@ -315,6 +313,11 @@ class _CollegesState extends State<Colleges> {
                   shape: const CircleBorder(),
                   side: BorderSide(color: theme.filterSelectedColor),
                   padding: const EdgeInsets.all(10),
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  splashFactory: NoSplash.splashFactory,
+                ).copyWith(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
                 ),
                 onPressed: () {
                   scrollController.animateTo(
@@ -335,6 +338,11 @@ class _CollegesState extends State<Colleges> {
                   shape: const CircleBorder(),
                   side: BorderSide(color: theme.filterSelectedColor),
                   padding: const EdgeInsets.all(10),
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  splashFactory: NoSplash.splashFactory,
+                ).copyWith(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
                 ),
                 onPressed: () {
                   scrollController.animateTo(
@@ -356,7 +364,12 @@ class _CollegesState extends State<Colleges> {
     });
   }
 
-  Widget _buildBox({required String title, required String buttonText, required int pageNo, VoidCallback? callback,}) {
+  Widget _buildBox({
+    required String title,
+    required String buttonText,
+    required int pageNo,
+    VoidCallback? callback,
+  }) {
     final theme = ThemeController.to.currentTheme;
 
     return Padding(
@@ -454,5 +467,4 @@ class _CollegesState extends State<Colleges> {
 
     loader.isLoading.value = false;
   }
-
 }

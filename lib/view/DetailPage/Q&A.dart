@@ -415,6 +415,7 @@ class _QuestionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeController.to.currentTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Column(
@@ -423,9 +424,14 @@ class _QuestionItem extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 30,
-                child: Icon(Icons.person, size: 30),
+                backgroundColor: theme.selectedTextBackground,
+                child: Icon(
+                  Icons.person,
+                  size: 30,
+                  color: theme.filterSelectedColor,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -454,9 +460,9 @@ class _QuestionItem extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: onAnswerPressed,
-                          child: const Text(
+                          child: Text(
                             'Answer',
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(color: theme.filterSelectedColor),
                           ),
                         ),
                       ],

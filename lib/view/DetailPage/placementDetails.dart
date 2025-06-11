@@ -58,6 +58,7 @@ class _PlacementDetailsState extends State<PlacementDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeController.to.currentTheme;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -79,7 +80,9 @@ class _PlacementDetailsState extends State<PlacementDetails> {
       body:
           isLoading
               ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: theme.filterSelectedColor,
+                ),
               ) // Show loader while loading data
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -452,9 +455,14 @@ class _PlacementDetailsState extends State<PlacementDetails> {
           ],
         ),
         child: ListTile(
-          leading: const CircleAvatar(
+          leading: CircleAvatar(
             radius: 35,
-            child: Icon(Icons.person, size: 28),
+            backgroundColor: theme.selectedTextBackground,
+            child: Icon(
+              Icons.person,
+              size: 28,
+              color: theme.filterSelectedColor,
+            ),
           ),
           title: Text(
             name,
