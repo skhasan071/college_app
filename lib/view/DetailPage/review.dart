@@ -304,9 +304,9 @@ class _ReviewsState extends State<Reviews> {
                         fontSize: 22,
                       ),
                     ),
-                    _buildStarRating(rating, iconSize: 18),
                   ],
                 ),
+                _buildStarRating(rating, iconSize: 18),
                 Text(
                   role,
                   style: const TextStyle(
